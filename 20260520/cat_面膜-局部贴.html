@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>面膜/局部贴 · 20260520 周报</title>
+<style>
+  :root{--bg:#0a0d14;--panel:#101622;--panel2:#0d1320;--line:#1f2937;
+        --text:#e6edf3;--muted:#94a3b8;--primary:#fbbf24;--success:#86efac;--info:#9dbcff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:24px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+          background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line)}
+  .header .nav{color:var(--muted);font-size:13px}
+  .header .nav a{color:var(--muted)}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .badge{background:rgba(157,188,255,.14);color:var(--info);padding:4px 10px;
+                 border-radius:12px;font-size:12px;border:1px solid rgba(157,188,255,.3)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+  .section{margin-top:32px}
+  .section h2{margin:0 0 16px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section h2 .count{font-size:13px;color:var(--muted);font-weight:400}
+
+  /* ① 指标均值 */
+  .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+                background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .m-cell{text-align:center}
+  .m-cell .lab{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .m-cell .val{font-size:22px;font-weight:700;color:var(--text)}
+  .m-cell .val.muted{color:var(--muted);font-size:18px}
+  .m-cell .unit{font-size:12px;color:var(--muted);margin-left:2px}
+
+  /* ② 脚本框架 A-B-C-D-E */
+  .frame-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;
+               background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .stage-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .stage-card .stg-ix{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--primary);
+                      background:rgba(251,191,36,.14);padding:2px 7px;border-radius:6px;border:1px solid rgba(251,191,36,.3)}
+  .stage-card .stg-name{font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;padding-right:36px}
+  .stage-card .stg-purpose{font-size:12px;color:#cbd2e0;line-height:1.6;margin-bottom:6px}
+  .stage-card .stg-time{font-size:11px;color:var(--info);margin-bottom:6px}
+  .stage-card .stg-pattern{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+  .frame-empty{padding:32px;text-align:center;color:var(--muted);font-size:13px;
+               background:var(--panel);border:1px dashed var(--line);border-radius:12px}
+
+  /* ③ Top5 紧凑卡片：左封面 + 右关键帧并列 */
+  .top-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;
+            display:grid;grid-template-columns:200px 1fr;gap:18px}
+  .top-card .cover{aspect-ratio:9/16;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .top-card .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .cover .placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:#475569;font-size:12px}
+  .top-card .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .top-card .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .top-card .head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;border:1px solid rgba(251,191,36,.3)}
+  .top-card .head .meta-pill{font-size:11px;color:#cbd2e0;background:#172033;padding:2px 8px;border-radius:4px;border:1px solid var(--line)}
+  .top-card .metrics-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+  .top-card .metrics-row b{color:var(--text)}
+  .top-card .desc{font-size:12px;color:#cbd2e0;line-height:1.7;
+                  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .top-card .frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .top-card .frame{background:#0a0e18;border:1px solid var(--line);border-radius:6px;overflow:hidden;aspect-ratio:9/16;position:relative}
+  .top-card .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .frame .fcap{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:10px;color:#fff;line-height:1.3}
+  .top-card .frame .fname{font-weight:600}
+  .top-card .frame .ftime{color:#9dbcff;font-size:9px}
+  .top-card .frame.no-img{display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;text-align:center;padding:8px}
+
+  /* 黄金 3s prompt */
+  .hp{background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:8px}
+  .hp .hp-h{font-size:12px;font-weight:600;color:var(--info);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hp .hp-actions{margin-left:auto;display:inline-flex;gap:6px}
+  .hp .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;font-size:10px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:4px;cursor:pointer;text-decoration:none;font-family:inherit}
+  .hp .hp-btn:hover{background:#1e293b;color:#fff}
+  .hp .hp-t{font-size:12px;color:#cbd2e0;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:32px;border-top:1px solid var(--line);margin-top:48px}
+  #_tip{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:8px 16px;border-radius:8px;font-size:12px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_tip.ok{background:#15803d}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="nav"><a href="index.html">← 返回首页</a></span>
+  <span class="nav">·</span>
+  <span class="nav"><a href="full.html">完整报告</a></span>
+  <h1 style="margin-left:12px">🧴 面膜/局部贴</h1>
+  <span class="badge">9 条素材</span>
+</div>
+
+<div class="wrap">
+  <!-- ① 指标均值 -->
+  <section class="section">
+    <h2>📊 指标均值 <span class="count">· 该类别 9 条素材的均值（消耗加权）</span></h2>
+    <div class="metrics-grid"><div class="m-cell"><div class="lab">消耗(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">增长量(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">CTR (均值)</div><span class="val">2.74<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">CVR (均值)</div><span class="val">7.54<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">3s完播 (均值)</div><span class="val">41.8<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">播放时长(均值)</div><span class="val">11.5<span class="unit">s</span></span></div></div>
+  </section>
+
+  <!-- ② 脚本框架 -->
+  <section class="section">
+    <h2>📋 脚本框架 <span class="count">· AI 跨条聚合该类别下的典型套路</span></h2>
+    <div class="frame-empty">该类别下样本不足或解析尚未跑完，暂无脚本框架。<br>需 ≥2 条带『素材结构』的素材才能聚合。</div>
+  </section>
+
+  <!-- ③ Top5 关键帧拆解 -->
+  <section class="section">
+    <h2>🏆 Top5 素材关键帧拆解 <span class="count">· 按消耗降序</span></h2>
+    <div class="top-card"><div class="cover"><img src="assets/f8ff0a826bd21bac.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">🧴 涂抹面膜</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.23%</b> · CVR <b>4.66%</b> · 3s完播 <b>38.7%</b> · 播放时长 <b>15.3s</b></div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div></div></div><div class="top-card"><div class="cover"><div class="placeholder">无封面</div></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">🧴 贴片面膜</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>1.37%</b> · CVR <b>11.09%</b> · 3s完播 <b>45.0%</b> · 播放时长 <b>6.3s</b></div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/89890593db821d7e.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#3</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">🧴 贴片面膜</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>1.69%</b> · CVR <b>11.85%</b> · 3s完播 <b>29.5%</b> · 播放时长 <b>4.9s</b></div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/e185491ac52668e1.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#4</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">🧴 贴片面膜</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🏷️ 达人测评</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>1.75%</b> · CVR <b>8.78%</b> · 3s完播 <b>48.6%</b> · 播放时长 <b>6.1s</b></div><div class="desc">素材类型属于多博主实测+成分背书型。开篇以『面中不平整显老』痛点切入，建议每天灌肤15分钟，快速抓住抗老焦虑人群。接着多位博主轮番展示涂抹过程，强调『口红可以不买但这个要买』『美容院六位数换不来』等价值锚点。重点展示产品核心成分：99%高浓度极光甘草、稀有人参皂苷CK、3D微囊锁鲜技术，配合一抹爆珠的视觉演示。针对不同年龄给出使用频率建议，强化专业感。结尾以周年庆买一送一福利收尾，引导下单转化。</div><div class="frames"><div class="frame"><img src="assets/e26829dea2576961.jpg" alt="frame1"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">0-4s</div></div></div><div class="frame"><img src="assets/06bed8f68cb81fb6.jpg" alt="frame2"><div class="fcap"><div class="fname">价值锚定</div><div class="ftime">4-11s</div></div></div><div class="frame"><img src="assets/cd87b117ab00a3d1.jpg" alt="frame3"><div class="fcap"><div class="fname">多博主实测</div><div class="ftime">11-26s</div></div></div><div class="frame"><img src="assets/7591eb8196bbd2e4.jpg" alt="frame4"><div class="fcap"><div class="fname">成分解析</div><div class="ftime">26-46s</div></div></div><div class="frame"><img src="assets/3b68d92e53a74d3a.jpg" alt="frame5"><div class="fcap"><div class="fname">效果呈现</div><div class="ftime">46-52s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄气质女性侧脸缓缓转向正面，皮肤呈现紧致透亮状态，背景明亮干净。配音用成熟女声说『女生面中不平整是很显老的』，字幕同步弹出制造焦虑共鸣。第2秒切到手部特写撕开金色果冻状面膜包装，配音接『建议你每天用它灌肤15分钟』。节奏紧凑，前3秒用『显老焦虑+解决方案』双钩子留住目标用户。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄气质女性侧脸缓缓转向正面，皮肤呈现紧致透亮状态，背景明亮干净。配音用成熟女声说『女生面中不平整是很显老的』，字幕同步弹出制造焦虑共鸣。第2秒切到手部特写撕开金色果冻状面膜包装，配音接『建议你每天用它灌肤15分钟』。节奏紧凑，前3秒用『显老焦虑+解决方案』双钩子留住目标用户。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/dd2175d2159e70ed.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#5</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">🧴 祛斑贴</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🏷️ 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>6.80%</b> · CVR <b>3.83%</b> · 3s完播 <b>55.9%</b> · 播放时长 <b>12.9s</b></div><div class="desc">素材类型属于明星背书+促销福利型。开篇以刘晓庆红毯画面配合『突然临时宣布』悬念文案，紧接着抛出『不要再买169一盒』的反常话术制造好奇。随后展示刘晓庆与厂家谈判背景，强调『全场一折、拍一发26件』的超值福利。接着切入刘晓庆亲自推荐产品，声称是自己坚持在用的淡斑好物，配合多位女性贴敷淡斑贴的使用场景。中间穿插街头采访的用户证言，增强可信度。最后以直播间主播口播收尾，营造限时抢购的紧迫感，引导用户立即下单。</div><div class="frames"><div class="frame"><img src="assets/b093d3f8593b9b9d.jpg" alt="frame1"><div class="fcap"><div class="fname">悬念开篇</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/75e8016895dd5074.jpg" alt="frame2"><div class="fcap"><div class="fname">福利揭秘</div><div class="ftime">4-18s</div></div></div><div class="frame"><img src="assets/72cc4a6ffd18f391.jpg" alt="frame3"><div class="fcap"><div class="fname">明星背书</div><div class="ftime">19-42s</div></div></div><div class="frame"><img src="assets/a6570801aaee75f7.jpg" alt="frame4"><div class="fcap"><div class="fname">用户证言</div><div class="ftime">43-48s</div></div></div><div class="frame"><img src="assets/549354a5a70f3053.jpg" alt="frame5"><div class="fcap"><div class="fname">痛点强化</div><div class="ftime">49-64s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄知名女星身着黑色礼服在红毯上优雅挥手，画面顶部立即弹出红底白字『XXX突然临时宣布』制造悬念。配音用播报式语气说『昨晚演员XXX宣布，不要再买169一盒的淡斑贴』，1.5秒时切入产品名称字幕。第3秒配音反转『因为价格已经被谈下来了』，字幕同步出现『周年庆活动』。节奏紧凑，用『不要买』的反常话术打破用户预期，激发好奇心停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄知名女星身着黑色礼服在红毯上优雅挥手，画面顶部立即弹出红底白字『XXX突然临时宣布』制造悬念。配音用播报式语气说『昨晚演员XXX宣布，不要再买169一盒的淡斑贴』，1.5秒时切入产品名称字幕。第3秒配音反转『因为价格已经被谈下来了』，字幕同步出现『周年庆活动』。节奏紧凑，用『不要买』的反常话术打破用户预期，激发好奇心停留。</div></div></div></div>
+  </section>
+</div>
+
+<div class="footer">素材解析台 · 面膜/局部贴 · 20260520 · 对外版（脱敏）</div>
+<div id="_tip"></div>
+<script>
+// 复制按钮事件代理
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  var txt = btn.getAttribute("data-hook-copy") || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = txt;
+  var decoded = ta.value;
+  function ok(){
+    var t = document.getElementById("_tip");
+    t.textContent = "✓ 已复制黄金 3s prompt";
+    t.className = "ok"; t.style.display = "block";
+    clearTimeout(window._tipT);
+    window._tipT = setTimeout(function(){ t.style.display="none"; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(ok);
+  } else {
+    var t2 = document.createElement("textarea");
+    t2.value = decoded; t2.style.position="fixed"; t2.style.opacity="0";
+    document.body.appendChild(t2); t2.select();
+    try { document.execCommand("copy"); ok(); } catch(_){}
+    document.body.removeChild(t2);
+  }
+});
+</script>
+</body></html>
