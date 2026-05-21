@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>防晒霜/乳/啫喱/露 · 20260519update 周报</title>
+<style>
+  :root{--bg:#0a0d14;--panel:#101622;--panel2:#0d1320;--line:#1f2937;
+        --text:#e6edf3;--muted:#94a3b8;--primary:#fbbf24;--success:#86efac;--info:#9dbcff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:24px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+          background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line)}
+  .header .nav{color:var(--muted);font-size:13px}
+  .header .nav a{color:var(--muted)}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .badge{background:rgba(157,188,255,.14);color:var(--info);padding:4px 10px;
+                 border-radius:12px;font-size:12px;border:1px solid rgba(157,188,255,.3)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+  .section{margin-top:32px}
+  .section h2{margin:0 0 16px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section h2 .count{font-size:13px;color:var(--muted);font-weight:400}
+
+  /* ① 指标均值 */
+  .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+                background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .m-cell{text-align:center}
+  .m-cell .lab{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .m-cell .val{font-size:22px;font-weight:700;color:var(--text)}
+  .m-cell .val.muted{color:var(--muted);font-size:18px}
+  .m-cell .unit{font-size:12px;color:var(--muted);margin-left:2px}
+
+  /* ② 脚本框架 A-B-C-D-E */
+  .frame-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;
+               background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .stage-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .stage-card .stg-ix{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--primary);
+                      background:rgba(251,191,36,.14);padding:2px 7px;border-radius:6px;border:1px solid rgba(251,191,36,.3)}
+  .stage-card .stg-name{font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;padding-right:36px}
+  .stage-card .stg-purpose{font-size:12px;color:#cbd2e0;line-height:1.6;margin-bottom:6px}
+  .stage-card .stg-time{font-size:11px;color:var(--info);margin-bottom:6px}
+  .stage-card .stg-pattern{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+  .frame-empty{padding:32px;text-align:center;color:var(--muted);font-size:13px;
+               background:var(--panel);border:1px dashed var(--line);border-radius:12px}
+
+  /* ③ Top5 紧凑卡片：左封面 + 右关键帧并列 */
+  .top-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;
+            display:grid;grid-template-columns:200px 1fr;gap:18px}
+  .top-card .cover{aspect-ratio:9/16;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .top-card .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .cover .placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:#475569;font-size:12px}
+  .top-card .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .top-card .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .top-card .head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;border:1px solid rgba(251,191,36,.3)}
+  .top-card .head .meta-pill{font-size:11px;color:#cbd2e0;background:#172033;padding:2px 8px;border-radius:4px;border:1px solid var(--line)}
+  .top-card .metrics-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+  .top-card .metrics-row b{color:var(--text)}
+  .top-card .desc{font-size:12px;color:#cbd2e0;line-height:1.7;
+                  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .top-card .frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .top-card .frame{background:#0a0e18;border:1px solid var(--line);border-radius:6px;overflow:hidden;aspect-ratio:9/16;position:relative}
+  .top-card .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .frame .fcap{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:10px;color:#fff;line-height:1.3}
+  .top-card .frame .fname{font-weight:600}
+  .top-card .frame .ftime{color:#9dbcff;font-size:9px}
+  .top-card .frame.no-img{display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;text-align:center;padding:8px}
+
+  /* 黄金 3s prompt */
+  .hp{background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:8px}
+  .hp .hp-h{font-size:12px;font-weight:600;color:var(--info);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hp .hp-actions{margin-left:auto;display:inline-flex;gap:6px}
+  .hp .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;font-size:10px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:4px;cursor:pointer;text-decoration:none;font-family:inherit}
+  .hp .hp-btn:hover{background:#1e293b;color:#fff}
+  .hp .hp-t{font-size:12px;color:#cbd2e0;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:32px;border-top:1px solid var(--line);margin-top:48px}
+  #_tip{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:8px 16px;border-radius:8px;font-size:12px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_tip.ok{background:#15803d}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="nav"><a href="index.html">← 返回首页</a></span>
+  <span class="nav">·</span>
+  <span class="nav"><a href="full.html">完整报告</a></span>
+  <h1 style="margin-left:12px">🧴 防晒霜/乳/啫喱/露</h1>
+  <span class="badge">9 条素材</span>
+</div>
+
+<div class="wrap">
+  <!-- ① 指标均值 -->
+  <section class="section">
+    <h2>📊 指标均值 <span class="count">· 该类别 9 条素材的均值（消耗加权）</span></h2>
+    <div class="metrics-grid"><div class="m-cell"><div class="lab">消耗(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">增长量(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">CTR (均值)</div><span class="val">3.29<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">CVR (均值)</div><span class="val">11.02<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">3s完播 (均值)</div><span class="val">56.3<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">播放时长(均值)</div><span class="val">22.0<span class="unit">s</span></span></div></div>
+  </section>
+
+  <!-- ② 脚本框架 -->
+  <section class="section">
+    <h2>📋 脚本框架 <span class="count">· AI 跨条聚合该类别下的典型套路</span></h2>
+    <div class="frame-strip"><div class="stage-card"><span class="stg-ix">A</span><div class="stg-name">制造悬念开场</div><div class="stg-time">⏱ 0-3s</div><div class="stg-purpose">通过剧情冲突、痛点文案或福利预告快速抓取用户注意力，阻止划走，为后续内容铺垫情绪基础</div><div class="stg-pattern">📌 剧情类用闺蜜撕、婆媳矛盾、出轨悬疑等强冲突画面；卖货类用『晒黑长斑』痛点+达人喊话或福利降价字幕</div></div><div class="stage-card"><span class="stg-ix">B</span><div class="stg-name">展示产品入镜</div><div class="stg-time">⏱ 3-15s</div><div class="stg-purpose">完成从剧情/痛点到产品的自然过渡，让用户首次看到防晒产品实物，建立品牌认知</div><div class="stg-pattern">📌 产品瓶身特写、达人手持展示、按压出膏体动作，配合『这款防晒』『就是它』等口播引出</div></div><div class="stage-card"><span class="stg-ix">C</span><div class="stg-name">轰炸核心卖点</div><div class="stg-time">⏱ 15-50s</div><div class="stg-purpose">密集输出产品功效、成分、技术等差异化卖点，建立产品专业感与购买理由</div><div class="stg-pattern">📌 强调『高倍防晒、养肤美白、不假白不搓泥』等关键词，配合成分表、实验室画面、字幕强化记忆</div></div><div class="stage-card"><span class="stg-ix">D</span><div class="stg-name">呈现效果对比</div><div class="stg-time">⏱ 30-60s</div><div class="stg-purpose">通过使用前后对比或实测演示，将抽象卖点转化为可视化效果证据，增强说服力</div><div class="stg-pattern">📌 手臂涂抹对比、紫外线灯测试、户外暴晒实测、素人使用前后肤色对比图</div></div><div class="stage-card"><span class="stg-ix">E</span><div class="stg-name">叠加信任背书</div><div class="stg-time">⏱ 10-30s</div><div class="stg-purpose">借助明星代言、达人种草或真实用户证言，消除用户疑虑，强化产品可信度与社交认同</div><div class="stg-pattern">📌 明星同款/代言人画面、达人真人出镜推荐、用户好评截图或街头采访真实反馈</div></div><div class="stage-card"><span class="stg-ix">F</span><div class="stg-name">促销引导下单</div><div class="stg-time">⏱ 5-15s</div><div class="stg-purpose">通过限时优惠、价格对比、赠品福利等刺激即时转化，完成从种草到拔草的临门一脚</div><div class="stg-pattern">📌 价格划线对比、『今天下单立减』、买一送一赠品展示、点击下方链接/购物车引导话术</div></div></div>
+  </section>
+
+  <!-- ③ Top5 关键帧拆解 -->
+  <section class="section">
+    <h2>🏆 Top5 素材关键帧拆解 <span class="count">· 按消耗降序</span></h2>
+    <div class="top-card"><div class="cover"><img src="assets/75d1e028809396ca.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">🧴 防晒霜/乳/啫喱/露</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 达人测评</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.36%</b> · CVR <b>11.62%</b> · 3s完播 <b>57.1%</b> · 播放时长 <b>14.4s</b></div><div class="desc">素材类型属于达人口播带货+用户证言型。开篇达人猫七七在舞台上以强势口吻抛出『晒黑长斑』痛点，制造紧迫感吸引停留。接着展示产品并进行价格轰炸，从原价399元一路降至59元，营造超值促销氛围。中段插入福建阿姨的真实使用反馈，强调『不满意可退』的售后保障增加信任。重点展示377+877美白隔离防晒乳的六合一功效，通过半脸对比和紫外线感应卡测试直观呈现美白防晒效果。结尾强调300g大容量和高性价比，锁定懒人护肤人群，引导下单转化。</div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="舞台直播间场景，达人身穿红色大衣手持麦克风面对镜头，神情紧迫、语气强势。第1秒达人指向镜头喊出『我只说一遍』，同步弹出黄色大字。第2秒画面不切，字幕快速更新为『晒完黑三度』直击痛点。第3秒继续喊『脸上长斑的家人们听好了』，营造不听就亏的紧迫氛围。整体节奏快、信息密度高，用痛点+悬念双钩子逼停划走手指。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">舞台直播间场景，达人身穿红色大衣手持麦克风面对镜头，神情紧迫、语气强势。第1秒达人指向镜头喊出『我只说一遍』，同步弹出黄色大字。第2秒画面不切，字幕快速更新为『晒完黑三度』直击痛点。第3秒继续喊『脸上长斑的家人们听好了』，营造不听就亏的紧迫氛围。整体节奏快、信息密度高，用痛点+悬念双钩子逼停划走手指。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/8c2f34bc9db8facc.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">🧴 防晒霜/乳/啫喱/露</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 营销福利</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>2.18%</b> · CVR <b>12.57%</b> · 3s完播 <b>37.2%</b> · 播放时长 <b>7.6s</b></div><div class="desc">素材类型属于营销福利+用户证言型。开篇以猫七七周年庆活动现场为背景，配合『舍不得买防晒霜的姐妹们有福了』的钩子文案，直接抛出全场一折起的促销信息。接着用价格阶梯递减（99→79→59）制造紧迫感和价格悬念。中段插入福建阿姨的真实使用证言，强调『不满意直接退』的售后保障和实际效果。重点展示377+877美白隔离防晒乳的六合一功效：美白、隔离、防晒、提亮、保湿、遮瑕。通过模特上脸实测演示产品质地丝滑、清爽不粘腻、不假白的特点。结尾强调SPF50+高倍防晒和300g大容量的超高性价比，引导下单。</div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="开场画面以红毯走秀或大型庆典活动为背景，营造品牌盛事氛围，画面上方叠加醒目黄色字幕『福利大降价』。第1秒切到女性涂抹防晒霜的脸部特写，配音用亲切女声说『一直舍不得买防晒霜的姐妹们有福了』，直击消费痛点。第2-3秒快速切回活动现场全景，字幕弹出『全场一折起』制造价格惊喜。整体节奏紧凑，用『福利+痛点+价格』三重钩子快速抓住注意力。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">开场画面以红毯走秀或大型庆典活动为背景，营造品牌盛事氛围，画面上方叠加醒目黄色字幕『福利大降价』。第1秒切到女性涂抹防晒霜的脸部特写，配音用亲切女声说『一直舍不得买防晒霜的姐妹们有福了』，直击消费痛点。第2-3秒快速切回活动现场全景，字幕弹出『全场一折起』制造价格惊喜。整体节奏紧凑，用『福利+痛点+价格』三重钩子快速抓住注意力。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/ffccb5b57be8915f.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#3</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">🧴 防晒霜/乳/啫喱/露</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>4.19%</b> · CVR <b>11.57%</b> · 3s完播 <b>46.9%</b> · 播放时长 <b>11.4s</b></div><div class="desc">素材类型属于达人专场+痛点对比型。开篇以猫七七专场活动盛大场面制造热度，配合『五一防晒霜福利降价』文案吸引眼球。接着快速展示价格递减过程，从99元降至59元，营造超值感。中段切入福建阿姨的真实用户证言，强调『不满意直接退』的售后保障建立信任。重点展示产品六合一功效：美白、隔离、防晒、提亮、补水、保湿，通过半脸涂抹对比和紫外线感应卡测试直观呈现SPF50+的防晒效果。结尾展示300g大容量产品实物，强调性价比引导囤货下单。</div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="画面以达人专场活动盛大场面开场，人群簇拥走下楼梯，营造热闹氛围。配音用略带调侃的语气说『猫七七真的是无理取闹』制造悬念，1秒后快速切到两瓶防晒霜产品特写，画面上方出现黄色醒目文字『五一防晒霜福利降价』。紧接着配音说『原本99两瓶的』形成价格锚点，为后续降价做铺垫。整体节奏快速紧凑，用『达人噱头+价格悬念』双钩子吸引停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">画面以达人专场活动盛大场面开场，人群簇拥走下楼梯，营造热闹氛围。配音用略带调侃的语气说『猫七七真的是无理取闹』制造悬念，1秒后快速切到两瓶防晒霜产品特写，画面上方出现黄色醒目文字『五一防晒霜福利降价』。紧接着配音说『原本99两瓶的』形成价格锚点，为后续降价做铺垫。整体节奏快速紧凑，用『达人噱头+价格悬念』双钩子吸引停留。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/67b5966e864194d9.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#4</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">🧴 防晒霜/乳/啫喱/露</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>4.31%</b> · CVR <b>2.25%</b> · 3s完播 <b>65.7%</b> · 播放时长 <b>81.9s</b></div><div class="desc">素材类型属于剧情反转+明星背书型。开篇女主故意扮丑去相亲，塞假肚子、涂夸张腮红，制造强烈视觉冲突和好奇心。接着在咖啡厅相亲现场，女主被男方嫌弃，前女友又出现嘲讽，情绪推向高潮。产品自然引入，女主拿出VEVR美白防晒乳开始变美反击，多位达人演示产品使用效果。重点展示377+877美白成分、SPF50+高倍防晒、五效合一等核心卖点，配合半脸对比强化效果。加入范冰冰品牌发布会背书片段建立信任。结尾强调厂家直发39.9元超值价，引导点击下单。</div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄一位穿着花哨短袖、腹部隆起的女性站在服装店里打电话，表情夸张，妆容故意涂得很乱。画面上方大字幕弹出『故意扮丑去相亲，竟然遇到了未来婆婆...』制造悬念。配音用轻松语气说『妈，我挺好的，你那病该治就治』，暗示即将发生反转。整体节奏轻快，用扮丑造型+悬念标题双重钩子，激发观众好奇心停留观看。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄一位穿着花哨短袖、腹部隆起的女性站在服装店里打电话，表情夸张，妆容故意涂得很乱。画面上方大字幕弹出『故意扮丑去相亲，竟然遇到了未来婆婆...』制造悬念。配音用轻松语气说『妈，我挺好的，你那病该治就治』，暗示即将发生反转。整体节奏轻快，用扮丑造型+悬念标题双重钩子，激发观众好奇心停留观看。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/0163f49769cd4fbc.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#5</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">🧴 防晒霜/乳/啫喱/露</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>2.15%</b> · CVR <b>12.25%</b> · 3s完播 <b>90.9%</b> · 播放时长 <b>41.0s</b></div><div class="desc">素材类型属于达人实测+痛点对比+街头采访型。开篇达人口播直击『女人不想显老』痛点，配合产品按压画面制造紧迫感，预告即将涨价至99元。接着展示产品便捷性，强调洗完脸直接用，插入街头采访『又便宜又好用』建立口碑。重点介绍377+877美白成分和六合一功效：美白、隔离、防晒、提亮、补水、保湿，展示奶油质地丝滑好推开。效果对比环节采用半脸实测、纸巾擦拭验证清爽不粘腻、紫外线卡测试验证SPF50+高倍防晒。结尾强调300g大容量、一年四季可用，锁定不会化妆又想美美出门的目标人群。</div><div class="frames"><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div><div class="frame no-img">—</div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄成熟女性面对镜头，表情略带焦虑，配音用关切语气说『女人不想显老』。0.8秒快切到产品特写，手指按压白色瓶身橙色泵头的防晒乳，乳液流出形成视觉吸引。配音继续『每天就用它抹一抹』，同时画面切到模特将乳液涂抹脸部，肤色瞬间提亮。字幕弹出『即将涨价99元』制造紧迫感。整体节奏紧凑，3秒内完成『痛点共鸣+产品露出+价格锚点』三重钩子。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄成熟女性面对镜头，表情略带焦虑，配音用关切语气说『女人不想显老』。0.8秒快切到产品特写，手指按压白色瓶身橙色泵头的防晒乳，乳液流出形成视觉吸引。配音继续『每天就用它抹一抹』，同时画面切到模特将乳液涂抹脸部，肤色瞬间提亮。字幕弹出『即将涨价99元』制造紧迫感。整体节奏紧凑，3秒内完成『痛点共鸣+产品露出+价格锚点』三重钩子。</div></div></div></div>
+  </section>
+</div>
+
+<div class="footer">素材解析台 · 防晒霜/乳/啫喱/露 · 20260519update · 对外版（脱敏）</div>
+<div id="_tip"></div>
+<script>
+// 复制按钮事件代理
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  var txt = btn.getAttribute("data-hook-copy") || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = txt;
+  var decoded = ta.value;
+  function ok(){
+    var t = document.getElementById("_tip");
+    t.textContent = "✓ 已复制黄金 3s prompt";
+    t.className = "ok"; t.style.display = "block";
+    clearTimeout(window._tipT);
+    window._tipT = setTimeout(function(){ t.style.display="none"; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(ok);
+  } else {
+    var t2 = document.createElement("textarea");
+    t2.value = decoded; t2.style.position="fixed"; t2.style.opacity="0";
+    document.body.appendChild(t2); t2.select();
+    try { document.execCommand("copy"); ok(); } catch(_){}
+    document.body.removeChild(t2);
+  }
+});
+</script>
+</body></html>
