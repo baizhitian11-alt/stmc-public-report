@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>颈膜 · 20260521 周报</title>
+<style>
+  :root{--bg:#0a0d14;--panel:#101622;--panel2:#0d1320;--line:#1f2937;
+        --text:#e6edf3;--muted:#94a3b8;--primary:#fbbf24;--success:#86efac;--info:#9dbcff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:24px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+          background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line)}
+  .header .nav{color:var(--muted);font-size:13px}
+  .header .nav a{color:var(--muted)}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .badge{background:rgba(157,188,255,.14);color:var(--info);padding:4px 10px;
+                 border-radius:12px;font-size:12px;border:1px solid rgba(157,188,255,.3)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+  .section{margin-top:32px}
+  .section h2{margin:0 0 16px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section h2 .count{font-size:13px;color:var(--muted);font-weight:400}
+
+  /* ① 指标均值 */
+  .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+                background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .m-cell{text-align:center}
+  .m-cell .lab{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .m-cell .val{font-size:22px;font-weight:700;color:var(--text)}
+  .m-cell .val.muted{color:var(--muted);font-size:18px}
+  .m-cell .unit{font-size:12px;color:var(--muted);margin-left:2px}
+
+  /* ② 脚本框架 A-B-C-D-E */
+  .frame-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;
+               background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .stage-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .stage-card .stg-ix{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--primary);
+                      background:rgba(251,191,36,.14);padding:2px 7px;border-radius:6px;border:1px solid rgba(251,191,36,.3)}
+  .stage-card .stg-name{font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;padding-right:36px}
+  .stage-card .stg-purpose{font-size:12px;color:#cbd2e0;line-height:1.6;margin-bottom:6px}
+  .stage-card .stg-time{font-size:11px;color:var(--info);margin-bottom:6px}
+  .stage-card .stg-pattern{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+  .frame-empty{padding:32px;text-align:center;color:var(--muted);font-size:13px;
+               background:var(--panel);border:1px dashed var(--line);border-radius:12px}
+
+  /* ③ Top5 紧凑卡片：左封面 + 右关键帧并列 */
+  .top-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;
+            display:grid;grid-template-columns:200px 1fr;gap:18px}
+  .top-card .cover{aspect-ratio:9/16;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .top-card .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .cover .placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:#475569;font-size:12px}
+  .top-card .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .top-card .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .top-card .head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;border:1px solid rgba(251,191,36,.3)}
+  .top-card .head .meta-pill{font-size:11px;color:#cbd2e0;background:#172033;padding:2px 8px;border-radius:4px;border:1px solid var(--line)}
+  .top-card .metrics-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+  .top-card .metrics-row b{color:var(--text)}
+  .top-card .desc{font-size:12px;color:#cbd2e0;line-height:1.7;
+                  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .top-card .frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .top-card .frame{background:#0a0e18;border:1px solid var(--line);border-radius:6px;overflow:hidden;aspect-ratio:9/16;position:relative}
+  .top-card .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .frame .fcap{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:10px;color:#fff;line-height:1.3}
+  .top-card .frame .fname{font-weight:600}
+  .top-card .frame .ftime{color:#9dbcff;font-size:9px}
+  .top-card .frame.no-img{display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;text-align:center;padding:8px}
+
+  /* 黄金 3s prompt */
+  .hp{background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:8px}
+  .hp .hp-h{font-size:12px;font-weight:600;color:var(--info);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hp .hp-actions{margin-left:auto;display:inline-flex;gap:6px}
+  .hp .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;font-size:10px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:4px;cursor:pointer;text-decoration:none;font-family:inherit}
+  .hp .hp-btn:hover{background:#1e293b;color:#fff}
+  .hp .hp-t{font-size:12px;color:#cbd2e0;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:32px;border-top:1px solid var(--line);margin-top:48px}
+  #_tip{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:8px 16px;border-radius:8px;font-size:12px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_tip.ok{background:#15803d}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="nav"><a href="index.html">← 返回首页</a></span>
+  <span class="nav">·</span>
+  <span class="nav"><a href="full.html">完整报告</a></span>
+  <h1 style="margin-left:12px">🧴 颈膜</h1>
+  <span class="badge">2 条素材</span>
+</div>
+
+<div class="wrap">
+  <!-- ① 指标均值 -->
+  <section class="section">
+    <h2>📊 指标均值 <span class="count">· 该类别 2 条素材的均值（消耗加权）</span></h2>
+    <div class="metrics-grid"><div class="m-cell"><div class="lab">消耗(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">增长量(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">CTR (均值)</div><span class="val">1.11<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">CVR (均值)</div><span class="val">19.00<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">3s完播 (均值)</div><span class="val">29.5<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">播放时长(均值)</div><span class="val">4.7<span class="unit">s</span></span></div></div>
+  </section>
+
+  <!-- ② 脚本框架 -->
+  <section class="section">
+    <h2>📋 脚本框架 <span class="count">· AI 跨条聚合该类别下的典型套路</span></h2>
+    <div class="frame-empty">该类别下样本不足或解析尚未跑完，暂无脚本框架。<br>需 ≥2 条带『素材结构』的素材才能聚合。</div>
+  </section>
+
+  <!-- ③ Top5 关键帧拆解 -->
+  <section class="section">
+    <h2>🏆 Top5 素材关键帧拆解 <span class="count">· 按消耗降序</span></h2>
+    <div class="top-card"><div class="cover"><img src="assets/e7d6e80ccbaf1a0d.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">🧴 颈膜</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 营销福利</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>1.25%</b> · CVR <b>19.11%</b> · 3s完播 <b>26.2%</b> · 播放时长 <b>3.8s</b></div><div class="desc">开篇类型属于营销福利+达人种草型。开篇通过两位女性的价格对比对话，用『有包装299vs没包装69.9』的巨大价差制造冲击，配合『明星都在用』的背书快速抓住注意力。接着展示颈部纹路特写，用『脖子挂满螺丝圈真的很显老』戳中用户焦虑。重点介绍黑灵芝精华液+银绷带颈膜的1+1组合，展示六重胜肽、高浓度玻色因等大牌同款成分，配合官方淡纹检测报告增加信任。随后达人亲身演示使用过程，描述『温温热热营养灌进皮肤』的感受，展示使用后颈部『又嫩又亮』的即时效果。结尾强调体验活动4组69.9元的超值价格，引导下单薅羊毛。</div><div class="frames"><div class="frame"><img src="assets/02a77ffe2be0475d.jpg" alt="frame1"><div class="fcap"><div class="fname">价格对比开场</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/1ba6bd5b181d8f8d.jpg" alt="frame2"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">3-10s</div></div></div><div class="frame"><img src="assets/abb409d9b747afdb.jpg" alt="frame3"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">10-18s</div></div></div><div class="frame"><img src="assets/de50161b5f046946.jpg" alt="frame4"><div class="fcap"><div class="fname">成分背书</div><div class="ftime">18-30s</div></div></div><div class="frame"><img src="assets/ea82d6ca8950683e.jpg" alt="frame5"><div class="fcap"><div class="fname">效果演示</div><div class="ftime">30-38s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="居家场景中景，一位女性正仰头贴敷银色颈膜，旁边闺蜜手拿产品盒惊讶发问。配音用闺蜜对话形式：『真的假的？有包装多少？299。没包装呢？69块9！』语气从质疑到震惊。画面节奏快切，1秒内完成价格锚点设置，2秒抛出超低价形成强烈反差冲击。字幕同步弹出价格数字，用红色大字强调69.9，制造『不买就亏了』的紧迫感。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">居家场景中景，一位女性正仰头贴敷银色颈膜，旁边闺蜜手拿产品盒惊讶发问。配音用闺蜜对话形式：『真的假的？有包装多少？299。没包装呢？69块9！』语气从质疑到震惊。画面节奏快切，1秒内完成价格锚点设置，2秒抛出超低价形成强烈反差冲击。字幕同步弹出价格数字，用红色大字强调69.9，制造『不买就亏了』的紧迫感。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/76077840d901dcd8.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">🧴 颈膜</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>0.96%</b> · CVR <b>18.89%</b> · 3s完播 <b>33.0%</b> · 播放时长 <b>5.6s</b></div><div class="desc">开篇类型属于痛点对比+明星背书型。开篇用泥塑雕像直观展示颈部纹路和松弛，配合『女人衰老的体现就是纹路和下垂松弛』的痛点文案，瞬间抓住抗衰焦虑人群。接着模特展示撕开颈膜的精华质地，强调『一年没去美容院的秘密』建立私藏好物信任感。重点展示产品核心成分六重胜肽、玻色因、黑灵芝精华，用『以肽养肤』强化专业感。中段引入迪丽热巴、陈紫函明星背书，配合『曾经299现在宠粉福利』的价格锚点制造紧迫感。结尾描绘『比同龄人更年轻有魅力』的美好愿景，引导下单转化。</div><div class="frames"><div class="frame"><img src="assets/44681758620a3c79.jpg" alt="frame1"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/0d722ebe47fee04f.jpg" alt="frame2"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">3-12s</div></div></div><div class="frame"><img src="assets/1ea3981cc7b4b231.jpg" alt="frame3"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">13-24s</div></div></div><div class="frame"><img src="assets/5033807c105de84b.jpg" alt="frame4"><div class="fcap"><div class="fname">明星背书</div><div class="ftime">25-36s</div></div></div><div class="frame"><img src="assets/fce9f5008a53f48e.jpg" alt="frame5"><div class="fcap"><div class="fname">价格促销</div><div class="ftime">37-45s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="开场第一秒，近景特写一只手指向女性泥塑雕像的颈部，雕像颈部刻有清晰的深层皱纹，配音用成熟女声说『女人衰老的体现』。第二秒手指沿纹路滑动，字幕弹出『就是纹路和下垂松弛』，语气略带焦虑感。第三秒画面快切至双手撕开银色颈膜包装，露出浓稠精华质地，形成『问题—解决方案』的强反差悬念，节奏紧凑无停顿。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">开场第一秒，近景特写一只手指向女性泥塑雕像的颈部，雕像颈部刻有清晰的深层皱纹，配音用成熟女声说『女人衰老的体现』。第二秒手指沿纹路滑动，字幕弹出『就是纹路和下垂松弛』，语气略带焦虑感。第三秒画面快切至双手撕开银色颈膜包装，露出浓稠精华质地，形成『问题—解决方案』的强反差悬念，节奏紧凑无停顿。</div></div></div></div>
+  </section>
+</div>
+
+<div class="footer">素材解析台 · 颈膜 · 20260521 · 对外版（脱敏）</div>
+<div id="_tip"></div>
+<script>
+// 复制按钮事件代理
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  var txt = btn.getAttribute("data-hook-copy") || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = txt;
+  var decoded = ta.value;
+  function ok(){
+    var t = document.getElementById("_tip");
+    t.textContent = "✓ 已复制黄金 3s prompt";
+    t.className = "ok"; t.style.display = "block";
+    clearTimeout(window._tipT);
+    window._tipT = setTimeout(function(){ t.style.display="none"; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(ok);
+  } else {
+    var t2 = document.createElement("textarea");
+    t2.value = decoded; t2.style.position="fixed"; t2.style.opacity="0";
+    document.body.appendChild(t2); t2.select();
+    try { document.execCommand("copy"); ok(); } catch(_){}
+    document.body.removeChild(t2);
+  }
+});
+</script>
+</body></html>
