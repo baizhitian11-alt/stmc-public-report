@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>素材周报 · 完整报告 · 20260521</title>
+<style>
+  :root{
+    --bg:#0a0d14; --panel:#101622; --panel2:#0d1320; --line:#1f2937;
+    --text:#e6edf3; --muted:#94a3b8; --primary:#fbbf24; --success:#86efac; --info:#9dbcff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:0;background:var(--bg);color:var(--text);font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:20px 28px;background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .sub{color:var(--muted);font-size:13px}
+  .header .badge{background:rgba(251,191,36,.14);color:var(--primary);padding:4px 10px;border-radius:12px;font-size:12px;border:1px solid rgba(251,191,36,.3)}
+
+  .topbar{padding:14px 28px;background:var(--panel2);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px}
+  .topbar .group{display:flex;align-items:center;gap:8px}
+  .topbar .label{color:var(--muted);font-size:12px}
+  .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;background:#172033;border:1px solid var(--line);color:#cbd2e0;font-size:12px;cursor:pointer;user-select:none;transition:.15s}
+  .chip:hover{background:#1e293b}
+  .chip.on{background:rgba(251,191,36,.14);border-color:rgba(251,191,36,.4);color:var(--primary)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:480px}
+  select{background:#172033;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer}
+  .ms-dd{position:relative;display:inline-block}
+  .ms-dd-btn{background:#172033;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;min-width:120px;text-align:left}
+  .ms-dd-panel{position:absolute;top:100%;left:0;margin-top:4px;background:#0d1320;border:1px solid var(--line);border-radius:6px;padding:8px;display:none;z-index:50;min-width:180px;max-height:280px;overflow:auto;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  .ms-dd.open .ms-dd-panel{display:block}
+
+  .btn-clear{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px}
+  .btn-clear:hover{background:#172033;color:var(--text)}
+
+  /* —— 特征提炼 —— */
+  .common{margin:18px 28px 0;padding:20px;background:linear-gradient(180deg,#101622,#0d1320);border:1px solid var(--line);border-radius:10px}
+  .common-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .common-head .ico{font-size:20px}
+  .common-title{font-size:16px;font-weight:700}
+  .common-sub{color:var(--muted);font-size:12px}
+  .common-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+  .cf-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .cf-no{position:absolute;top:10px;right:12px;color:var(--muted);font-size:11px;font-weight:700}
+  .cf-title{color:var(--primary);font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.4;padding-right:30px}
+  .cf-desc{color:#cbd2e0;font-size:12px;line-height:1.7}
+
+  /* —— 卡片：纵向文档流，每条一张长卡 —— */
+  .grid{padding:18px 28px;display:flex;flex-direction:column;gap:18px;max-width:1180px;margin:0 auto}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+
+  /* 卡片头：序号 + 元信息 */
+  .card-head{padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:linear-gradient(180deg,#101622,#0d1320);border-bottom:1px solid var(--line)}
+  .card-head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:4px 12px;border-radius:8px;font-weight:700;font-size:14px;border:1px solid rgba(251,191,36,.3);min-width:40px;text-align:center}
+  .card-head .meta-item{font-size:12px;color:#cbd2e0;background:#172033;border:1px solid var(--line);padding:3px 10px;border-radius:4px}
+  .card-head .meta-item.muted{color:var(--muted)}
+  .card-head .tag{background:rgba(251,191,36,.2);color:var(--primary);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;border:1px solid rgba(251,191,36,.4)}
+
+  /* 卡片身体：左封面 + 右文本，2 栏 */
+  .card-body{display:grid;grid-template-columns:240px 1fr;gap:20px;padding:18px}
+  .card-cover{aspect-ratio:9/16;max-height:420px;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .card-cover .no-cover{display:flex;align-items:center;justify-content:center;height:100%;color:#475569;font-size:13px}
+  .card-content{display:flex;flex-direction:column;gap:14px;min-width:0}
+
+  /* 指标条带（对外版只 4 项，无金额） */
+  .metrics-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:10px}
+  .metric{text-align:center}
+  .metric .lab{font-size:11px;color:var(--muted);margin-bottom:3px}
+  .metric .val{font-size:15px;font-weight:700;color:var(--text)}
+
+  /* 解析正文段落式 */
+  .ana-block{padding:10px 12px;background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0}
+  .ana-block.warn{border-left-color:var(--primary)}
+  .ana-block.ok{border-left-color:var(--success)}
+  .ana-block .ana-h{font-size:13px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .ana-block .ana-t{font-size:13px;color:#cbd2e0;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+  .ana-block .ana-t.empty{color:#64748b;font-style:italic;font-size:12px}
+  /* 黄金 3s Prompt 复制 / 妙思跳转按钮 */
+  .hook-prompt-actions{display:inline-flex;align-items:center;gap:6px;margin-left:auto}
+  .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;font-size:11px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:6px;cursor:pointer;text-decoration:none;transition:.15s;font-family:inherit}
+  .hp-btn:hover{background:#1e293b;color:#fff;border-color:var(--info)}
+  .hp-btn.copied{background:rgba(134,239,172,.15);color:#86efac;border-color:rgba(134,239,172,.4)}
+  /* toast */
+  #_pubToast{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:10px 18px;border-radius:8px;font-size:13px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_pubToast.ok{background:#15803d}
+  #_pubToast.err{background:#b91c1c}
+
+  .video-link{font-size:12px;color:var(--info);word-break:break-all;display:inline-block;padding:6px 12px;background:rgba(157,188,255,.08);border:1px solid rgba(157,188,255,.2);border-radius:6px}
+  .video-link:hover{background:rgba(157,188,255,.16);text-decoration:none}
+
+  /* 素材结构关键帧条带 —— 横向滚动，全宽 */
+  .struct{padding:14px 18px 18px;border-top:1px solid var(--line);background:#0a0e18}
+  .struct-h{font-size:13px;font-weight:600;color:var(--success);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .struct-h .cnt{color:var(--muted);font-weight:400;font-size:11px}
+  .frames{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:#334155 transparent}
+  .frames::-webkit-scrollbar{height:6px}
+  .frames::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+  .frame{flex:0 0 150px;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .frame img{width:100%;aspect-ratio:9/16;object-fit:cover;display:block;background:#000}
+  .frame .fc{padding:6px 8px;text-align:center}
+  .frame .fn{font-size:11px;font-weight:600;color:#cbd2e0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .frame .ft{font-size:10px;color:var(--muted);margin-top:2px}
+  .frame.no-img{padding:8px}
+  .frame.no-img .ph{aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;background:#0a0e18;border:1px dashed var(--line);border-radius:4px;color:#475569;font-size:11px}
+
+  /* 移动端兼容 */
+  @media (max-width: 720px){
+    .card-body{grid-template-columns:1fr;padding:14px}
+    .card-cover{max-height:360px;max-width:240px;margin:0 auto}
+    .grid{padding:12px}
+    .header,.topbar,.struct{padding-left:14px;padding-right:14px}
+  }
+
+  .empty{padding:48px;text-align:center;color:var(--muted)}
+  .footer{padding:20px;text-align:center;color:var(--muted);font-size:11px;border-top:1px solid var(--line);margin-top:20px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>素材周报 · 完整报告 · 20260521</h1>
+  <span class="badge" id="countBadge">0 条</span>
+  <span class="sub" id="metaSub"></span>
+  <span id="publishToWebSlot" style="margin-left:auto"></span>
+</div>
+
+<div class="topbar">
+  <div class="group">
+    <span class="label">📊 指标标签</span>
+    <div class="chips" id="fMetricTags"></div>
+  </div>
+  <div class="group">
+    <span class="label">🩺 解析状态</span>
+    <span class="chip" id="chipOnlyFailed" title="仅显示尚未解析或解析不完整的素材">⚠ 仅显示失败</span>
+  </div>
+  <div class="group">
+    <span class="label">🏷️ 行业</span>
+    <div class="ms-dd" id="ddIndustry"><button class="ms-dd-btn">行业（全部）</button><div class="ms-dd-panel"></div></div>
+  </div>
+  <div class="group">
+    <span class="label">🧴 商品类型</span>
+    <div class="ms-dd" id="ddProduct"><button class="ms-dd-btn">商品类型（全部）</button><div class="ms-dd-panel"></div></div>
+  </div>
+  <div class="group">
+    <span class="label">👥 客户</span>
+    <div class="ms-dd" id="ddCustomer"><button class="ms-dd-btn">客户（全部）</button><div class="ms-dd-panel"></div></div>
+  </div>
+  <div class="group">
+    <span class="label">🏪 品牌</span>
+    <div class="ms-dd" id="ddBrand"><button class="ms-dd-btn">品牌（全部）</button><div class="ms-dd-panel"></div></div>
+  </div>
+  <div class="group">
+    <span class="label" title="AI 解析时自动打的素材类型一级标签">🏷️ 素材类型</span>
+    <div class="ms-dd" id="ddMatType"><button class="ms-dd-btn">素材类型（全部）</button><div class="ms-dd-panel"></div></div>
+  </div>
+  <div class="group">
+    <span class="label">排序</span>
+    <select id="sortBy">
+      <option value="增长量">按 高增长</option>
+      <option value="消耗">按 高消耗</option>
+      <option value="ctr" selected>按 ctr</option>
+      <option value="cvr">按 cvr</option>
+      <option value="完播3s">按 3s完播</option>
+      <option value="播放时长">按 播放时长</option>
+    </select>
+    <select id="sortDir">
+      <option value="desc" selected>降序</option>
+      <option value="asc">升序</option>
+    </select>
+  </div>
+  <div class="group">
+    <span class="label">显示</span>
+    <select id="topN">
+      <option value="5">Top 5</option>
+      <option value="10">Top 10</option>
+      <option value="15">Top 15</option>
+      <option value="20" selected>Top 20</option>
+      <option value="0">全部</option>
+    </select>
+  </div>
+  <button class="btn-clear" id="btnClearFilters">🧹 清空筛选</button>
+</div>
+
+<section class="common" id="commonSection" hidden>
+  <div class="common-head">
+    <span class="ico">🔥</span>
+    <span class="common-title">行业 Top 跑量素材的特征提炼</span>
+    <span class="common-sub" id="commonSub"></span>
+    <button id="cfRefreshBtn" title="基于当前完整素材实时重新提炼（不会写回缓存，仅在你这次浏览中生效）"
+            style="margin-left:auto;padding:6px 14px;background:#172033;color:#cbd2e0;border:1px solid #2b3447;border-radius:6px;font-size:12px;cursor:pointer;display:none">
+      🔄 刷新提炼
+    </button>
+  </div>
+  <div class="common-grid" id="commonGrid"></div>
+  <div id="cfRefreshMsg" style="margin-top:10px;font-size:12px;color:#94a3b8;display:none"></div>
+</section>
+
+<div id="grid" class="grid"></div>
+<div class="footer" id="footer"></div>
+
+<script>
+//=============== 内联数据 ===============
+const PAYLOAD = {"items": [{"md5": "c7c7a4941eae791c725f5ed962d15a82", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53xads4aahh4ahckxu4rur3oaef24aolsa.f0.mp4?dis_k=6e634c423ffe7ce9189bf8cd52d1be88&dis_t=1777557385&m=c7c7a4941eae791c725f5ed962d15a82", "素材创建时间": "20260430", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "面部洗护套装", "客户简称": "韩束", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 5.699179211000001, "ctr": 2.788499291270987, "cvr": 2.511783306485293, "增长量": 5.442650432000001, "完播3s": 87.98996261586521, "播放时长": 39.50669758009523}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "多明星x福利促销开篇"}, "跑量learning": "✅【模特】选用萨日娜、林心如、温峥嵘等知名中生代女演员，契合目标用户年龄层，增强『她在用我也想用』的信任感\n✅【痛点表达】精准击中『抗皱淡纹』核心焦虑，配合母亲节送礼场景，戳中送妈妈/自用双重需求\n✅【场景】明星居家背景+直播间促销氛围+短剧女王古装场景，多元场景轮播增强真实感与趣味性\n✅【效果呈现】采用『赠品堆叠视觉轰炸』+『价格牌撕毁』+『礼盒礼袋展示』组合，让用户直观感知超值性价比", "脚本拆解": "素材类型属于多明星背书+营销福利促销型。开篇以警报式文字『韩束宣布母亲节提前购一折』制造紧迫感，配合急促警报声抓取注意力。接着萨日娜、林心如、温峥嵘三位知名演员依次出镜，手持产品强调『只要一折』的核心利益点。短剧女王姜十七以古装造型出场，用『再不买就恢复299』制造紧迫感。重点展示疯狂赠品环节，通过『送的比买的还要多』的视觉堆叠呈现4瓶提亮大水、4瓶紧致大乳、4罐抗皱面霜、20支美白淡斑次抛精华的超值福利。结尾展示限定礼盒礼袋，以『福利不等人』引导进入直播间下单。", "前3s内容解析": "0-1s：『刚刚韩束宣布母亲节一折』大字冲击\n1-2s：急促警报声持续营造紧迫氛围\n2-3s：蓝色背景白云元素强化视觉记忆", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "警报式文字『母亲节提前购一折』制造紧迫感"}, {"name": "明星背书", "time": "3-11s", "content": "萨日娜、林心如、温峥嵘依次出镜强调一折"}, {"name": "达人种草", "time": "12-17s", "content": "短剧女王姜十七古装出镜制造稀缺紧迫感"}, {"name": "价格促销", "time": "18-27s", "content": "撕掉299价格牌，强调23周年庆一折福利"}, {"name": "赠品堆砌", "time": "28-53s", "content": "展示4瓶大水+4瓶大乳+4罐面霜+20支精华"}, {"name": "引导下单", "time": "54-66s", "content": "展示限定礼盒礼袋，引导进入直播间购买"}], "核心卖点": ["一折超低价", "23周年庆福利", "母亲节送礼", "多明星推荐", "抗皱淡纹功效", "海量赠品", "限定礼盒包装", "买一送多"], "黄金3sPrompt": "深蓝色背景画面中央快速弹出白色大字『刚刚 韩束宣布 母亲节提前购一折』，右侧配以白云卡通元素增加记忆点。配音使用急促的警报声，营造『重大新闻播报』的紧迫氛围。字体采用加粗醒目样式，『一折』二字用红色高亮突出。整体节奏快速紧凑，前3秒通过『警报声+重磅消息』双重刺激制造『错过即亏』的紧迫悬念，激发用户停留了解详情。"}, "cover": "assets/a4dd02160cbe8d36.jpg"}, {"md5": "678e64919a90f750ba5305b4a1e4acd5", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0bc3beb3yaadguajp4hemfursciexqeqhpca.f0.mp4?dis_k=318b008f6021911bf5852468ab96bf95&dis_t=1776938680&m=678e64919a90f750ba5305b4a1e4acd5&sha256=d2bdd830b28170c11894bf49fcdba6b9dcecf50d9ea277e7e792df67e1bb6eaa", "素材创建时间": "20260423", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "化妆水/爽肤水/面部喷雾水", "客户简称": "谷雨", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 1.191226427, "ctr": 3.023866468197555, "cvr": 5.3097345132743365, "增长量": -1.127827163, "完播3s": 72.52174579453578, "播放时长": 30.233744221879807}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星代言x多明星功效背书"}, "跑量learning": "✅【模特】选用秦岚、阿娇、甘露三位不同年龄段女明星，用『46岁紧致、42岁抗皱、37岁防松』建立同龄信任感\n✅【痛点表达】精准击中『面中不平整显老』『细纹』『松垮』等熟龄肌核心焦虑，让用户产生『我也需要』的代入感\n✅【场景】采用明星出镜+产品特写+护肤演示的组合场景，强化『明星都在用』的权威背书氛围\n✅【效果呈现】通过『素颜出门像化了妆』的效果描述+明星真实状态对比，让用户期待『用了也能像她们一样』", "脚本拆解": "素材类型属于多明星背书+促销福利型。开篇用面部不平整特写直击熟龄肌痛点，配合『显年龄』话术制造焦虑。紧接着代言人秦岚出镜，展示谷雨山参胶原固态喷雾的使用方法，强调洗脸后直喷的便捷性。重点展示产品质感和喷雾细腻度，用『素颜出门像化了妆』强化效果。随后快速切换秦岚、阿娇、甘露三位明星，分别对应紧致、去细纹、防松垮三大功效，用年龄数字增强说服力。最后抛出十周年庆大促，『买一送三』的超值福利配合秦岚口播，通过『承包全年护肤』引导下单转化。", "前3s内容解析": "0-1s：面部拉线特写展示不平整痛点\n1-2s：『女生面中不平整是很显年龄的』\n2-3s：『跟我一起用这个』引出产品", "素材结构": [{"name": "痛点引入", "time": "0-3s", "content": "面部不平整特写配合『显年龄』痛点话术"}, {"name": "明星背书", "time": "3-7s", "content": "秦岚出镜展示产品使用方法"}, {"name": "产品演示", "time": "7-16s", "content": "喷雾质感展示+素颜神器效果描述"}, {"name": "多明星功效", "time": "17-25s", "content": "秦岚紧致+阿娇抗皱+甘露防松三重背书"}, {"name": "价格促销", "time": "26-32s", "content": "十周年庆价格直降+秦岚宠粉福利"}, {"name": "引导下单", "time": "33-40s", "content": "买一送三+承包全年护肤引导转化"}], "核心卖点": ["明星同款代言", "山参胶原成分", "固态喷雾质地", "紧致抗皱功效", "十周年庆大促", "买一送三福利", "素颜提亮效果", "洗脸后直喷便捷"], "黄金3sPrompt": "开场微距镜头特写女性面部，用手指轻拉皮肤展示面中不平整和松弛感，画面停留1秒强调问题。配音用焦虑感女声说『女生面中不平整是很显年龄的』，字幕同步弹出。第2秒切到另一位女性面部毛孔特写，强化真实痛点。第3秒画面转暖，配音切换为轻快语气『跟我一起用这个』，制造解决方案悬念。整体节奏从焦虑到希望，用痛点+解法两个钩子留住观众。"}, "cover": "assets/530680b68e1f822f.jpg"}, {"md5": "db1e7b07af6072d7fbbe0a225cd2b5d7", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53ruczwaafj4aapoxzdrur5dietogqlg2a.f0.mp4?dis_k=53e163c31cd195ab9ba6cd105be0297d&dis_t=1778162900", "素材创建时间": "20260507", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "洁面摩丝/泡沫", "客户简称": "起量", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.81211, "ctr": 3.6723934187801106, "cvr": 6.229372937293729, "增长量": null, "完播3s": 72.58755707471367, "播放时长": 44.0804960693955}, "analysis": {"素材类型": {"一级": "剧情反转", "二级": "家庭剧情x悬念误会反转"}, "跑量learning": "✅【模特】选用普通素人模特演绎家庭角色，妻子、丈夫、婆婆三角关系增强『这就是我生活』的代入感\n✅【痛点表达】精准击中『皮肤暗沉显老』『被老公嫌弃』『不如婆婆年轻』等中年女性核心焦虑\n✅【场景】公园偶遇+卧室冲突+居家护肤的生活化场景串联，去广告化呈现真实家庭日常\n✅【效果呈现】通过洁面乳净化深色液体的实验演示+使用前后肤色对比+丈夫态度180度反转，让美白效果可视化", "脚本拆解": "素材类型属于家庭剧情反转+产品种草型。开篇以『老公背着我做这种事』的误会悬念制造冲突，妻子撞见丈夫抱着白衣女子却发现是婆婆。接着卧室场景丈夫嫌弃妻子皮肤差，直言『你看起来比我妈还老』，戳中观众痛点。妻子发现婆婆的护肤秘密——草安堂美白洁面乳，开始偷偷试用。重点展示产品泡沫细腻、清洁力强的卖点，通过深色液体变清澈的实验强化美白功效。结尾妻子焕然一新，丈夫态度大反转变得热情亲昵，完成『变美逆袭』的情感闭环，最后引导直播间下单。", "前3s内容解析": "0-1s：男子从背后紧抱白衣女子\n1-2s：『老公竟然背着我做这种事』\n2-3s：妻子愤怒冲上前质问", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "误会场景：老公抱白衣女子制造出轨悬念"}, {"name": "剧情反转", "time": "3-37s", "content": "真相揭晓是婆婆噎住，妻子惊叹婆婆年轻"}, {"name": "痛点引入", "time": "38-72s", "content": "丈夫嫌弃妻子皮肤差，直言比婆婆还显老"}, {"name": "产品亮相", "time": "73-96s", "content": "妻子发现婆婆的护肤秘密草安堂洁面乳"}, {"name": "产品演示", "time": "97-147s", "content": "展示泡沫质地、上脸清洁过程及即时效果"}, {"name": "效果对比", "time": "148-178s", "content": "深色液体净化实验演示强清洁美白力"}, {"name": "限时促销", "time": "179-194s", "content": "直播间拍二发三、拍三发五优惠引导下单"}], "核心卖点": ["美白净肤", "深层清洁", "泡沫细腻", "拍二发三", "婆婆同款", "即时提亮", "温和不刺激"], "黄金3sPrompt": "中景镜头拍摄公园树后，男子从背后紧紧抱住白衣女子，动作暧昧。画面上方弹出红色大字『刚结婚的老公竟然背着我做这种事...』，配合男子喘气声营造紧张氛围。1.5秒后切到妻子愤怒表情特写，快步冲向两人。整体节奏紧凑，用『出轨误会』悬念制造强烈好奇心，激发观众停留看真相。"}, "cover": "assets/f8fc09712350995e.jpg"}, {"md5": "8f1cd1bae36c543704f8b3f1b5534417", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53ayd7aaahmiamnhh2wvur2bqe6adap4ca.f0.mp4?dis_k=744c03691305a1563dfa48c594ee35e0&dis_t=1778202339&m=8f1cd1bae36c543704f8b3f1b5534417&sha256=cdf345ff14f13720e8ead2ceb879f8e9ab29cad5d0c674962543eaa798463619", "素材创建时间": "20260508", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "贴片面膜", "客户简称": "慕可", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.725686155, "ctr": 7.852209044702202, "cvr": 99.95850622406638, "增长量": null, "完播3s": 70.17608385821342, "播放时长": 18.53345442049973}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星x福利促销混剪开篇"}, "跑量learning": "✅【模特】选用多位年轻女性博主展示真实肤质问题，增强『她和我一样』的代入感\n✅【痛点表达】精准击中『熬夜暗沉』『脸松脸垮』『抬头纹八字纹』『毛孔粗大』『闭口粉刺』等多重痛点\n✅【场景】直播间促销+居家护肤实测场景，营造真实囤货氛围，去广告化\n✅【效果呈现】采用面部特写对比+敷面膜过程展示+素颜效果呈现，让紧致提拉效果可感知", "脚本拆解": "素材类型属于明星背书+大促福利混剪型。开篇博主手持多盒面膜，配合『再不买就要恢复299』的紧迫感文案和『中秋大促』标签，制造囤货氛围。紧接着插入秦岚等明星推荐切片，快速建立品牌信任。随后展示多位女性面部痛点特写，包括暗沉、松弛、细纹、毛孔粗大、闭口等问题，精准戳中用户焦虑。重点展示面膜敷贴过程和核心成分卖点，强调海绵微针疏通毛孔、富勒烯类蛇毒肽紧致嫩肤的功效。结尾由张晨光夫妇出镜背书，再次强调『囤满半年量』的超值感，引导下单。", "前3s内容解析": "0-1s：博主手持多盒面膜，顶部飘字『再不买就恢复299』\n1-2s：『这可能是你今年囤面膜最狠的一次』\n2-3s：产品堆叠展示，切入明星推荐画面", "素材结构": [{"name": "促销开篇", "time": "0-3s", "content": "博主展示面膜+紧迫感文案制造囤货氛围"}, {"name": "明星背书", "time": "3-6s", "content": "秦岚等明星推荐切片快速建立信任"}, {"name": "福利轰炸", "time": "6-14s", "content": "主播展示买2发4送精华的超值赠品组合"}, {"name": "痛点引入", "time": "14-24s", "content": "多位女性面部痛点特写：暗沉松弛纹路毛孔闭口"}, {"name": "产品演示", "time": "24-34s", "content": "敷面膜过程+海绵微针富勒烯等成分卖点展示"}, {"name": "效果呈现", "time": "34-38s", "content": "素颜肌肤细腻光滑的使用效果展示"}, {"name": "引导下单", "time": "38-42s", "content": "张晨光夫妇背书+囤半年量话术引导购买"}], "核心卖点": ["明星推荐背书", "买2发4超值", "海绵微针成分", "富勒烯抗老", "类蛇毒肽紧致", "改善暗沉松弛", "疏通毛孔", "老国货品牌"], "黄金3sPrompt": "中景镜头拍摄年轻女性博主手持多盒黑色面膜礼盒，表情兴奋夸张，画面顶部飘出粉色横幅『再不买就要恢复299一盒了』制造紧迫感。配音用激动语气说『这可能是你今年囤面膜最狠的一次』，1.5秒快切至产品堆叠画面和明星推荐片段。节奏紧凑，前3秒用『限时低价+明星信任』双重钩子抓住用户停留。"}, "cover": "assets/31d470d42f99e3e2.jpg"}, {"md5": "ac4ea3223926286a5472521580891833", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0bc3cidpiaag4aaiy7plwvuryeqe6qjan5ca.f0.mp4?dis_k=ec5d243f0b245abfb716e3e1ebd8baf4&dis_t=1777170678&m=ac4ea3223926286a5472521580891833", "素材创建时间": "20260426", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "面部洗护套装", "客户简称": "自然堂", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.566706359, "ctr": 1.3927157958018137, "cvr": 0.9992006394884092, "增长量": null, "完播3s": 70.11743879403954, "播放时长": 17.156201524246306}, "analysis": {"素材类型": {"一级": "营销福利", "二级": "直播间赠品堆叠x老板加码"}, "跑量learning": "✅【模特】女主播专业亲和形象+电商总监出镜增强官方背书可信度\n✅【痛点表达】精准击中『送礼给妈妈婆婆』的节日送礼场景焦虑\n✅【场景】直播间+仓库货架背景营造货源充足、官方正品的信任氛围\n✅【效果呈现】采用『不断加码堆叠产品』的视觉奇观，让用户感知『买到就是赚到』", "脚本拆解": "素材类型属于直播间赠品堆叠+老板加码型。开篇主播手捧金色礼盒，以『一套给妈妈，一套给婆婆』切入送礼场景，快速建立消费动机。接着主播在桌面摆放4瓶水、4瓶乳等基础套装，展示产品阵容。随后电商总监出镜互动，要求『再加点』，主播惊讶回应『从没送过这么多』，营造破例优惠氛围。重点展示不断追加的4瓶精华、2罐面霜、2支眼霜、2支洁面及14支安瓶精华，形成满桌产品的视觉冲击。结尾引导观众进入直播间领取福利，完成转化闭环。", "前3s内容解析": "0-1s：主播捧金色礼盒『一套给妈妈』\n1-2s：『一套给婆婆』黄色大字幕弹出\n2-3s：桌面摆放四瓶正装精华水", "素材结构": [{"name": "开篇送礼场景", "time": "0-3s", "content": "主播捧礼盒提出『给妈妈给婆婆』送礼场景"}, {"name": "基础套装展示", "time": "3-7s", "content": "摆放4瓶水4瓶乳展示基础护肤套装"}, {"name": "老板互动加码", "time": "7-15s", "content": "电商总监出镜要求加赠品营造破例氛围"}, {"name": "赠品持续堆叠", "time": "15-25s", "content": "追加精华面霜眼霜洁面等正装产品"}, {"name": "安瓶精华加码", "time": "25-32s", "content": "加送14支贵妇安瓶精华两大盒装"}, {"name": "全量产品展示", "time": "32-36s", "content": "满桌产品形成强烈视觉冲击"}, {"name": "引导下单", "time": "36-39s", "content": "引导观众进入直播间领取福利"}], "核心卖点": ["官方旗舰店正品", "抗老护肤系列", "买一送多超值", "正装产品不是小样", "年度最大力度", "送礼双套装", "14支安瓶精华", "电商总监背书"], "黄金3sPrompt": "直播间场景，女主播双手捧起金色大礼盒面对镜头，背景是堆满自然堂纸箱的货架。配音用热情女声说『一套给妈妈』，1秒后切换画面主播将礼盒放桌上，黄色艺术字『一套给婆婆』从画面中心弹出。第3秒主播开始在红布桌面整齐摆放金色瓶身的正装精华水。整体节奏紧凑，用『送礼场景+产品堆叠』制造超值感悬念。"}, "cover": "assets/9af3bacd1f43733d.jpg"}, {"md5": "73edb0691936ad4d66450c9c4bc5a245", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b5364abgaaa2maj7r76lnurx5yecp3qae2a.f0.mp4?dis_k=facd4fbc31a90b1ea2cdb0e8d76ae4bb&dis_t=1778289716", "素材创建时间": "20260509", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "洁面乳", "客户简称": "起量", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.510786, "ctr": 2.451863332355939, "cvr": 4.555808656036446, "增长量": null, "完播3s": 74.94051106673523, "播放时长": 43.06573506165033}, "analysis": {"素材类型": {"一级": "剧情反转", "二级": "婆媳误会x悬念剧情开篇"}, "跑量learning": "✅【模特】选用普通家庭主妇形象，皮肤问题真实可见，增强『她和我一样』的代入感\n✅【痛点表达】精准击中『皮肤暗沉显老』『婆媳形象反差』『夫妻关系冷淡』等已婚女性核心焦虑\n✅【场景】户外公园+卧室+梳妆台多场景切换，用家庭日常场景强化真实感和代入感\n✅【效果呈现】采用『使用前后人物对比』+『深色液体清洁实验』+『丈夫态度反转』组合，让美白效果可视化可感知", "脚本拆解": "素材类型属于婆媳误会剧情反转+产品演示型。开篇用『老公背着我做这种事』的悬念文案配合暧昧画面制造误会，反转揭示是婆婆吃糖卡喉咙。接着在卧室场景展示丈夫嫌弃妻子皮肤差、拒绝亲近的矛盾冲突，将皮肤问题上升到婚姻危机。重点展示媳妇偷用婆婆护肤品的情节，通过产品上脸演示和深色液体清洁实验突出美白清洁力。加入婆婆口播介绍直播间优惠活动。结尾媳妇变美后丈夫态度180度大转弯，公主抱收尾，强化产品改变命运的情感诉求。", "前3s内容解析": "0-1s：『老公背着我做这种事』悬念字幕\n1-2s：男子紧闭眼睛用力表情特写\n2-3s：戴钻戒女手抓树枝暧昧暗示", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "暧昧误会画面+『老公背着我』悬念文案制造好奇"}, {"name": "剧情反转", "time": "3-37s", "content": "揭示是婆婆吃糖卡喉，媳妇发现婆婆皮肤年轻"}, {"name": "痛点引入", "time": "38-72s", "content": "丈夫嫌弃妻子皮肤差拒绝亲近，制造婚姻危机"}, {"name": "产品亮相", "time": "73-96s", "content": "媳妇偷看婆婆护肤品，展示草安堂洁面乳"}, {"name": "产品演示", "time": "97-179s", "content": "上脸试用+深色液体清洁实验展示美白清洁力"}, {"name": "效果呈现", "time": "180-194s", "content": "媳妇变美丈夫惊艳，公主抱收尾强化效果"}], "核心卖点": ["美白洁面", "深层清洁", "去黑去黄", "国妆特字认证", "拍二发三", "婆婆同款", "改善肤质", "直播间优惠"], "黄金3sPrompt": "中景镜头拍摄男子背对镜头靠在树旁，身体前倾做出暧昧动作，树后隐约可见穿白裙女子。画面顶部大字弹出『刚结婚的老公竟然背着我做这种事...』悬念文案。1秒后快切男子面部特写，表情吃力狰狞。2秒再切戴钻戒女手紧抓树枝的暧昧细节。整体节奏紧凑，用误会剧情+悬念字幕双重钩子制造『出轨既视感』，激发观众好奇心停留看反转。"}, "cover": "assets/f8fc09712350995e.jpg"}, {"md5": "3537946c97d858c01e3a300a709f721a", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b5334aceaaarmakovsh5burvxyeelpqaisa.f0.mp4?dis_k=04eaf2f91ecf9170b144d18b38c9a2da&dis_t=1766374424&m=3537946c97d858c01e3a300a709f721a&sha256=354f61846219c00dc4149d5fd08d813a6d1a355982cf1794587c333d742ae169", "素材创建时间": "20251222", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "有色唇膏/口红", "客户简称": "安美", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.491450709, "ctr": 3.359833907231112, "cvr": 11.303692539562924, "增长量": -1.20518135, "完播3s": 69.96147458565409, "播放时长": 11.132524056609428}, "analysis": {"素材类型": {"一级": "达人测评", "二级": "达人实测x不沾杯效果对比"}, "跑量learning": "✅【模特】选用'46岁阿姨'人设，强化'逆龄感'，让目标用户产生'她能我也能'的代入感\n✅【痛点表达】精准击中'口红沾杯''掉色''拔干'等日常使用痛点，引发用户共鸣\n✅【场景】高铁出行+室内试色+商场镜前，真实生活场景增强可信度，去广告化\n✅【效果呈现】采用'喝水不留印''纸巾擦拭不掉色'等实测对比，让持妆效果肉眼可见", "脚本拆解": "素材类型属于达人实测+效果对比型。开篇以'46岁阿姨逆袭成功被误以为大学生'的悬念文案吸引眼球，配合高铁场景展示模特摘口罩露出精致妆容。接着切入口红试色环节，展示06肉桂奶茶色的上唇效果，强调丝滑质地和雾面哑光质感。重点演示不沾杯测试，模特喝水后杯口无印记，再用纸巾擦拭嘴唇证明不掉色不脱妆。穿插多位模特展示上妆效果，强调显白提气色、近看温柔远看有气质的妆效。结尾引导进入直播间，用'买一送多'的促销信息刺激下单转化。", "前3s内容解析": "0-1s：高铁场景+'46岁阿姨逆袭'悬念文案\n1-2s：模特摘下口罩露出精致面容\n2-3s：嘴唇特写涂抹肉桂奶茶色口红", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "'46岁阿姨被误认大学生'文案制造好奇"}, {"name": "产品亮相", "time": "3-8s", "content": "口红色号展示，强调肉桂奶茶色显白"}, {"name": "产品演示", "time": "8-20s", "content": "上唇试色展示丝滑质地和雾面哑光效果"}, {"name": "效果对比", "time": "20-35s", "content": "喝水不沾杯+纸巾擦拭不掉色实测对比"}, {"name": "多场景演示", "time": "35-45s", "content": "多位模特展示上妆效果，强调气质提升"}, {"name": "引导下单", "time": "45-50s", "content": "买一送多促销信息，引导直播间购买"}], "核心卖点": ["不沾杯不掉色", "雾面哑光质感", "显白提气色", "丝滑不卡纹", "不拔干", "防水防汗", "买一送多"], "黄金3sPrompt": "高铁车厢内景，中景拍摄一位气质女性戴着口罩坐在靠窗位置，画面上方弹出醒目文字'46岁阿姨逆袭成功，被误以为大学生'。1秒后女性缓缓摘下口罩，露出精致妆容和饱满唇色，镜头快速推进至嘴唇特写。配音保持安静只有轻柔背景音乐，用'年龄反差+悬念文案'双重钩子制造停留欲望，激发观众好奇她用了什么产品。"}, "cover": "assets/26f7498cf4d3e033.jpg"}, {"md5": "63f4b56678cd6439a1e7a434917cd3f3", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53kmdciaagxqano2xhmvuryuyeerjqmjca.f0.mp4?dis_k=b8631bf9d66118877fd41579dbaf3dce&dis_t=1776415734&m=63f4b56678cd6439a1e7a434917cd3f3", "素材创建时间": "20260417", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "洁面乳", "客户简称": "起量", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.375026, "ctr": 2.2535908865775136, "cvr": 17.692307692307693, "增长量": -0.7308840459999999, "完播3s": 70.06519673688693, "播放时长": 15.69428592068193}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星口播x达人实测类"}, "跑量learning": "✅【模特】选用生活化素人女性在车内场景分享，增强『她和我一样』的同龄代入感\n✅【痛点表达】精准击中『肤色暗沉』『毛孔粗大』『早起不想化妆』等具体痛点\n✅【场景】车内自拍+居家洗脸+演播室口播多场景切换，真实感与权威感兼顾\n✅【效果呈现】采用洗脸前后即时对比+肤色亮度对比+微距特写，让美白效果可感知", "脚本拆解": "素材类型属于明星口播+达人实测对比型。开篇女性在车内用『瞒着老公偷偷用了美白洗面奶』制造悬念，展示白皙肌肤引发好奇。接着演员于震出镜推荐草安堂美白洁面乳，强调『洗卸养三合一』的多功能卖点。重点展示产品质地和丰富泡沫，提出高浓度烟酰胺和熊果苷两大核心成分。多位博主演示洗脸过程，强调温和不刺激、洗后水润透亮的使用体验。演员杨若兮再次背书，展示大容量规格。结尾进入促销环节，49元单瓶价、买三送二的超值活动配合痛点总结，引导下单转化。", "前3s内容解析": "0-1s：车内女性捂嘴，字幕『瞒着老公偷偷用了美白洗面奶』\n1-2s：女性移开手露出灿烂笑容展示白皙肌肤\n2-3s：女性开心地对镜头说话分享秘密", "素材结构": [{"name": "开篇悬念", "time": "0-6s", "content": "车内女性用『瞒着老公』话题制造悬念，展示美白效果"}, {"name": "明星背书", "time": "7-14s", "content": "演员于震出镜推荐，强调洗卸养三合一功能"}, {"name": "成分卖点", "time": "15-19s", "content": "展示产品质地泡沫，介绍烟酰胺熊果苷成分"}, {"name": "达人实测", "time": "20-27s", "content": "多位博主演示洗脸，展示温和水润洗后效果"}, {"name": "二次背书", "time": "28-33s", "content": "演员杨若兮出镜，展示110g大容量规格"}, {"name": "促销引导", "time": "34-45s", "content": "49元单瓶，买二送一买三送二超值活动"}, {"name": "痛点总结", "time": "46-57s", "content": "针对毛孔暗沉痛点总结，引导下单转化"}], "核心卖点": ["明星推荐背书", "洗卸养三合一", "高浓度烟酰胺", "熊果苷美白", "温和不刺激", "洗后水润不紧绷", "110g大容量", "买三送二超值"], "黄金3sPrompt": "车内自拍视角，年轻女性系着安全带，右手捂嘴做出『有秘密』的神秘表情。画面中央大字幕弹出『瞒着老公偷偷用了美白洗面奶』制造八卦悬念。1秒后女性移开手，露出灿烂自信笑容，展示白皙透亮的面部肌肤。配合轻快抒情背景音乐，整体节奏轻松生活化。前3秒用『偷偷+变美秘密』双重钩子激发女性用户好奇心，暗示产品效果惊艳到需要藏着用。"}, "cover": "assets/4a4b2a4616bcd888.jpg"}, {"md5": "d9edd3f884fb1bb091b56c4b51b9d3cf", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b532ybncaaclmalto62dnurrvqe2hlafuka.f0.mp4?dis_k=ff99a2ed60ab3c0b75650faaa0689c52&dis_t=1775790329&m=d9edd3f884fb1bb091b56c4b51b9d3cf&sha256=472b6f0fcf88a4e7024a7b0973f9dffc8b3bab1ecf03ad8d0ba824945e1e5c0e", "素材创建时间": "20260410", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "隔离霜/妆前乳", "客户简称": "M3", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.314294556, "ctr": 2.2277543725264906, "cvr": 16.045845272206304, "增长量": null, "完播3s": 82.74660160334611, "播放时长": 36.470495362147226}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星x直播带货开篇"}, "跑量learning": "✅【模特】选用明星曹颖作为品牌创始人出镜，以个人名誉背书增强信任感，精致妆容和良好肤态成为产品活招牌\n✅【痛点表达】精准击中『不会化妆』『假白油腻』『卡粉留白汤』『夏季防晒刚需』等女性底妆痛点\n✅【场景】直播间+实验室对比测试场景，紫外线灯实验增强科学说服力，去硬广化严重\n✅【效果呈现】采用『紫外线灯对比实验』+『纸巾清爽度测试』+『手背质地展示』让防晒效果和肤感可视化", "脚本拆解": "素材类型属于明星直播带货+实验对比型。开篇模特展示上妆过程，配合『女人不化妆是没有气质的』话术引发焦虑，随即亮出M3防晒妆前乳产品。接着明星曹颖以品牌创始人身份出镜，强调『这是我自己的品牌，安心拍』，用个人信誉背书并给出30元直降优惠。重点展示SPF50/PA+++防晒参数和乳液质地，通过纸巾按压证明清爽不黏腻。核心环节用紫外线灯做对比实验，直观呈现防晒阻隔效果。结尾强调三合一功效、不假白不留白汤，配合『价格要恢复』制造紧迫感引导囤货下单。", "前3s内容解析": "0-1s：模特涂抹妆前乳配『女人不化妆』\n1-2s：『是没有气质的』焦虑话术\n2-3s：产品亮相配『不会化妆就用这个』", "素材结构": [{"name": "痛点+悬念开场", "time": "0-4s", "content": "模特上妆画面配合气质焦虑话术引出产品"}, {"name": "明星背书", "time": "5-16s", "content": "曹颖以品牌创始人身份推荐并给出30元优惠"}, {"name": "卖点轰炸", "time": "17-35s", "content": "展示SPF50防晒参数和乳液质地清爽不黏"}, {"name": "多功能展示", "time": "36-45s", "content": "强调三合一功效、不假白、防水防汗"}, {"name": "效果对比", "time": "46-60s", "content": "紫外线灯实验直观对比防晒阻隔效果"}, {"name": "引导下单", "time": "60-68s", "content": "强调限时优惠即将恢复催促囤货下单"}], "核心卖点": ["明星自有品牌", "SPF50高倍防晒", "三效合一", "乳液质地清爽", "不假白不油腻", "防水防汗持久", "直降30元优惠", "紫外线实验验证"], "黄金3sPrompt": "近景镜头拍摄模特用刷子涂抹妆前乳的上妆过程，画面停留1秒。配音用成熟女声说『女人不化妆是没有气质的』制造焦虑钩子，第2秒字幕弹出『是没有气质的』强化痛点。第3秒快速切换到海滩背景下的产品特写，配音接『不会化妆的你就用这个』给出解决方案。整体节奏紧凑，用『焦虑制造+即时解药』的反差结构在3秒内完成注意力抓取。"}, "cover": "assets/cbd4af11c670f0a0.jpg"}, {"md5": "18aa600475aef31c43866ee411e43366", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53tudx6aahteaanmx52zurzhiep6oqo72a.f0.mp4?dis_k=fc1c309dd18a86c9419661f4bc295bc9&dis_t=1778022673&m=18aa600475aef31c43866ee411e43366", "素材创建时间": "20260506", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "贴片面膜", "客户简称": "谷雨", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.310247807, "ctr": 1.2449145646867372, "cvr": 8.49673202614379, "增长量": null, "完播3s": 72.35983297523006, "播放时长": 20.135339276869736}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星背书+反差爆改剧情"}, "跑量learning": "✅【模特】选用50岁大妈形象，展示色斑、黄黑皮、松弛等真实问题肌肤，精准触达中年女性『她和我一样』的代入感\n✅【痛点表达】精准击中『大块黑斑』『黄黑皮暗沉』『脸垮松弛』『熬夜肤差』等成熟肌常见痛点\n✅【场景】化妆店剧情+居家护肤演示+多城市街头采访+户外酷炫成片，真实感与高级感兼具\n✅【效果呈现】采用『大妈→御姐』极端反差对比，配合面膜质地微距特写和素人证言，让美白提亮效果可视化", "脚本拆解": "素材类型属于明星背书+反差爆改剧情型。开篇以年轻男生走进化妆店向大妈提出化妆需求作为悬念钩子，大妈夸张的化妆手法制造笑点。接着展示大妈卸妆后的真实素颜状态，放大色斑、黄黑皮、松弛等肌肤痛点。重点展示谷雨流金面膜的产品质地与核心卖点，强调极光甘草美白淡斑、活性微囊弹嫩提亮、次抛保鲜等功效，并插入演员何宣林、向涵之的明星背书画面。加入多位不同城市素人的街头采访证言，增强可信度。结尾呈现大妈蜕变为酷飒御姐吉他手的惊艳反转，配合直播间高性价比促销信息引导下单。", "前3s内容解析": "0-1s：男子侧脸问『咱这能化妆吗』\n1-2s：大妈回答『能，化妆20』\n2-3s：男子展示手机上浓妆模特照片", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "男生进店要求大妈化夸张妆容，制造好奇"}, {"name": "痛点引入", "time": "3-28s", "content": "大妈粗犷化妆引发笑点，卸妆后展示色斑黄黑皮等真实痛点"}, {"name": "产品亮相", "time": "28-45s", "content": "谷雨流金面膜登场，展示金色啫喱质地与活性微囊"}, {"name": "卖点轰炸", "time": "45-60s", "content": "极光甘草美白淡斑、次抛保鲜、分龄使用建议"}, {"name": "明星背书", "time": "60-70s", "content": "演员何宣林口播推荐+向涵之同款背书"}, {"name": "用户证言", "time": "70-115s", "content": "多城市街头采访素人分享提亮细腻熬夜救急体验"}, {"name": "限时促销", "time": "115-122s", "content": "直播间拍一发多，强调高性价比诱导下单"}, {"name": "惊艳反转", "time": "122-143s", "content": "大妈蜕变酷飒御姐吉他手，视觉冲击收尾"}], "核心卖点": ["美白淡斑", "改善黄黑皮", "提亮肤色", "次抛保鲜", "极光甘草专利", "明星同款", "活性微囊", "高性价比"], "黄金3sPrompt": "中景镜头拍摄年轻男生侧脸走进杂乱的化妆小店，背景是各类小商品，男生开口问『姐，咱这儿能化妆吗』，语气带点调侃。画面快切到50岁大妈店主正脸，穿着朴素白衬衫，大妈干脆回答『能，化妆20』。男生立刻掏出手机展示一张浓妆艳抹的模特照片说『就化这个妆』，制造『土味小店x高难度妆容』的反差悬念，激发观众好奇心停留看后续反转。"}, "cover": "assets/0edf709908074d94.jpg"}, {"md5": "4a85aa7a268a36cd3a3fc4d51fa4d259", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53jucmeaae7eajzkgjyvutytoeyjgqjqsa.f0.mp4?dis_k=74a5d5bbdda72c4c2c5016d7001c78ca&dis_t=1775066807", "素材创建时间": "20260402", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "贴片面膜", "客户简称": "谷雨", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.283720045, "ctr": 1.1007085020242915, "cvr": 1.5030946065428823, "增长量": null, "完播3s": 73.39808693725301, "播放时长": 47.52932404141215}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "多明星x感谢体口播开篇"}, "跑量learning": "✅【模特】选用陈妍希、姜妍、王琳、王艳、秦岚等多位知名女星，增强『明星同款』的信任背书\n✅【痛点表达】精准击中『断崖式衰老』『松垮』『细纹暗沉』『熬夜蜡黄』等30+女性核心焦虑\n✅【场景】明星口播+居家护肤实测+产品特写组合，既有权威感又有真实生活代入感\n✅【效果呈现】采用『涂抹即时提亮』『微距肤质特写』『果冻质地展示』让紧致水润效果可感知", "脚本拆解": "素材类型属于多明星背书+达人演示型。开篇快速切换陈妍希、姜妍、王琳、王艳、秦岚五位明星的『感谢青岚』口播，秦岚手持产品引出『皮秒膏可以在家做』的钩子。接着用『断崖式衰老』『垮脸人的命根子』等痛点话术戳中目标人群焦虑。重点展示谷雨山参胶原面膜的果冻质地、独立小金蛋包装和涂抹即时提亮效果，强调含高纯度极光甘草和人参皂苷CK成分。多位模特演示刷涂按摩手法，呈现紧致水润的使用效果。结尾以宠粉活动和新品福利引导下单转化。", "前3s内容解析": "0-1s：陈妍希红毯造型『我要感谢青岚』\n1-2s：姜妍出镜『我是姜妍，我要感谢青岚』\n2-3s：王琳微笑口播『我是王琳，我要感谢青岚』", "素材结构": [{"name": "明星背书开篇", "time": "0-9s", "content": "五位明星依次口播感谢，秦岚引出皮秒膏概念"}, {"name": "痛点引入", "time": "9-14s", "content": "『断崖式衰老』『垮脸人命根子』戳中抗老焦虑"}, {"name": "产品亮相", "time": "14-23s", "content": "展示谷雨山参胶原面膜包装与果冻质地"}, {"name": "卖点轰炸", "time": "23-36s", "content": "独立包装、极光甘草、人参皂苷CK等成分卖点"}, {"name": "多场景演示", "time": "36-50s", "content": "多位模特刷涂按摩，展示即时紧致提亮效果"}, {"name": "促销引导", "time": "50-57s", "content": "宠粉活动+新品福利，呼吁趁活动囤货"}], "核心卖点": ["多明星同款", "抗皱紧致", "美白淡斑", "人参皂苷CK", "极光甘草成分", "独立小金蛋包装", "宠粉福利活动", "居家皮秒级护理"], "黄金3sPrompt": "快节奏切换三位知名女星特写画面，每人停留约1秒，均为精致妆容造型。第一位女星微笑说『我是XXX，我要感谢青岚』，立刻切换第二位重复同样句式，再切第三位。字幕同步显示『知名明星 XXX同款』标签。通过多明星连续出镜的高密度信息轰炸制造权威感和好奇心，让观众产生『这么多明星都在感谢的是什么』的悬念。"}, "cover": "assets/ed01b8f7e70f6a5b.jpg"}, {"md5": "87b8bcd91eccc7d084fae5423127b65e", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53syaguaaamuamwdogefurxfqenklaa2sa.f0.mp4?dis_k=328a79662b5b0e63f10133a334107810&dis_t=1774805330&m=87b8bcd91eccc7d084fae5423127b65e&sha256=074eb6d4ab51329a823aae98ed5936b90f8c5df3f45f5bb46ce8afd5fe2a9876", "素材创建时间": "20260330", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "化妆水/爽肤水/面部喷雾水", "客户简称": "谷雨", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.276060501, "ctr": 1.954162976085031, "cvr": 4.2492917847025495, "增长量": null, "完播3s": 81.81818181818181, "播放时长": 40.89501147985807}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "手绘素描x多明星背书开篇"}, "跑量learning": "✅【模特】选用多位明星（胡兵、何泓姗、秦岚、王琳）做背书，增强品牌信任感与高端定位\n✅【痛点表达】精准击中『泪沟显老』『皱纹』『熬夜脸垮』等抗衰焦虑痛点\n✅【场景】直播间分享+录节目后台+日常护肤等真实场景，去广告化增强代入感\n✅【效果呈现】采用『手绘素描对比』+『使用前后对比』+『微距质地特写』让紧致效果可感知", "脚本拆解": "素材类型属于手绘素描开篇+多明星背书型。开篇用素描画手指按压泪沟的创意画面，配合『女人有泪沟是很显老的』直击抗衰焦虑。接着展示谷雨元参胶原喷雾产品特写与细腻喷雾效果，强调胶原养肤概念。重点展示胡兵、何泓姗、秦岚等多位明星的使用切片与推荐证言，建立高端品牌背书。穿插模特上脸演示与前后对比，强化『去皱』而非『淡皱』的核心卖点。结尾展示礼盒包装与买一送一周年庆活动，通过高性价比促销引导下单转化。", "前3s内容解析": "0-1s：素描画手指按压泪沟特写\n1-2s：『女人有泪沟是很显老的』\n2-3s：棕色喷雾瓶身产品亮相", "素材结构": [{"name": "痛点+悬念开场", "time": "0-3s", "content": "素描画泪沟特写配合显老痛点文案制造焦虑"}, {"name": "产品亮相", "time": "3-10s", "content": "喷雾产品特写与细腻雾化效果展示"}, {"name": "效果演示", "time": "10-17s", "content": "模特上脸展示水润透亮肤质与胶原质地"}, {"name": "明星背书", "time": "17-47s", "content": "胡兵、何泓姗、秦岚等明星推荐切片与使用证言"}, {"name": "卖点轰炸", "time": "47-60s", "content": "强调『去皱非淡皱』与高浓度品质承诺"}, {"name": "效果对比", "time": "60-75s", "content": "使用前后对比展示紧致效果与湿敷演示"}, {"name": "限时促销", "time": "75-92s", "content": "周年庆买一送一礼盒装促销引导下单"}], "核心卖点": ["多明星同款", "去皱非淡皱", "固态喷雾技术", "高浓度胶原", "买一送一", "周年庆活动", "紧致抗衰", "素颜出门"], "黄金3sPrompt": "开场采用素描画特写镜头，画中年轻女性面部清晰可见，一只手指轻轻按压眼下泪沟位置。配音用成熟女声说『女人有泪沟是很显老的』，语气略带叹息感。第2秒快速切换至棕色透明喷雾瓶产品特写，瓶内可见细密金色微粒流动。第3秒展示喷雾喷出瞬间的细腻水雾效果。整体节奏紧凑，用『素描艺术感+痛点文案+产品悬念』三重钩子制造停留。"}, "cover": "assets/7ce19a0a7aabea60.jpg"}, {"md5": "e41f9fcc134007503a3c734fe5010d6e", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0bc33mcckaaevyakpzgdd5ur7wyeexnqijka.f0.mp4?dis_k=881936d02118a6e923af867e00d2a5d0&dis_t=1774682757", "素材创建时间": "20260328", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "洁面乳", "客户简称": "起量", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.255438707, "ctr": 3.9362640130998874, "cvr": 8.64, "增长量": -0.3913931009999999, "完播3s": 93.7729578450236, "播放时长": 53.8677087304613}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星口播x福利引流开篇"}, "跑量learning": "✅【模特】选用中年女性开篇，同龄感强，增强『她和我一样』的代入感，配合男性权威口播建立信任\n✅【痛点表达】精准击中『暗沉蜡黄』『晒黑』『不显老』等熟龄女性核心护肤焦虑\n✅【场景】居家洗脸场景+工厂生产线画面，强调『工厂直发』增强品质信任感\n✅【效果呈现】多位女性洗脸后肤色提亮的前后对比，配合产品质地特写让效果可感知", "脚本拆解": "素材类型属于明星背书+多人口播福利引流型。开篇中年女性微笑出镜，用『女人要想不显老很简单』的话术制造好奇，随即切到产品展示强调美白提亮、保湿淡斑、清洁养肤五效合一。接着男性口播强调认准官方正品，展示工厂研发生产线画面建立品质背书。重点加入明星黄海冰、杨若兮的推荐切片，宣布全场一折的促销力度。结尾通过周年庆福利活动收尾，『拍2送1、拍3送2』的买赠政策引导下单，强调国货性价比。", "前3s内容解析": "0-1s：中年女性微笑出镜对镜头说话\n1-2s：『女人要想不显老真的很简单』\n2-3s：洗手台场景展示草安堂洁面乳", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "中年女性出镜，抛出『不显老秘诀』话题制造好奇"}, {"name": "产品亮相", "time": "3-12s", "content": "展示草安堂洁面乳，强调五效合一功效"}, {"name": "卖点轰炸", "time": "12-26s", "content": "美白提亮保湿淡斑清洁养肤，工厂直发品质保障"}, {"name": "品牌背书", "time": "26-74s", "content": "男性口播强调正品，展示工厂研发生产线画面"}, {"name": "明星背书", "time": "74-105s", "content": "黄海冰杨若兮出镜推荐，宣布全场一折福利"}, {"name": "限时促销", "time": "105-126s", "content": "周年庆活动买2送1买3送2，强调性价比"}], "核心卖点": ["五效合一", "美白提亮", "保湿淡斑", "工厂直发", "明星推荐", "周年庆一折", "买二送一", "国货品牌"], "黄金3sPrompt": "中景镜头拍摄一位状态良好的中年女性，穿白色针织衫戴丝巾，面带微笑直视镜头。配音用亲切女声说『其实女人要想不显老真的很简单』，字幕同步弹出。第2秒保持人物近景，制造悬念停顿。第3秒快切到洗手台场景，手持蓝白色洁面乳入画，配音接『就是你每天洗脸的时候』。节奏先稳后快，用『不显老秘诀』悬念钩住观众。"}, "cover": "assets/4d9cabaee887d265.jpg"}, {"md5": "999b173ad7d2e20d489a07ec287d0afd", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53gycc4aaeuqaan2pxezur4nqefy3ailsa.f0.mp4?dis_k=aa2cb440bfe257318706661cfd4e101d&dis_t=1777543368&m=999b173ad7d2e20d489a07ec287d0afd&sha256=39cddd889ce8dbf7505be3698ebfd5fdd1e4f22f4d55e9ef56fe480fb404a93f", "素材创建时间": "20260430", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "涂抹面膜", "客户简称": "必扬", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.252712391, "ctr": 3.075403251927188, "cvr": 0.210637177461822, "增长量": -0.15555979, "完播3s": 85.35214207959918, "播放时长": 50.684518536415126}, "analysis": {"素材类型": {"一级": "营销福利", "二级": "主播口播x福利促销开篇"}, "跑量learning": "✅【模特】采用一男一女双主播组合，男性主导讲解增强公信力，女性配合展示增添亲和力\n✅【痛点表达】精准击中『平时舍不得买』的价格痛点，用囤货心理撬动购买决策\n✅【场景】户外阳光场景+产品堆叠展台，营造轻松愉快的促销氛围，弱化硬广感\n✅【效果呈现】通过『50片到手』的数量冲击+精美礼盒展示，让用户感知超高性价比", "脚本拆解": "素材类型属于主播口播+营销福利型。开篇男女双主播站在产品展台前，字幕直接打出『五一面膜活动来啦』，配合『平时舍不得买』的话术精准锁定价格敏感人群。接着强调『五一一年一次大活动就在今天』，用时间稀缺性制造紧迫感。重点展示产品数量优势，采用递进否定手法『不是10片、不是20片、不是30片』，最终揭晓『通通50片』形成数字冲击。结尾明确喊话『想省钱、想囤货的富婆小姐姐们』，引导用户进入直播间完成转化闭环。", "前3s内容解析": "0-1s：双主播出镜，字幕『五一面膜活动来啦』\n1-2s：『平时舍不得买的粉丝们看过来』\n2-3s：『五一一年一次大活动就在今天』", "素材结构": [{"name": "福利开篇", "time": "0-3s", "content": "双主播出镜，直接抛出五一面膜活动信息"}, {"name": "痛点引入", "time": "3-5s", "content": "『平时舍不得买』锁定价格敏感用户"}, {"name": "稀缺性强调", "time": "5-8s", "content": "『一年一次大活动就在今天』制造紧迫感"}, {"name": "卖点轰炸", "time": "8-12s", "content": "递进否定『不是10片20片30片』强化期待"}, {"name": "利益揭晓", "time": "12-14s", "content": "『通通50片到手』数字冲击呈现超值感"}, {"name": "引导下单", "time": "14-17s", "content": "喊话目标人群，引导进入直播间"}], "核心卖点": ["五一大促", "50片到手", "一年一次活动", "省钱囤货", "玫瑰发酵面膜", "超值礼盒"], "黄金3sPrompt": "户外阳光场景，一男一女双主播站在堆满紫色面膜礼盒的展台后方，男主播手持两片面膜向镜头展示。画面顶部立即弹出醒目黄色字幕『五一面膜活动来啦』，配音用热情语调说『平时舍不得买我们这个必扬玫瑰发酵面膜的粉丝们，看过来哦』。节奏明快，前3秒用『舍不得买+活动来了』制造价格痛点与福利悬念的双重钩子，激发用户停留欲望。"}, "cover": "assets/109eb0bcbccd6395.jpg"}, {"md5": "46dec4c111707e58127cfc55caddcbe5", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0bc3hucrsaaffqaeoyhrj5ur6piede6qkgka.f0.mp4?dis_k=0d9758e0f509fcf00f794b40332d4698&dis_t=1777622554&m=46dec4c111707e58127cfc55caddcbe5", "素材创建时间": "20260501", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "礼盒套装", "客户简称": "谷雨", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.2457991149999999, "ctr": 4.987277353689567, "cvr": 2.380952380952381, "增长量": null, "完播3s": 88.84598884598884, "播放时长": 39.70791788856305}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星同款x母亲节福利开篇"}, "跑量learning": "✅【模特】选用明星秦岚、孙怡做背书，配合亲和力主播讲解，明星高级感+主播亲切感双重信任加持\n✅【痛点表达】精准击中『岁月带来的垮脸烦恼』『素颜状态差』等熟龄女性核心抗老焦虑\n✅【场景】中式雅致直播间+产品堆叠陈列，营造高端礼赠氛围，强化母亲节送礼场景代入感\n✅【效果呈现】通过『素颜状态像回到20年前』的效果承诺+人参皂苷CK、胶原原肽等成分背书，让用户相信产品价值", "脚本拆解": "素材类型属于明星背书+母亲节促销福利型。开篇用『母亲节半价』的强利益点配合产品动态闪现制造紧迫感，迅速抓住用户注意力。接着切入明星秦岚和孙怡手持礼盒的画面，用『明星同款护肤』建立品牌信任背书。重点展示买一送一机制，主播逐一拆解礼盒内含的极光紧致水、山参抗皱乳、山参胶原霜等八件套产品，强调『拍一发八、拍二发十六』的超值感。穿插人参皂苷CK和大牌同源胶原原肽等成分科普，主打紧致抗皱功效。结尾用『妈妈素颜像回到20年前』的情感话术加上『福利价格得靠抢』引导下单转化。", "前3s内容解析": "0-1s：『什么？母亲节半价！』气泡框弹出\n1-2s：产品特写配合『半价』大字闪现\n2-3s：礼盒开箱+五彩纸屑特效营造惊喜", "素材结构": [{"name": "营销福利开篇", "time": "0-3s", "content": "母亲节半价强利益点+产品动态闪现制造紧迫感"}, {"name": "明星背书", "time": "3-7s", "content": "秦岚、孙怡手持礼盒出镜，明星同款增加信任"}, {"name": "核心机制", "time": "8-14s", "content": "主播讲解买一送一机制，礼盒堆叠展示优惠力度"}, {"name": "产品拆解", "time": "15-25s", "content": "逐一展示八件套单品，清单式呈现到手内容"}, {"name": "成分背书", "time": "26-32s", "content": "人参皂苷CK+胶原原肽成分科普，强调抗皱功效"}, {"name": "情感促单", "time": "33-40s", "content": "『素颜像回到20年前』情感话术+福利靠抢引导下单"}], "核心卖点": ["母亲节半价", "明星同款", "买一送一", "拍一发八", "人参皂苷CK", "胶原原肽成分", "紧致抗皱", "精美礼盒"], "黄金3sPrompt": "粉色背景下弹出气泡对话框，文字『什么？母亲节半价！』配合惊讶语气快速念出。画面立刻切换到护肤品套装特写，产品周围金色光效环绕，背景大字『半价』闪烁强调。第3秒切到打开的精美礼盒俯拍，五彩纸屑从上方飘落，黄色艺术字『母亲节半价』居中弹出。整体节奏紧凑，用价格冲击+视觉惊喜双重钩子在3秒内锁定用户停留。"}, "cover": "assets/7407804d296e6fdc.jpg"}, {"md5": "652bfeae0ee0adbd1727636d69fc1a30", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0bc37ecniaaexmaoapgvg5ur56ie2t4qjvca.f0.mp4?dis_k=cafe1e907c08d101857f31e6052bb6d8&dis_t=1775318115&m=652bfeae0ee0adbd1727636d69fc1a30&sha256=c4166a535d18ad2e3ceee5bf115e3c9fdf7ca9c5baf0fb465470da4f2aa90b8d", "素材创建时间": "20260404", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "粉底液/膏/棒", "客户简称": "缔芙曼", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.235494858, "ctr": 2.003750610116372, "cvr": 6.794871794871795, "增长量": null, "完播3s": 69.43773280982583, "播放时长": 11.733666675170282}, "analysis": {"素材类型": {"一级": "痛点对比", "二级": "雀斑遮瑕x强效果对比开篇"}, "跑量learning": "✅【模特】选用面部有明显雀斑的真实肤质模特，强化『她和我一样』的代入感，拉近用户距离\n✅【痛点表达】精准击中『雀斑遮不住』『卡粉脱妆』『黑黄暗沉』等底妆痛点，让用户产生强烈共鸣\n✅【场景】采用博主实测+街头采访+直播间促销多场景组合，真实感强，去广告化明显\n✅【效果呈现】开篇即用『雀斑瞬间消失』的视觉奇观制造冲击，配合多位用户口碑证言强化效果可信度", "脚本拆解": "素材类型属于痛点对比+达人实测+促销引流型。开篇用满脸雀斑的女性涂抹粉底液后瞬间遮盖的强视觉冲击制造钩子。接着多位博主轮流介绍产品适合早起赶时间人群，强调『妆养合一』『遮瑕又养肤』的核心卖点。重点展示产品在干皮、油皮、暗沉肤质上的适配性，通过上脸演示呈现『奶油肌』妆效。随后切入街头采访环节，多位女性分享『持妆久』『不卡粉』『平价大碗』等真实口碑。结尾转入直播间场景，展示买一发六的超值赠品组合，通过不断加码的福利刺激用户下单转化。", "前3s内容解析": "0-1s：满脸雀斑女性面部特写\n1-2s：气垫粉扑按压涂抹粉底液\n2-3s：雀斑瞬间被遮盖呈现水光肌", "素材结构": [{"name": "痛点+效果开场", "time": "0-12s", "content": "雀斑女性涂抹粉底后瞬间遮盖，强视觉冲击"}, {"name": "卖点轰炸", "time": "12-30s", "content": "博主介绍妆养合一、遮瑕养肤、适合赶时间人群"}, {"name": "多肤质演示", "time": "30-60s", "content": "展示干皮油皮暗沉肤质适配性，解决卡粉痛点"}, {"name": "效果呈现", "time": "60-83s", "content": "上脸演示打造奶油肌妆效，强调清爽不油腻"}, {"name": "街头采访", "time": "83-109s", "content": "多位女性分享持妆久、不卡粉、平价好用口碑"}, {"name": "赠品堆砌", "time": "109-125s", "content": "直播间展示买一发六超值福利组合"}, {"name": "引导下单", "time": "125-129s", "content": "强调性价比引导用户进入直播间下单"}], "核心卖点": ["妆养合一", "强力遮瑕", "水光妆感", "持妆不脱", "多肤质适配", "平价大碗", "买一发六", "学生党友好"], "黄金3sPrompt": "极近距离特写一位面部布满明显雀斑的女性正脸，皮肤瑕疵清晰可见形成视觉冲击。画面第1秒停留在雀斑特写，第2秒气垫粉扑入画轻轻按压面部，第3秒随着粉扑移开雀斑瞬间消失，皮肤呈现透亮水光感。无需配音，纯靠『问题肌→完美肌』的戏剧性视觉反差制造悬念，让观众产生『这是什么神仙产品』的好奇心。"}, "cover": "assets/9070993fb81e8e91.jpg"}, {"md5": "fa5691d2e7e655d8ec49ca8735850721", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53xmaboaaabuaf3j4usfurvoyec65qaf2a.f0.mp4?dis_k=f4b99f330ed3b44d7b546e39126b771a&dis_t=1771326456&m=fa5691d2e7e655d8ec49ca8735850721&sha256=ca9489208864327973abb6069e1cd58eba1ec40a48471febb9b864d2ec125737", "素材创建时间": "20260217", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "粉底液/膏/棒", "客户简称": "纯朴", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.2184429999999999, "ctr": 2.6831468044111006, "cvr": 2.482811306340718, "增长量": null, "完播3s": 70.20085010124596, "播放时长": 16.220686954575967}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "多明星x达人实测混剪"}, "跑量learning": "✅【模特】选用博主妈妈改造场景+多位问题肌博主实测，『她和我一样』的同龄代入感强烈\n✅【痛点表达】精准击中『卡粉』『起皮』『脱妆』『毛孔大』『暗沉』等底妆核心痛点\n✅【场景】居家改造+街头采访+达人实测室多场景切换，真实感强去广告化\n✅【效果呈现】前后对比+12小时持妆实测+微距特写，效果可视化说服力强", "脚本拆解": "素材类型属于多明星背书+达人实测混剪型。开篇用博主为短发妈妈改造成『江南美人』的剧情钩子，父亲惊喜反应制造情绪高潮。接着展示卡粉、起皮、脱妆等真实底妆痛点，让观众产生『这就是我』的代入感。重点展示DPDP空气持妆粉底液五合一卖点，强调随手涂抹即可成膜的便捷性。穿插沈梦辰、何泓姗、颖儿等明星推荐切片，以及街头采访和达人实测镜头，建立品牌可信度。结尾强调周年庆『买一发五』『拍二发十』的超值福利，配合赠品堆叠画面引导下单。", "前3s内容解析": "0-1s：父亲与女儿站在桌旁的居家场景\n1-2s：『当我给短发妈妈改造成了江南美人』\n2-3s：爸爸惊讶捂嘴、激动后仰的表情", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "博主为妈妈改造成江南美人，爸爸惊喜反应制造好奇"}, {"name": "痛点引入", "time": "3-8s", "content": "展示卡粉、起皮、脱妆、毛孔大等底妆痛点"}, {"name": "产品亮相", "time": "8-12s", "content": "DPDP空气持妆粉底液亮相，五合一卖点速递"}, {"name": "明星背书", "time": "12-25s", "content": "沈梦辰、何泓姗、颖儿等明星推荐切片"}, {"name": "达人种草", "time": "25-35s", "content": "多位达人实测展示遮瑕、持妆、水润效果"}, {"name": "街头采访", "time": "35-42s", "content": "路人证言强调持妆力强、妆效自然"}, {"name": "价格促销", "time": "42-50s", "content": "周年庆买一发五、拍二发十福利信息"}, {"name": "引导下单", "time": "50-55s", "content": "赠品堆叠展示，强调性价比引导购买"}], "核心卖点": ["五合一粉底液", "12小时持妆", "强力遮瑕", "水润不卡粉", "明星同款", "敏感肌可用", "买一发五", "修黄提亮"], "黄金3sPrompt": "居家温馨场景，中景拍摄父亲和女儿站在桌旁，父亲穿条纹毛衣。画面停留1秒后父亲转头，脸上露出极度惊讶表情，用手捂住嘴巴身体后仰。配音用活泼女声说『当我给短发妈妈改造成了江南美人，我爹直接被美发财了』，字幕同步弹出。整体节奏欢快，用父亲夸张的惊喜反应制造悬念，激发观众好奇妈妈改造后的效果。"}, "cover": "assets/f705903859726490.jpg"}, {"md5": "7f591bbac147e384b48e4a3501247efe", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53i4acmaaa6qamubkh5rururyeezdqajsa.f0.mp4?dis_k=dd0965010bcbd99fb405e1e0076ec5c8&dis_t=1766471300&m=7f591bbac147e384b48e4a3501247efe&sha256=2e7a17cdc2035053b15140ef983ad40953f92fded4033044c1d5e8a2b3bb8761", "素材创建时间": "20251223", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "有色唇膏/口红", "客户简称": "橘朵", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.216008311, "ctr": 1.5109363807493046, "cvr": 2.535832414553473, "增长量": null, "完播3s": 91.3320990060417, "播放时长": 39.9305325835263}, "analysis": {"素材类型": {"一级": "达人测评", "二级": "达人实测x氛围感试色开篇"}, "跑量learning": "✅【模特】选用多位气质时尚的年轻女性达人，干练都市风与优雅名媛风兼具，增强『她在用我也想要』的代入感\n✅【痛点表达】精准击中『沾杯掉色』『黏腻拉丝』『粘头发』『拔干卡纹』等唇部产品常见痛点，让用户产生强烈共鸣\n✅【场景】秋季红枫户外场景+温馨居家场景切换，营造秋冬氛围感，去广告化呈现真实生活质感\n✅【效果呈现】采用『涂抹特写+喝水不沾杯实测+手臂试色』多维度展示，让成膜效果和显色度可感知", "脚本拆解": "素材类型属于达人实测氛围感试色型。开篇以秋季红枫背景搭配『冬天我就要涂无花果裸色』的季节性话术，达人边涂边展示色号效果，快速建立氛围感。接着通过痛点罗列（显老显土、沾杯掉色、黏腻拉丝、粘头发）与产品优势形成对比，突出30秒成膜不沾杯的核心卖点。重点展示喝水测试证明不掉色，以及手臂大面积试色呈现『杏仁裸粉』的显白效果。随后介绍角鲨烷、淡纹肽等护唇成分，强调妆养合一。结尾展示产品全系列及直播间赠品福利，引导下单转化。", "前3s内容解析": "0-1s：『冬天我就要涂无花果裸色』\n1-2s：达人用唇釉笔涂抹嘴唇特写\n2-3s：达人涂完后自信展示妆容", "素材结构": [{"name": "氛围感开篇", "time": "0-5s", "content": "秋季红枫背景+达人涂唇釉展示色号妆效"}, {"name": "痛点引入", "time": "6-12s", "content": "罗列传统口红和唇釉的常见痛点形成对比"}, {"name": "核心卖点展示", "time": "13-17s", "content": "强调30秒成膜不沾杯，喝水实测验证"}, {"name": "产品试色", "time": "18-24s", "content": "手臂试色展示杏仁裸粉色，强调黄皮显白"}, {"name": "成分背书", "time": "25-30s", "content": "角鲨烷+淡纹肽护唇成分，妆养合一"}, {"name": "多场景演示", "time": "31-35s", "content": "约会聚餐场景展示持久妆效无需补妆"}, {"name": "促销引导", "time": "36-38s", "content": "展示赠品组合，直播间限定福利引导下单"}], "核心卖点": ["30秒快速成膜", "不沾杯不掉色", "镜面水光妆效", "黄皮显白", "角鲨烷养唇", "淡纹肽淡化唇纹", "质地轻盈不黏腻", "直播间赠品福利"], "黄金3sPrompt": "秋季红枫树林背景，暖色调氛围感画面，一只手持粉白渐变唇釉笔入镜，旁边点缀无花果和咖啡威化卷营造精致感。配音用温柔女声说『冬天我就要涂无花果裸色』，1秒后切到达人涂唇特写，展示丝滑涂抹质感。2秒后达人面对镜头微笑展示妆后效果，神情自信。整体节奏舒缓有质感，用季节性话术+氛围感画面制造停留欲望。"}, "cover": "assets/f396b4dc6b6e6c5a.jpg"}, {"md5": "ad4035d55bb95ebe25b825abb5da4c59", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53xmabsaaanuaefk6xcvurvoyedg5qagka.f0.mp4?dis_k=9be645bea70304246a7c9d38f5fc60c1&dis_t=1775721486&m=ad4035d55bb95ebe25b825abb5da4c59&sha256=3b9c09b7429e8dcce262324d7327d71c075765835fa7b0cd925645dd34991444", "素材创建时间": "20260409", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "睫毛打底", "客户简称": "三资堂", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.205418635, "ctr": 2.1062674299134008, "cvr": 11.32404181184669, "增长量": null, "完播3s": 69.55798401565814, "播放时长": 20.82458901128336}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星背书x素人改造开篇"}, "跑量learning": "✅【模特】选用29岁素颜普通女生作为改造对象，增强『她和我一样』的同龄代入感\n✅【痛点表达】精准击中『素颜没气质』『眼睛无神』『不会化妆』等女性日常痛点\n✅【场景】街头采访+美发沙龙+居家实测多场景切换，真实感强，去广告化明显\n✅【效果呈现】采用『素人改造前后对比』+『眼部微距特写』+『明星亲测』组合，让睫毛变长效果可感知", "脚本拆解": "素材类型属于明星背书+素人改造型。开篇以街头搭讪29岁素颜女生为钩子，用『背影杀手』悬念制造好奇心。接着进入美发沙龙进行发型改造，自然过渡到眼妆环节。重点展示三资堂睫毛打底膏的产品特写，强调三效合一、小蛮腰刷头、不结块不苍蝇腿等核心卖点。穿插何泓姗、黄海冰两位明星的推荐切片，以及多位达人的使用前后对比，建立产品信任度。结尾展示素人改造后的惊艳效果，将变美归功于精致眼妆，引导用户认同产品价值。", "前3s内容解析": "0-1s：街头高挑女生挑鞋，路人惊叹身材好\n1-2s：『模特身材却被当作背影杀手』悬念字幕\n2-3s：『要不今天改她吧』搭讪邀请改造", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "街头搭讪素颜女生，『背影杀手』悬念制造好奇"}, {"name": "痛点引入", "time": "3-19s", "content": "素人自嘲已打扮过只涂了口红，暴露不会化妆痛点"}, {"name": "产品亮相", "time": "20-35s", "content": "三资堂睫毛打底膏特写，强调三效合一卖点"}, {"name": "卖点轰炸", "time": "35-66s", "content": "小蛮腰刷头、不结块、3分钟刷出纤长睫毛等核心卖点"}, {"name": "明星背书", "time": "67-174s", "content": "何泓姗、黄海冰两位明星亲测推荐，增强信任"}, {"name": "效果对比", "time": "175-199s", "content": "多位达人使用前后对比，眼睛大一圈视觉冲击"}, {"name": "改造揭晓", "time": "200-206s", "content": "素人改造后惊艳亮相，强调眼妆重要性引导认同"}], "核心卖点": ["三效合一", "小蛮腰刷头", "不结块不苍蝇腿", "30秒刷出纤长", "防水防汗", "明星同款", "素颜神器", "手残党友好"], "黄金3sPrompt": "街头实拍，镜头对准一位身材高挑、扎马尾的素颜女生正在路边摊挑鞋，画面停留0.5秒后切到两位路人侧脸，用惊叹语气说『哇你看身材好好』。顶部弹出悬念字幕『模特身材却被当作背影杀手』，1.5秒后路人商量『要不今天改她吧，走』。整体节奏快切，前3秒制造『身材好但颜值存疑』的反差悬念，激发观众想看改造结果的好奇心。"}, "cover": "assets/5701a7f8e103d93c.jpg"}, {"md5": "af6cda44dbbb06ce78022939c0c2eb70", "video_url": "http://adsmind.gdtimg.com/ads_svp_video__0b53lid36aah4qacglp37nurywqex5napp2a.f0.mp4?dis_k=8d8ba754b71aae3571191facf5d206d6&dis_t=1778162888", "素材创建时间": "20260507", "时间": "2026-05-06至2026-05-10", "KPI三级行业": "本土美妆", "商品类型": "洁面乳", "客户简称": "起量", "品牌or非品牌": "未填", "metric_tags": ["高3s完播"], "metrics": {"消耗": 0.201476, "ctr": 3.3662613981762926, "cvr": 10.15801354401806, "增长量": null, "完播3s": 71.91353649893692, "播放时长": 14.874763498762915}, "analysis": {"素材类型": {"一级": "明星背书", "二级": "明星代言x工厂溯源类"}, "跑量learning": "✅【模特】选用明星杨若兮作为品牌代言人，古装造型展现品牌底蕴，居家装增强亲和力与信任感\n✅【痛点表达】精准击中『皮肤暗沉』『脸色蜡黄』『夏季晒黑出油』等美白核心痛点\n✅【场景】户外街拍+居家使用+工厂仓库发货多场景切换，强调『工厂直发无中间商』增强信任\n✅【效果呈现】采用『半脸对比』『前后肤色对比』+多年龄段用户证言，让美白效果可感知", "脚本拆解": "素材类型属于明星代言+工厂溯源+促销引流型。开篇户外女性出镜，以『六个月没黑了』的强效果承诺制造钩子，配合『无效回来骂我』增强可信度。接着明星杨若兮以古装和居家双形象出镜，强调官方正品、警惕低价陷阱，建立品牌信任。重点展示产品质地和使用演示，配合『脸色蜡黄』『暗沉无光』等痛点画面形成对比。穿插工厂生产线和仓库发货场景，强调品牌几十年实力和工厂直发模式。结尾以『宠粉福利节』『拍二发三、拍三发五』的超值促销收尾，引导点击下单。", "前3s内容解析": "0-1s：户外女性出镜，大字『六个月没黑了』\n1-2s：『无效回来骂我』承诺文案抓眼球\n2-3s：手持三支洁面乳产品展示", "素材结构": [{"name": "开篇悬念", "time": "0-3s", "content": "『六个月没黑了』强效果承诺+『无效回来骂我』信任钩子"}, {"name": "明星背书", "time": "3-30s", "content": "杨若兮古装+居家双形象出镜，强调官方正品"}, {"name": "痛点引入", "time": "30-45s", "content": "展示暗沉蜡黄肤色痛点，明确美白去黄定位"}, {"name": "产品演示", "time": "45-70s", "content": "洁面乳质地展示、揉搓出泡沫、上脸使用演示"}, {"name": "品牌溯源", "time": "70-90s", "content": "工厂生产线+仓库发货场景，强调几十年品牌实力"}, {"name": "用户证言", "time": "90-100s", "content": "20岁/30岁/50岁多年龄段女性美白效果展示"}, {"name": "促销引导", "time": "100-120s", "content": "宠粉福利节拍二发三、拍三发五，引导下单"}], "核心卖点": ["明星杨若兮代言", "美白去黄", "工厂直发", "几十年品牌", "拍二发三", "官方正品", "全年龄适用", "深层清洁控油"], "黄金3sPrompt": "户外阳光场景，年轻女性面对镜头微笑，皮肤呈现白皙透亮状态。画面中央大字弹出『六个月没黑了』，停留0.5秒后下方出现『无效回来骂我』形成承诺式钩子。女性手持三支洁面乳产品入镜展示。配音用轻快女声说出标题文案。整体节奏明快，前3秒制造『强效果承诺+敢于担保』双重信任点，激发用户对美白效果的好奇与停留。"}, "cover": "assets/78beb0f04650fbd5.jpg"}], "keyframes": {"c7c7a4941eae791c725f5ed962d15a82": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/1a76d39068f562de.jpg"}, {"idx": 1, "name": "明星背书", "time": "3-11s", "at_sec": 7.0, "data_uri": "assets/f83fc42ed1a3d2df.jpg"}, {"idx": 2, "name": "达人种草", "time": "12-17s", "at_sec": 14.5, "data_uri": "assets/1c0e19cde433d331.jpg"}, {"idx": 3, "name": "价格促销", "time": "18-27s", "at_sec": 22.5, "data_uri": "assets/ac253be95a400b8f.jpg"}, {"idx": 4, "name": "赠品堆砌", "time": "28-53s", "at_sec": 40.5, "data_uri": "assets/d2334c89fe4f86aa.jpg"}, {"idx": 5, "name": "引导下单", "time": "54-66s", "at_sec": 60.0, "data_uri": "assets/b91842c2e19906a1.jpg"}], "678e64919a90f750ba5305b4a1e4acd5": [{"idx": 0, "name": "痛点引入", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/583dae9ab9eff04f.jpg"}, {"idx": 1, "name": "明星背书", "time": "3-7s", "at_sec": 5.0, "data_uri": "assets/526c648d4383b19d.jpg"}, {"idx": 2, "name": "产品演示", "time": "7-16s", "at_sec": 11.5, "data_uri": "assets/50882d30c7682b26.jpg"}, {"idx": 3, "name": "多明星功效", "time": "17-25s", "at_sec": 21.0, "data_uri": "assets/9085435e5fc9f008.jpg"}, {"idx": 4, "name": "价格促销", "time": "26-32s", "at_sec": 29.0, "data_uri": "assets/df115421e939752d.jpg"}, {"idx": 5, "name": "引导下单", "time": "33-40s", "at_sec": 36.5, "data_uri": "assets/c01fc09fc6588646.jpg"}], "db1e7b07af6072d7fbbe0a225cd2b5d7": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/5417f8f7221b88e0.jpg"}, {"idx": 1, "name": "剧情反转", "time": "3-37s", "at_sec": 20.0, "data_uri": "assets/66624e3523660e6d.jpg"}, {"idx": 2, "name": "痛点引入", "time": "38-72s", "at_sec": 55.0, "data_uri": "assets/bbfabd9cb753988c.jpg"}, {"idx": 3, "name": "产品亮相", "time": "73-96s", "at_sec": 84.5, "data_uri": "assets/a2bdb20e934da938.jpg"}, {"idx": 4, "name": "产品演示", "time": "97-147s", "at_sec": 122.0, "data_uri": "assets/42fdbc757a4b5cba.jpg"}, {"idx": 5, "name": "效果对比", "time": "148-178s", "at_sec": 163.0, "data_uri": "assets/58cf10cf00a9ce48.jpg"}, {"idx": 6, "name": "限时促销", "time": "179-194s", "at_sec": 186.5, "data_uri": "assets/27340b0d90a1a0b3.jpg"}], "8f1cd1bae36c543704f8b3f1b5534417": [{"idx": 0, "name": "促销开篇", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/86d1b2e1ac2e792b.jpg"}, {"idx": 1, "name": "明星背书", "time": "3-6s", "at_sec": 4.5, "data_uri": "assets/a915060ec99aeb22.jpg"}, {"idx": 2, "name": "福利轰炸", "time": "6-14s", "at_sec": 10.0, "data_uri": "assets/f8fbcf358ceb4bd0.jpg"}, {"idx": 3, "name": "痛点引入", "time": "14-24s", "at_sec": 19.0, "data_uri": "assets/3b27b473a03cc8eb.jpg"}, {"idx": 4, "name": "产品演示", "time": "24-34s", "at_sec": 29.0, "data_uri": "assets/ecf2d5879cf5b117.jpg"}, {"idx": 5, "name": "效果呈现", "time": "34-38s", "at_sec": 36.0, "data_uri": "assets/d29d4d654b3e5a32.jpg"}, {"idx": 6, "name": "引导下单", "time": "38-42s", "at_sec": 40.0, "data_uri": "assets/e26cc102d5a0be59.jpg"}], "ac4ea3223926286a5472521580891833": [{"idx": 0, "name": "开篇送礼场景", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/fc519d5b2f119ff8.jpg"}, {"idx": 1, "name": "基础套装展示", "time": "3-7s", "at_sec": 5.0, "data_uri": "assets/4ac719555b54de01.jpg"}, {"idx": 2, "name": "老板互动加码", "time": "7-15s", "at_sec": 11.0, "data_uri": "assets/76304b26bf6d4423.jpg"}, {"idx": 3, "name": "赠品持续堆叠", "time": "15-25s", "at_sec": 20.0, "data_uri": "assets/3a7ff3394c20895a.jpg"}, {"idx": 4, "name": "安瓶精华加码", "time": "25-32s", "at_sec": 28.5, "data_uri": "assets/b2c0b79d258189d4.jpg"}, {"idx": 5, "name": "全量产品展示", "time": "32-36s", "at_sec": 34.0, "data_uri": "assets/5e1acf26eb2c438d.jpg"}, {"idx": 6, "name": "引导下单", "time": "36-39s", "at_sec": 37.5, "data_uri": "assets/c7ca029598c6289f.jpg"}], "73edb0691936ad4d66450c9c4bc5a245": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/5417f8f7221b88e0.jpg"}, {"idx": 1, "name": "剧情反转", "time": "3-37s", "at_sec": 20.0, "data_uri": "assets/66624e3523660e6d.jpg"}, {"idx": 2, "name": "痛点引入", "time": "38-72s", "at_sec": 55.0, "data_uri": "assets/bbfabd9cb753988c.jpg"}, {"idx": 3, "name": "产品亮相", "time": "73-96s", "at_sec": 84.5, "data_uri": "assets/a2bdb20e934da938.jpg"}, {"idx": 4, "name": "产品演示", "time": "97-179s", "at_sec": 138.0, "data_uri": "assets/e70ad374f1bb4aab.jpg"}, {"idx": 5, "name": "效果呈现", "time": "180-194s", "at_sec": 187.0, "data_uri": "assets/e149d049cfd4c4a8.jpg"}], "3537946c97d858c01e3a300a709f721a": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/b44eb6d3c254cef7.jpg"}, {"idx": 1, "name": "产品亮相", "time": "3-8s", "at_sec": 5.5, "data_uri": "assets/8e4da72760632a81.jpg"}, {"idx": 2, "name": "产品演示", "time": "8-20s", "at_sec": 14.0, "data_uri": "assets/9c2585321e3a2c6b.jpg"}, {"idx": 3, "name": "效果对比", "time": "20-35s", "at_sec": 27.5, "data_uri": "assets/8b705b82b8bfa0f2.jpg"}, {"idx": 4, "name": "多场景演示", "time": "35-45s", "at_sec": 40.0, "data_uri": "assets/e6750c8329ab6554.jpg"}, {"idx": 5, "name": "引导下单", "time": "45-50s", "at_sec": 47.5, "data_uri": "assets/c1168ada50c43fa2.jpg"}], "63f4b56678cd6439a1e7a434917cd3f3": [{"idx": 0, "name": "开篇悬念", "time": "0-6s", "at_sec": 3.0, "data_uri": "assets/a9611e8f76e8cc22.jpg"}, {"idx": 1, "name": "明星背书", "time": "7-14s", "at_sec": 10.5, "data_uri": "assets/a75f0a9a760bba36.jpg"}, {"idx": 2, "name": "成分卖点", "time": "15-19s", "at_sec": 17.0, "data_uri": "assets/3fcc095f1e1fb3b1.jpg"}, {"idx": 3, "name": "达人实测", "time": "20-27s", "at_sec": 23.5, "data_uri": "assets/fb03ae8227ac3a6a.jpg"}, {"idx": 4, "name": "二次背书", "time": "28-33s", "at_sec": 30.5, "data_uri": "assets/ba60b86d6ca01695.jpg"}, {"idx": 5, "name": "促销引导", "time": "34-45s", "at_sec": 39.5, "data_uri": "assets/c34253922aea516e.jpg"}, {"idx": 6, "name": "痛点总结", "time": "46-57s", "at_sec": 51.5, "data_uri": "assets/aa200cecdca40efd.jpg"}], "d9edd3f884fb1bb091b56c4b51b9d3cf": [{"idx": 0, "name": "痛点+悬念开场", "time": "0-4s", "at_sec": 2.0, "data_uri": "assets/47e622b76a32988f.jpg"}, {"idx": 1, "name": "明星背书", "time": "5-16s", "at_sec": 10.5, "data_uri": "assets/b5c9ae450a1951a2.jpg"}, {"idx": 2, "name": "卖点轰炸", "time": "17-35s", "at_sec": 26.0, "data_uri": "assets/69baf4a7b07fdd94.jpg"}, {"idx": 3, "name": "多功能展示", "time": "36-45s", "at_sec": 40.5, "data_uri": "assets/8c2fb90520a13c71.jpg"}, {"idx": 4, "name": "效果对比", "time": "46-60s", "at_sec": 53.0, "data_uri": "assets/3b32077d70fe6f2f.jpg"}, {"idx": 5, "name": "引导下单", "time": "60-68s", "at_sec": 64.0, "data_uri": "assets/e81445df3960ea7b.jpg"}], "18aa600475aef31c43866ee411e43366": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/a8efab381f59d92a.jpg"}, {"idx": 1, "name": "痛点引入", "time": "3-28s", "at_sec": 15.5, "data_uri": "assets/eb5950ab5a5fb39e.jpg"}, {"idx": 2, "name": "产品亮相", "time": "28-45s", "at_sec": 36.5, "data_uri": "assets/52620a26f81e61b3.jpg"}, {"idx": 3, "name": "卖点轰炸", "time": "45-60s", "at_sec": 52.5, "data_uri": "assets/7f277b2fea965703.jpg"}, {"idx": 4, "name": "明星背书", "time": "60-70s", "at_sec": 65.0, "data_uri": "assets/33e4f67e15160958.jpg"}, {"idx": 5, "name": "用户证言", "time": "70-115s", "at_sec": 92.5, "data_uri": "assets/55db6a5f8a32b835.jpg"}, {"idx": 6, "name": "限时促销", "time": "115-122s", "at_sec": 118.5, "data_uri": "assets/e99f7960d84b48aa.jpg"}, {"idx": 7, "name": "惊艳反转", "time": "122-143s", "at_sec": 132.5, "data_uri": "assets/400f21bdb0e82b75.jpg"}], "4a85aa7a268a36cd3a3fc4d51fa4d259": [{"idx": 0, "name": "明星背书开篇", "time": "0-9s", "at_sec": 4.5, "data_uri": "assets/f2014f8b15306bde.jpg"}, {"idx": 1, "name": "痛点引入", "time": "9-14s", "at_sec": 11.5, "data_uri": "assets/682fba8edc54e988.jpg"}, {"idx": 2, "name": "产品亮相", "time": "14-23s", "at_sec": 18.5, "data_uri": "assets/b22b6a83d8b2966c.jpg"}, {"idx": 3, "name": "卖点轰炸", "time": "23-36s", "at_sec": 29.5, "data_uri": "assets/72b5747d0e677c8d.jpg"}, {"idx": 4, "name": "多场景演示", "time": "36-50s", "at_sec": 43.0, "data_uri": "assets/640f45613b9a9e3a.jpg"}, {"idx": 5, "name": "促销引导", "time": "50-57s", "at_sec": 53.5, "data_uri": "assets/b20d458b130b173c.jpg"}], "87b8bcd91eccc7d084fae5423127b65e": [{"idx": 0, "name": "痛点+悬念开场", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/2caa28673c922b58.jpg"}, {"idx": 1, "name": "产品亮相", "time": "3-10s", "at_sec": 6.5, "data_uri": "assets/609e41f001433faa.jpg"}, {"idx": 2, "name": "效果演示", "time": "10-17s", "at_sec": 13.5, "data_uri": "assets/710d98996f807e75.jpg"}, {"idx": 3, "name": "明星背书", "time": "17-47s", "at_sec": 32.0, "data_uri": "assets/61945004ad649b4b.jpg"}, {"idx": 4, "name": "卖点轰炸", "time": "47-60s", "at_sec": 53.5, "data_uri": "assets/75e8aad51107b9d9.jpg"}, {"idx": 5, "name": "效果对比", "time": "60-75s", "at_sec": 67.5, "data_uri": "assets/78ada9d8c0321aa1.jpg"}, {"idx": 6, "name": "限时促销", "time": "75-92s", "at_sec": 83.5, "data_uri": "assets/f5d3e6f0721484dd.jpg"}], "e41f9fcc134007503a3c734fe5010d6e": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/a271e3c46a7f5595.jpg"}, {"idx": 1, "name": "产品亮相", "time": "3-12s", "at_sec": 7.5, "data_uri": "assets/ef6bd6d129d20f7d.jpg"}, {"idx": 2, "name": "卖点轰炸", "time": "12-26s", "at_sec": 19.0, "data_uri": "assets/0e2fdc05f3bcc017.jpg"}, {"idx": 3, "name": "品牌背书", "time": "26-74s", "at_sec": 50.0, "data_uri": "assets/c8d2c0b90173ede7.jpg"}, {"idx": 4, "name": "明星背书", "time": "74-105s", "at_sec": 89.5, "data_uri": "assets/e794396b9301a251.jpg"}, {"idx": 5, "name": "限时促销", "time": "105-126s", "at_sec": 115.5, "data_uri": "assets/e34b22e768874107.jpg"}], "999b173ad7d2e20d489a07ec287d0afd": [{"idx": 0, "name": "福利开篇", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/d7d5559784b109f9.jpg"}, {"idx": 1, "name": "痛点引入", "time": "3-5s", "at_sec": 4.0, "data_uri": "assets/94f7cec55a955a86.jpg"}, {"idx": 2, "name": "稀缺性强调", "time": "5-8s", "at_sec": 6.5, "data_uri": "assets/eb0fb1d985801098.jpg"}, {"idx": 3, "name": "卖点轰炸", "time": "8-12s", "at_sec": 10.0, "data_uri": "assets/1a694294d7b3ac23.jpg"}, {"idx": 4, "name": "利益揭晓", "time": "12-14s", "at_sec": 13.0, "data_uri": "assets/679a3501db9baf6a.jpg"}, {"idx": 5, "name": "引导下单", "time": "14-17s", "at_sec": 15.5, "data_uri": "assets/13e5ccf8a77d8376.jpg"}], "46dec4c111707e58127cfc55caddcbe5": [{"idx": 0, "name": "营销福利开篇", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/aa359d6ce9bcd46d.jpg"}, {"idx": 1, "name": "明星背书", "time": "3-7s", "at_sec": 5.0, "data_uri": "assets/526c20d17a4ad3e1.jpg"}, {"idx": 2, "name": "核心机制", "time": "8-14s", "at_sec": 11.0, "data_uri": "assets/049e2bedb0e5afad.jpg"}, {"idx": 3, "name": "产品拆解", "time": "15-25s", "at_sec": 20.0, "data_uri": "assets/6c0944990fb2a3e1.jpg"}, {"idx": 4, "name": "成分背书", "time": "26-32s", "at_sec": 29.0, "data_uri": "assets/8624eb634c0ee0b4.jpg"}, {"idx": 5, "name": "情感促单", "time": "33-40s", "at_sec": 36.5, "data_uri": "assets/cc3194b9a4797546.jpg"}], "652bfeae0ee0adbd1727636d69fc1a30": [{"idx": 0, "name": "痛点+效果开场", "time": "0-12s", "at_sec": 6.0, "data_uri": "assets/7b8f8bf5bd86428c.jpg"}, {"idx": 1, "name": "卖点轰炸", "time": "12-30s", "at_sec": 21.0, "data_uri": "assets/fbbd185db1444cb8.jpg"}, {"idx": 2, "name": "多肤质演示", "time": "30-60s", "at_sec": 45.0, "data_uri": "assets/5d6b6c6ac69d4360.jpg"}, {"idx": 3, "name": "效果呈现", "time": "60-83s", "at_sec": 71.5, "data_uri": "assets/1bd52fe50995b202.jpg"}, {"idx": 4, "name": "街头采访", "time": "83-109s", "at_sec": 96.0, "data_uri": "assets/58e9055545b2ee8c.jpg"}, {"idx": 5, "name": "赠品堆砌", "time": "109-125s", "at_sec": 117.0, "data_uri": "assets/16911a4ae6be9983.jpg"}, {"idx": 6, "name": "引导下单", "time": "125-129s", "at_sec": 127.0, "data_uri": "assets/e08188ec9676939c.jpg"}], "fa5691d2e7e655d8ec49ca8735850721": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/6072cd484e625b9c.jpg"}, {"idx": 1, "name": "痛点引入", "time": "3-8s", "at_sec": 5.5, "data_uri": "assets/e679138decf85201.jpg"}, {"idx": 2, "name": "产品亮相", "time": "8-12s", "at_sec": 10.0, "data_uri": "assets/4565eebefb190372.jpg"}, {"idx": 3, "name": "明星背书", "time": "12-25s", "at_sec": 18.5, "data_uri": "assets/9326e60e6a9939c3.jpg"}, {"idx": 4, "name": "达人种草", "time": "25-35s", "at_sec": 30.0, "data_uri": "assets/d0392df5f36d75be.jpg"}, {"idx": 5, "name": "街头采访", "time": "35-42s", "at_sec": 38.5, "data_uri": "assets/26b1a98011cfa29a.jpg"}, {"idx": 6, "name": "价格促销", "time": "42-50s", "at_sec": 46.0, "data_uri": "assets/3b2f9327841d6939.jpg"}, {"idx": 7, "name": "引导下单", "time": "50-55s", "at_sec": 52.5, "data_uri": "assets/7079944ec8f73dea.jpg"}], "7f591bbac147e384b48e4a3501247efe": [{"idx": 0, "name": "氛围感开篇", "time": "0-5s", "at_sec": 2.5, "data_uri": "assets/0bd1a1911c8792b2.jpg"}, {"idx": 1, "name": "痛点引入", "time": "6-12s", "at_sec": 9.0, "data_uri": "assets/18c02e8bdd34b91f.jpg"}, {"idx": 2, "name": "核心卖点展示", "time": "13-17s", "at_sec": 15.0, "data_uri": "assets/ccd6224d04ad17a2.jpg"}, {"idx": 3, "name": "产品试色", "time": "18-24s", "at_sec": 21.0, "data_uri": "assets/2b055f6d5bcf3ed1.jpg"}, {"idx": 4, "name": "成分背书", "time": "25-30s", "at_sec": 27.5, "data_uri": "assets/2ed00a29ba636fc0.jpg"}, {"idx": 5, "name": "多场景演示", "time": "31-35s", "at_sec": 33.0, "data_uri": "assets/db9e9e88f186bb54.jpg"}, {"idx": 6, "name": "促销引导", "time": "36-38s", "at_sec": 37.0, "data_uri": "assets/64087debbfef0e13.jpg"}], "ad4035d55bb95ebe25b825abb5da4c59": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/e47fd6bbc2d399ac.jpg"}, {"idx": 1, "name": "痛点引入", "time": "3-19s", "at_sec": 11.0, "data_uri": "assets/2818233c5a3efa4a.jpg"}, {"idx": 2, "name": "产品亮相", "time": "20-35s", "at_sec": 27.5, "data_uri": "assets/51ee427e15c8cdc1.jpg"}, {"idx": 3, "name": "卖点轰炸", "time": "35-66s", "at_sec": 50.5, "data_uri": "assets/16f63dbe703ca368.jpg"}, {"idx": 4, "name": "明星背书", "time": "67-174s", "at_sec": 120.5, "data_uri": "assets/e8712c12d3132d18.jpg"}, {"idx": 5, "name": "效果对比", "time": "175-199s", "at_sec": 187.0, "data_uri": "assets/e91d2c7e4093020f.jpg"}, {"idx": 6, "name": "改造揭晓", "time": "200-206s", "at_sec": 203.0, "data_uri": "assets/6ad8aa4a77b37384.jpg"}], "af6cda44dbbb06ce78022939c0c2eb70": [{"idx": 0, "name": "开篇悬念", "time": "0-3s", "at_sec": 1.5, "data_uri": "assets/a34bd5af22d73d3e.jpg"}, {"idx": 1, "name": "明星背书", "time": "3-30s", "at_sec": 16.5, "data_uri": "assets/89c148311ca7ee8a.jpg"}, {"idx": 2, "name": "痛点引入", "time": "30-45s", "at_sec": 37.5, "data_uri": "assets/6ced14f17e317b73.jpg"}, {"idx": 3, "name": "产品演示", "time": "45-70s", "at_sec": 57.5, "data_uri": "assets/c0838c2e9d7640dd.jpg"}, {"idx": 4, "name": "品牌溯源", "time": "70-90s", "at_sec": 80.0, "data_uri": "assets/f6b94da88b7dcaee.jpg"}, {"idx": 5, "name": "用户证言", "time": "90-100s", "at_sec": 95.0, "data_uri": "assets/f28e89f51fd120fa.jpg"}, {"idx": 6, "name": "促销引导", "time": "100-120s", "at_sec": 110.0, "data_uri": "assets/0e06cec1ae5fdead.jpg"}]}, "common_features": {"features": [{"title": "痛点焦虑+悬念话术开场", "desc": "前3秒用『不显老』『泪沟显老』『沾杯掉色』等痛点词直击用户核心焦虑，配合悬念式话术制造好奇心。痛点越具体、越扎心，用户停留意愿越强，3秒完播率显著提升。", "evidence": ["#1", "#2", "#6"]}, {"title": "明星矩阵+信任叠加", "desc": "单条素材堆叠2-4位明星出镜推荐，形成『多人背书』的信任叠加效应。明星年龄层与目标用户匹配（中生代女演员对应熟龄用户），既有高级感又有代入感，品牌可信度倍增。", "evidence": ["#1", "#3", "#4", "#6"]}, {"title": "同龄模特+代入共鸣", "desc": "开篇选用与目标用户年龄相近的模特出镜，用『她和我一样』的同龄感建立信任。中年女性讲抗老、年轻达人讲试色，人设匹配让用户更易产生『她在用我也想要』的购买冲动。", "evidence": ["#1", "#2", "#4"]}, {"title": "节日锚点+价格冲击", "desc": "绑定母亲节、五一、周年庆等节点，用『半价』『一折』『限时』等强利益词制造紧迫感。节日场景自带送礼/囤货心智，配合价格锚点形成『错过即亏』的决策压力。", "evidence": ["#3", "#4", "#5"]}, {"title": "赠品堆叠+数字轰炸", "desc": "采用『不是10片、不是20片、通通50片』的递进否定句式，或『拍一发八』『4瓶大水+4瓶大乳+20支精华』的清单式罗列，用具体数字制造超值冲击，让用户直观感知『送的比买的多』。", "evidence": ["#4", "#5", "#3"]}, {"title": "实测验证+效果可视", "desc": "通过喝水不沾杯测试、前后对比特写、手臂大面积试色等方式，让产品功效『眼见为实』。实测场景越真实、对比越直观，用户对效果的信任度越高。", "evidence": ["#2", "#1", "#6"]}, {"title": "氛围感场景+去广告化", "desc": "用秋季红枫、户外阳光、居家洗脸等生活化场景替代硬广直播间，营造真实生活质感。场景越贴近用户日常，广告感越弱，种草接受度越高。", "evidence": ["#2", "#5", "#1"]}, {"title": "成分背书+功效承诺", "desc": "用人参皂苷CK、胶原原肽、角鲨烷等专业成分名称建立科学感，配合『去皱非淡皱』『30秒成膜』等明确功效承诺。成分可查证+效果可量化，让用户相信『贵有贵的道理』。", "evidence": ["#3", "#2", "#6"]}], "filter_summary": "本土美妆 · 20 条", "n_analyzed": 6}, "skill_fields": [{"key": "素材类型", "label": "素材类型", "icon": "🏷️", "color": "#fbbf24"}, {"key": "跑量learning", "label": "跑量 learning", "icon": "💡", "color": "#9dbcff"}, {"key": "脚本拆解", "label": "脚本拆解", "icon": "🎬", "color": "#ffd27f"}, {"key": "前3s内容解析", "label": "前 3s 内容解析", "icon": "⚡", "color": "#86efac"}], "internal": false, "hidden_metrics_value": ["消耗", "增长量"], "meta": {"tag": "全部", "date": "20260521", "title": "素材周报 · 完整报告 · 20260521", "n_total": 20, "exported_at": "2026-05-21 13:32:01", "flag": "对外版"}};
+
+const state = {
+  data: PAYLOAD.items || [],
+  keyframes: PAYLOAD.keyframes || {},
+  skillFields: PAYLOAD.skill_fields || [],
+  meta: PAYLOAD.meta || {},
+  internal: !!PAYLOAD.internal,
+  hiddenMetricValues: new Set(PAYLOAD.hidden_metrics_value || []),
+  filters: {
+    industries: new Set(),
+    products: new Set(),
+    customers: new Set(),
+    brands: new Set(),
+    matTypes: new Set(),
+    metricTags: new Set(),
+    onlyFailed: false,
+  },
+  sortBy: "增长量",
+  sortDir: "desc",
+  topN: 20,
+};
+const METRIC_TAG_LIST = ["高消耗","高ctr","高cvr","高增长","高3s完播","高播放时长"];
+
+function escapeHTML(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+
+// 取一条素材的「素材类型一级」（兼容 obj.一级 / 字符串）
+function _itemMatTypeL1(d){
+  const t = (d?.analysis || {})["素材类型"];
+  if(!t) return "";
+  if(typeof t === "object" && t["一级"]) return String(t["一级"]).trim();
+  return "";
+}
+
+// 「失败」= 缺素材结构（v3 关键字段）
+function isItemFailed(d){
+  const a = d.analysis || {};
+  const stages = a["素材结构"];
+  if(Array.isArray(stages) && stages.length>0) return false;
+  const hasAny = Object.keys(a).some(k => {
+    const v = a[k]; return typeof v==="string" ? v.trim().length>0 : (v!=null && v!=="");
+  });
+  return !hasAny ? true : true;  // 缺素材结构都算失败
+}
+
+function metricBadges(m){
+  // 6 个指标：消耗 / 增长量 / CTR / CVR / 3s完播 / 播放时长
+  // 对外版（默认）：消耗/增长量 不展示数值，但保留位置（显示『—』）以让客户看到指标维度的存在
+  // 内部版：展示完整数值
+  const all = [
+    ["消耗",      "消耗",       m["消耗"],     "万", 1],
+    ["增长量",    "增长量",     m["增长量"],   "万", 1],
+    ["ctr",       "CTR",        m.ctr,         "%",  2],
+    ["cvr",       "CVR",        m.cvr,         "%",  2],
+    ["完播3s",    "3s完播",     m["完播3s"],   "%",  1],
+    ["播放时长",  "播放时长",   m["播放时长"], "s",  1],
+  ];
+  return all.map(([key,lab,v,suf,nd]) => {
+    let txt;
+    if(state.hiddenMetricValues.has(key)){
+      txt = `<span style="color:#94a3b8" title="对外版隐藏数值，仅作排序维度">—</span>`;
+    } else if(v == null){
+      txt = "—";
+    } else {
+      txt = v.toFixed(nd) + suf;
+    }
+    return `<div class="metric"><div class="lab">${lab}</div><div class="val">${txt}</div></div>`;
+  }).join("");
+}
+
+function applyFilter(list){
+  const f = state.filters;
+  return list.filter(d=>{
+    if(f.industries.size && !f.industries.has(d["KPI三级行业"])) return false;
+    if(f.products.size && !f.products.has(d["商品类型"])) return false;
+    if(f.customers.size && !f.customers.has(d["客户简称"])) return false;
+    if(f.brands.size && !f.brands.has(d["品牌or非品牌"])) return false;
+    if(f.matTypes.size && !f.matTypes.has(_itemMatTypeL1(d))) return false;
+    if(f.metricTags.size){
+      const set = new Set(d.metric_tags||[]);
+      let hit=false; for(const t of f.metricTags){ if(set.has(t)){ hit=true; break; } }
+      if(!hit) return false;
+    }
+    if(f.onlyFailed && !isItemFailed(d)) return false;
+    return true;
+  });
+}
+function applySort(list){
+  const k = state.sortBy, dir = state.sortDir==="asc"?1:-1;
+  return [...list].sort((a,b)=>{
+    const va = a.metrics[k], vb = b.metrics[k];
+    if(va==null && vb==null) return 0;
+    if(va==null) return 1;
+    if(vb==null) return -1;
+    return (va-vb)*dir;
+  });
+}
+function applyTopN(list){
+  if(!state.topN || state.topN<=0) return list;
+  return list.slice(0, state.topN);
+}
+
+// 渲染单条素材内容正文（解析字段 + 核心卖点 + 黄金 3s）
+// 注意：素材结构（stages + 关键帧）单独走 renderStruct，放卡片底部全宽展示
+function renderAnalysisBody(d){
+  const a = d.analysis || {};
+  const fields = state.skillFields;
+  const blocks = [];
+  // 1) skill 定义的常规字段（跑量learning / 脚本拆解 / 前 3s 内容解析）
+  fields.forEach(f=>{
+    if(f.key === "素材结构") return;  // 这个走底部
+    if(f.key === "素材类型") return;  // 这个走卡片头的标签，不在正文重复
+    const v = a[f.key];
+    const isEmpty = v==null || v==="" || (Array.isArray(v) && v.length===0);
+    const text = isEmpty ? "未产出" : _stringifyAnaValue(v);
+    blocks.push(`<div class="ana-block">
+      <div class="ana-h" style="color:${f.color}">${f.icon} ${escapeHTML(f.label)}</div>
+      <div class="ana-t ${isEmpty?'empty':''}">${escapeHTML(text)}</div>
+    </div>`);
+  });
+  // 2) 核心卖点
+  if(a["核心卖点"]){
+    blocks.push(`<div class="ana-block warn">
+      <div class="ana-h" style="color:#fbbf24">💎 核心卖点</div>
+      <div class="ana-t">${escapeHTML(_stringifyAnaValue(a["核心卖点"]))}</div>
+    </div>`);
+  }
+  // 3) 黄金 3s prompt（带「📋 复制 / 🚀 admuse 跳转妙思」）
+  if(a["黄金3sPrompt"]){
+    const promptText = _stringifyAnaValue(a["黄金3sPrompt"]);
+    // attr-safe：编码引号 + 换行
+    const safeAttr = escapeHTML(promptText);
+    blocks.push(`<div class="ana-block hook-prompt-block">
+      <div class="ana-h" style="color:#9dbcff;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span>⚡ 黄金 3s Prompt</span>
+        <span class="hook-prompt-actions">
+          <button type="button" class="hp-btn" data-hook-copy="${safeAttr}" title="复制 prompt">📋 复制</button>
+          <a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener" title="跳转妙思 admuse 生成视频">🚀 妙思</a>
+        </span>
+      </div>
+      <div class="ana-t">${escapeHTML(promptText)}</div>
+    </div>`);
+  }
+  return blocks.join("");
+}
+
+// analysis 字段值 → 可显示字符串（兼容对象/数组/字符串）
+function _stringifyAnaValue(v){
+  if(v == null) return "";
+  if(typeof v === "string") return v;
+  if(typeof v === "number" || typeof v === "boolean") return String(v);
+  if(Array.isArray(v)) return v.map(x => _stringifyAnaValue(x)).filter(Boolean).join(" / ");
+  if(typeof v === "object"){
+    // 兼容 {一级,二级} / {一级类目,二级类目} / {l1,l2} 等近似形态：
+    //   不再直接 JSON.stringify（避免对外版出现 {"一级":"...","二级":"..."} 大括号）
+    const L1_KEYS = ["一级","一级类目","l1","level1","first","primary"];
+    const L2_KEYS = ["二级","二级类目","l2","level2","second","secondary"];
+    const pickKey = (keys) => keys.find(k => v[k] != null && String(v[k]).trim() !== "");
+    const k1 = pickKey(L1_KEYS), k2 = pickKey(L2_KEYS);
+    if(k1 || k2){
+      const a = k1 ? String(v[k1]).trim() : "";
+      const b = k2 ? String(v[k2]).trim() : "";
+      if(a && b) return `${a} · ${b}`;
+      return a || b || "";
+    }
+    // 退化方案：把对象的所有字符串/数字 value 用 ' · ' 拼起来；不再走 JSON.stringify
+    const parts = [];
+    for(const k of Object.keys(v)){
+      const x = v[k];
+      if(x == null) continue;
+      if(typeof x === "string" && x.trim()) parts.push(x.trim());
+      else if(typeof x === "number" || typeof x === "boolean") parts.push(String(x));
+      else if(Array.isArray(x)){
+        const t = x.filter(z => typeof z === "string" && z.trim()).join(" / ");
+        if(t) parts.push(t);
+      }
+    }
+    return parts.join(" · ");
+  }
+  return String(v);
+}
+
+// 渲染卡片底部的素材结构关键帧条带（横向滚动）
+function renderStruct(d){
+  const a = d.analysis || {};
+  const stages = a["素材结构"];
+  const frames = (state.keyframes||{})[d.md5] || [];
+  if(!Array.isArray(stages) || !stages.length) return "";
+  // 把 stages 按 idx 映射到 frames（idx 对齐，没有图就显示占位）
+  const frameByIdx = {};
+  frames.forEach(f => frameByIdx[f.idx] = f);
+  const items = stages.map((s,i)=>{
+    const idx = (typeof s.idx === "number") ? s.idx : i;
+    const f = frameByIdx[idx];
+    const name = s.name || ('环节'+(i+1));
+    const time = s.time || (s.at_sec!=null ? (s.at_sec.toFixed(1)+'s') : '');
+    if(f && f.data_uri){
+      return `<div class="frame">
+        <img src="${f.data_uri}" alt="${escapeHTML(name)}">
+        <div class="fc"><div class="fn">${escapeHTML(name)}</div><div class="ft">${escapeHTML(time)}</div></div>
+      </div>`;
+    }
+    return `<div class="frame no-img">
+      <div class="ph">无关键帧</div>
+      <div class="fc"><div class="fn">${escapeHTML(name)}</div><div class="ft">${escapeHTML(time)}</div></div>
+    </div>`;
+  }).join("");
+  const nWithImg = items ? frames.filter(f=>f.data_uri).length : 0;
+  return `<div class="struct">
+    <div class="struct-h">📋 素材结构 <span class="cnt">· ${stages.length} 个环节${nWithImg?` · ${nWithImg} 张关键帧`:''}</span></div>
+    <div class="frames">${items}</div>
+  </div>`;
+}
+
+function renderCard(d, rank){
+  const cover = d.cover
+    ? `<img src="${d.cover}" alt="cover">`
+    : `<div class="no-cover">暂无封面</div>`;
+  const tags = (d.metric_tags||[]).map(t=>`<span class="tag">${escapeHTML(t)}</span>`).join("");
+  // 素材类型（AI 自动打的一级/二级标签）
+  //   兼容 {一级,二级} / {一级类目,二级类目} / 字符串 等多种形态
+  const mt = (d.analysis||{})["素材类型"];
+  let mtTag = "";
+  const _pickMt = (obj, keys) => {
+    for(const k of keys){
+      if(obj[k] != null && String(obj[k]).trim() !== "") return String(obj[k]).trim();
+    }
+    return "";
+  };
+  if(mt && typeof mt === "object" && !Array.isArray(mt)){
+    const l1 = _pickMt(mt, ["一级","一级类目","l1","level1","first","primary"]);
+    const l2 = _pickMt(mt, ["二级","二级类目","l2","level2","second","secondary"]);
+    const text = (l1 && l2) ? `${l1} · ${l2}` : (l1 || l2 || "");
+    if(text){
+      mtTag = `<span class="meta-item" style="background:rgba(251,191,36,.18);color:#fbbf24;border-color:rgba(251,191,36,.45)">🏷️ ${escapeHTML(text)}</span>`;
+    }
+  } else if(typeof mt === "string" && mt.trim()){
+    mtTag = `<span class="meta-item" style="background:rgba(251,191,36,.18);color:#fbbf24;border-color:rgba(251,191,36,.45)">🏷️ ${escapeHTML(mt.trim())}</span>`;
+  }
+  const metaItems = [
+    mtTag,
+    d["KPI三级行业"]  ? `<span class="meta-item">🏭 ${escapeHTML(d["KPI三级行业"])}</span>` : "",
+    d["商品类型"]     ? `<span class="meta-item">🧴 ${escapeHTML(d["商品类型"])}</span>`     : "",
+    d["品牌or非品牌"] ? `<span class="meta-item">🏪 ${escapeHTML(d["品牌or非品牌"])}</span>` : "",
+    d["客户简称"]     ? `<span class="meta-item">👥 ${escapeHTML(d["客户简称"])}</span>`     : "",
+    d["素材创建时间"] ? `<span class="meta-item muted">📅 ${escapeHTML(d["素材创建时间"])}</span>` : "",
+  ].filter(Boolean).join("");
+  return `<div class="card">
+    <div class="card-head">
+      <span class="rank">#${rank}</span>
+      ${metaItems}
+      ${tags}
+    </div>
+    <div class="card-body">
+      <div class="card-cover">${cover}</div>
+      <div class="card-content">
+        <div class="metrics-bar">${metricBadges(d.metrics||{})}</div>
+        ${renderAnalysisBody(d)}
+        ${d.video_url?`<a class="video-link" href="${d.video_url}" target="_blank" rel="noopener">🔗 在新窗口打开原视频</a>`:''}
+      </div>
+    </div>
+    ${renderStruct(d)}
+  </div>`;
+}
+
+function render(){
+  const filtered = applySort(applyFilter(state.data));
+  const list = applyTopN(filtered);
+  const totalAll = state.data.length;
+  document.getElementById("countBadge").textContent =
+    list.length === totalAll ? `${totalAll} 条` : `${list.length} / ${totalAll}`;
+  document.getElementById("metaSub").textContent =
+    `排序：${state.sortBy} ${state.sortDir==='asc'?'↑':'↓'} · ${state.meta.exported_at||''}`;
+  const grid = document.getElementById("grid");
+  if(!list.length){
+    grid.innerHTML = `<div class="empty">无匹配素材，调整筛选试试</div>`;
+    return;
+  }
+  grid.innerHTML = list.map((d,i)=>renderCard(d,i+1)).join("");
+}
+
+// —— 多选下拉 ——
+function buildMultiSelect(id, label, values, key){
+  const wrap = document.getElementById(id);
+  const btn = wrap.querySelector(".ms-dd-btn");
+  const panel = wrap.querySelector(".ms-dd-panel");
+  panel.innerHTML = values.map(v=>`<span class="chip" data-v="${escapeHTML(v)}">${escapeHTML(v)}</span>`).join("");
+  panel.querySelectorAll(".chip").forEach(c=>{
+    c.onclick = () => {
+      const v = c.dataset.v;
+      const set = state.filters[key];
+      if(set.has(v)){ set.delete(v); c.classList.remove("on"); }
+      else{ set.add(v); c.classList.add("on"); }
+      const n = set.size;
+      btn.textContent = n ? `${label}（${n}）` : `${label}（全部）`;
+      render();
+    };
+  });
+  btn.onclick = (e) => {
+    e.stopPropagation();
+    document.querySelectorAll(".ms-dd").forEach(d=>{ if(d!==wrap) d.classList.remove("open"); });
+    wrap.classList.toggle("open");
+  };
+}
+document.body.addEventListener("click", () => {
+  document.querySelectorAll(".ms-dd").forEach(d=>d.classList.remove("open"));
+});
+
+function buildFilters(){
+  const data = state.data;
+  const industries = [...new Set(data.map(d=>d["KPI三级行业"]).filter(Boolean))].sort();
+  const products = [...new Set(data.map(d=>d["商品类型"]).filter(Boolean))].sort();
+  const customers = [...new Set(data.map(d=>d["客户简称"]).filter(Boolean))].sort();
+  const brands = [...new Set(data.map(d=>d["品牌or非品牌"]).filter(Boolean))].sort();
+  const matTypes = [...new Set(data.map(d => _itemMatTypeL1(d)).filter(Boolean))].sort();
+  buildMultiSelect("ddIndustry", "行业", industries, "industries");
+  buildMultiSelect("ddProduct", "商品类型", products, "products");
+  buildMultiSelect("ddCustomer", "客户", customers, "customers");
+  buildMultiSelect("ddBrand", "品牌", brands, "brands");
+  buildMultiSelect("ddMatType", "素材类型", matTypes, "matTypes");
+
+  // 指标标签 chips
+  const chips = document.getElementById("fMetricTags");
+  const usedTags = new Set();
+  data.forEach(d => (d.metric_tags||[]).forEach(t => usedTags.add(t)));
+  const order = METRIC_TAG_LIST.filter(t => usedTags.has(t));
+  // 但隐藏跟金额相关的 tag（高消耗 / 高增长）
+  const visible = order.filter(t => t !== "高消耗" && t !== "高增长");
+  chips.innerHTML = visible.map(t => `<span class="chip" data-tag="${escapeHTML(t)}">${escapeHTML(t)}</span>`).join("");
+  chips.querySelectorAll(".chip").forEach(c=>{
+    c.onclick = () => {
+      const t = c.dataset.tag;
+      const set = state.filters.metricTags;
+      if(set.has(t)){ set.delete(t); c.classList.remove("on"); }
+      else{ set.add(t); c.classList.add("on"); }
+      render();
+    };
+  });
+
+  // 仅显示失败
+  const cf = document.getElementById("chipOnlyFailed");
+  cf.onclick = () => {
+    state.filters.onlyFailed = !state.filters.onlyFailed;
+    cf.classList.toggle("on", state.filters.onlyFailed);
+    render();
+  };
+
+  document.getElementById("sortBy").onchange = e => { state.sortBy = e.target.value; render(); };
+  document.getElementById("sortDir").onchange = e => { state.sortDir = e.target.value; render(); };
+  document.getElementById("topN").onchange = e => { state.topN = parseInt(e.target.value,10)||0; render(); };
+
+  document.getElementById("btnClearFilters").onclick = () => {
+    state.filters.industries.clear();
+    state.filters.products.clear();
+    state.filters.customers.clear();
+    state.filters.brands.clear();
+    state.filters.matTypes.clear();
+    state.filters.metricTags.clear();
+    state.filters.onlyFailed = false;
+    document.querySelectorAll(".chip.on").forEach(c => c.classList.remove("on"));
+    document.querySelectorAll(".ms-dd-btn").forEach(b => {
+      const t = b.textContent || "";
+      const m = t.match(/^(.+?)（/);
+      if(m) b.textContent = `${m[1]}（全部）`;
+    });
+    render();
+  };
+}
+
+function renderCommon(){
+  const cf = PAYLOAD.common_features;
+  if(!cf || !cf.features || !cf.features.length) return;
+  const sec = document.getElementById("commonSection");
+  sec.hidden = false;
+  document.getElementById("commonSub").textContent =
+    `基于 ${cf.n_analyzed||state.data.length} 条素材聚合 · ${cf.filter_summary||''}`;
+  _renderCfGrid(cf.features);
+}
+
+// —— 把"特征提炼"卡片区刷新成新的 features 数组 ——
+function _renderCfGrid(features){
+  const grid = document.getElementById("commonGrid");
+  grid.innerHTML = features.map((f,i) => `
+    <div class="cf-card">
+      <div class="cf-no">${String(i+1).padStart(2,'0')}</div>
+      <div class="cf-title">${escapeHTML(f.title||'')}</div>
+      <div class="cf-desc">${escapeHTML(f.desc||f.description||'')}</div>
+    </div>
+  `).join("");
+}
+
+// —— 内部版：refresh 提炼按钮（同源调工作台 /api/common-features） ——
+//   * 仅 internal=true 才显示
+//   * 不写共享缓存（user 调用即时计算 / admin 不传 force=true 也只在 cache_key 变了时才写）
+//   * 强制 force=true → 让后端跳过 cache 命中、立刻重跑
+(function bindCfRefresh(){
+  const btn = document.getElementById("cfRefreshBtn");
+  const msg = document.getElementById("cfRefreshMsg");
+  if(!btn) return;
+  if(state.internal){
+    btn.style.display = "inline-flex";
+  }
+
+  function showMsg(text, kind){
+    msg.style.display = "block";
+    msg.style.color = kind === 'err' ? '#fca5a5' : (kind === 'ok' ? '#86efac' : '#94a3b8');
+    msg.textContent = text;
+  }
+
+  async function refresh(){
+    btn.disabled = true;
+    const oldText = btn.textContent;
+    btn.textContent = "⏳ 提炼中…";
+    // ⚠️ 用当前页面**筛选 + topN 后**的视图作为提炼范围
+    const visible = applyTopN(applySort(applyFilter(state.data)));
+    const md5s = visible.map(it => it.md5).filter(Boolean);
+    if(md5s.length < 3){
+      showMsg(`✗ 当前筛选下只有 ${md5s.length} 条素材，至少需要 3 条才能提炼共性`, "err");
+      btn.disabled = false;
+      btn.textContent = oldText;
+      return;
+    }
+    const filter_summary = buildFilterSummary(visible);
+    showMsg(`正在调 Gemini 实时聚合 ${md5s.length} 条素材，预计 15-30s …`, "info");
+    // ⚠️ 关键：先把内容区替换成"解析中…"占位
+    const grid = document.getElementById("commonGrid");
+    const sub  = document.getElementById("commonSub");
+    const oldGrid = grid ? grid.innerHTML : "";
+    const oldSub  = sub  ? sub.innerHTML  : "";
+    if(grid){
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;padding:40px 20px;text-align:center;color:#9dbcff;
+                    background:#0a0e18;border:1px dashed #2b3447;border-radius:8px;font-size:13px;line-height:1.8">
+          <div style="font-size:24px;margin-bottom:10px">⏳</div>
+          <div><b>正在重新提炼当前 ${md5s.length} 条素材的共性特征…</b></div>
+          <div style="color:var(--muted);font-size:12px;margin-top:6px">
+            范围：${escapeHTML(filter_summary)}<br>
+            调用 Gemini 跨条聚合，通常 15-30 秒，请耐心等候。<br>
+            本次刷新仅在你浏览器内生效，不会写回服务端缓存。
+          </div>
+        </div>`;
+    }
+    if(sub){
+      sub.textContent = `⏳ 重新提炼中…`;
+    }
+    const date = (PAYLOAD.meta && PAYLOAD.meta.date) || "";
+    let restoreOnError = () => {
+      if(grid && oldGrid) grid.innerHTML = oldGrid;
+      if(sub  && oldSub)  sub.innerHTML  = oldSub;
+    };
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 90000);
+    try {
+      const resp = await fetch(`${location.origin}/api/common-features`, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        credentials: "include",
+        signal: ctrl.signal,
+        body: JSON.stringify({
+          md5s, filter_summary,
+          scope: "history",
+          date,
+          force: true,
+        })
+      });
+      if(resp.status === 401){
+        showMsg("⚠ 未登录或会话已过期。请回到工作台 /dashboard/login.html 登录后再来刷新。", "err");
+        restoreOnError();
+        return;
+      }
+      if(resp.status === 403){
+        showMsg("⚠ 权限不足。请确认你已登录工作台。", "err");
+        restoreOnError();
+        return;
+      }
+      const j = await resp.json();
+      if(!j.ok){
+        showMsg(`✗ 提炼失败：${j.error || "未知错误"}`, "err");
+        restoreOnError();
+        return;
+      }
+      _renderCfGrid(j.features || []);
+      const fromCache = j.from_cache ? '（命中缓存）' : '（实时计算）';
+      if(sub) sub.textContent = `基于 ${j.n_analyzed||md5s.length} 条素材聚合 · ${j.filter_summary||filter_summary} · 刚刚刷新 ${fromCache}`;
+      showMsg(`✓ 已刷新（${(j.features||[]).length} 条特征，本次刷新仅在你浏览器内生效，未写回服务端缓存）`, "ok");
+    } catch(e){
+      if(e.name === 'AbortError'){
+        showMsg("✗ 提炼超时（90 秒未响应），请稍后重试", "err");
+      } else {
+        showMsg(`✗ 网络异常：${e.message || String(e)}`, "err");
+      }
+      restoreOnError();
+    } finally {
+      clearTimeout(timer);
+      btn.disabled = false;
+      btn.textContent = oldText;
+    }
+  }
+
+  // —— 根据当前筛选 + 视图生成简短描述（filter_summary） ——
+  function buildFilterSummary(visible){
+    const f = state.filters || {};
+    const parts = [];
+    function chip(set, label){
+      if(set && typeof set.size === 'number' && set.size > 0){
+        const arr = [...set];
+        parts.push(arr.length === 1 ? arr[0] : `${label}×${arr.length}`);
+      }
+    }
+    chip(f.industries, "行业");
+    chip(f.products,   "商品");
+    chip(f.customers,  "客户");
+    chip(f.brands,     "品牌");
+    chip(f.metricTags, "指标");
+    if(state.topN && state.topN > 0 && state.topN < state.data.length){
+      parts.push(`Top ${state.topN}`);
+    }
+    const head = parts.length ? parts.join(" · ") : "全部";
+    return `${head} · ${visible.length} 条`;
+  }
+
+  btn.addEventListener("click", refresh);
+})();
+
+// 初始化
+buildFilters();
+renderCommon();
+render();
+
+// —— 内部版独占：顶部「📤 发布到公网」按钮 ——
+//   点击后跳到本地工作台并触发 GitHub Pages 发布对话框
+(function injectPublishToWebBtn(){
+  if(!state.internal) return;
+  const slot = document.getElementById("publishToWebSlot");
+  if(!slot) return;
+  const ymd = (state.meta && state.meta.date) || "";
+  if(!ymd) return;
+  // 工作台地址：默认本地 8766；若用户改了端口/host，可以在 url 后加 ?stmcHost=
+  const localBase = (window.STMC_LOCAL_HOST || "http://127.0.0.1:8766").replace(/\/$/,"");
+  const u = `${localBase}/dashboard/index.html?action=publish-github&date=${encodeURIComponent(ymd)}`;
+  slot.innerHTML = `<a id="btnPublishWeb" href="${u}" target="_blank" rel="noopener"
+    title="把对外版（脱敏）发布到 GitHub Pages 公网，让客户能访问"
+    style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;
+           background:linear-gradient(180deg,#22c55e,#16a34a);color:#fff;
+           border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;
+           box-shadow:0 2px 8px rgba(34,197,94,.3);transition:.15s">
+    📤 发布对外版到公网</a>`;
+})();
+
+// —— 全局事件代理：黄金 3s Prompt 的「📋 复制」按钮 ——
+//   注意：因为卡片是动态渲染的，直接绑 click 会丢；所以走 document 事件委托。
+function _pubToast(msg, kind){
+  let el = document.getElementById("_pubToast");
+  if(!el){
+    el = document.createElement("div");
+    el.id = "_pubToast";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.className = kind || "ok";
+  el.style.display = "block";
+  clearTimeout(_pubToast._t);
+  _pubToast._t = setTimeout(()=>{ el.style.display = "none"; }, 1800);
+}
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const txt = btn.getAttribute("data-hook-copy") || "";
+  // 解码 escapeHTML（&amp; &lt; &gt; &quot; &#39;）
+  const decoded = (() => {
+    const ta = document.createElement("textarea");
+    ta.innerHTML = txt;
+    return ta.value;
+  })();
+  const finish = (ok) => {
+    if(ok){
+      btn.classList.add("copied");
+      const orig = btn.textContent;
+      btn.textContent = "✓ 已复制";
+      setTimeout(()=>{ btn.classList.remove("copied"); btn.textContent = orig; }, 1500);
+      _pubToast("已复制黄金 3s prompt，可粘贴到妙思 admuse", "ok");
+    } else {
+      _pubToast("复制失败，请手动选中", "err");
+    }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(()=>finish(true), ()=>finish(false));
+  } else {
+    // 兜底：临时 textarea + execCommand
+    const ta = document.createElement("textarea");
+    ta.value = decoded;
+    ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(_){}
+    document.body.removeChild(ta);
+    finish(ok);
+  }
+}, false);
+
+document.getElementById("footer").textContent =
+  `素材周报 · ${state.meta.title||''} · 导出于 ${state.meta.exported_at||''}`;
+</script>
+</body>
+</html>
