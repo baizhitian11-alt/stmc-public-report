@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>面膜/局部贴 · 20260521 周报</title>
+<style>
+  :root{--bg:#0a0d14;--panel:#101622;--panel2:#0d1320;--line:#1f2937;
+        --text:#e6edf3;--muted:#94a3b8;--primary:#fbbf24;--success:#86efac;--info:#9dbcff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:24px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+          background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line)}
+  .header .nav{color:var(--muted);font-size:13px}
+  .header .nav a{color:var(--muted)}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .badge{background:rgba(157,188,255,.14);color:var(--info);padding:4px 10px;
+                 border-radius:12px;font-size:12px;border:1px solid rgba(157,188,255,.3)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+  .section{margin-top:32px}
+  .section h2{margin:0 0 16px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section h2 .count{font-size:13px;color:var(--muted);font-weight:400}
+
+  /* ① 指标均值 */
+  .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+                background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .m-cell{text-align:center}
+  .m-cell .lab{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .m-cell .val{font-size:22px;font-weight:700;color:var(--text)}
+  .m-cell .val.muted{color:var(--muted);font-size:18px}
+  .m-cell .unit{font-size:12px;color:var(--muted);margin-left:2px}
+
+  /* ② 脚本框架 A-B-C-D-E */
+  .frame-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;
+               background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .stage-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .stage-card .stg-ix{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--primary);
+                      background:rgba(251,191,36,.14);padding:2px 7px;border-radius:6px;border:1px solid rgba(251,191,36,.3)}
+  .stage-card .stg-name{font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;padding-right:36px}
+  .stage-card .stg-purpose{font-size:12px;color:#cbd2e0;line-height:1.6;margin-bottom:6px}
+  .stage-card .stg-time{font-size:11px;color:var(--info);margin-bottom:6px}
+  .stage-card .stg-pattern{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+  .frame-empty{padding:32px;text-align:center;color:var(--muted);font-size:13px;
+               background:var(--panel);border:1px dashed var(--line);border-radius:12px}
+
+  /* ③ Top5 紧凑卡片：左封面 + 右关键帧并列 */
+  .top-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;
+            display:grid;grid-template-columns:200px 1fr;gap:18px}
+  .top-card .cover{aspect-ratio:9/16;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .top-card .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .cover .placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:#475569;font-size:12px}
+  .top-card .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .top-card .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .top-card .head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;border:1px solid rgba(251,191,36,.3)}
+  .top-card .head .meta-pill{font-size:11px;color:#cbd2e0;background:#172033;padding:2px 8px;border-radius:4px;border:1px solid var(--line)}
+  .top-card .metrics-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+  .top-card .metrics-row b{color:var(--text)}
+  .top-card .desc{font-size:12px;color:#cbd2e0;line-height:1.7;
+                  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .top-card .frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .top-card .frame{background:#0a0e18;border:1px solid var(--line);border-radius:6px;overflow:hidden;aspect-ratio:9/16;position:relative}
+  .top-card .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .frame .fcap{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:10px;color:#fff;line-height:1.3}
+  .top-card .frame .fname{font-weight:600}
+  .top-card .frame .ftime{color:#9dbcff;font-size:9px}
+  .top-card .frame.no-img{display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;text-align:center;padding:8px}
+
+  /* 黄金 3s prompt */
+  .hp{background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:8px}
+  .hp .hp-h{font-size:12px;font-weight:600;color:var(--info);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hp .hp-actions{margin-left:auto;display:inline-flex;gap:6px}
+  .hp .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;font-size:10px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:4px;cursor:pointer;text-decoration:none;font-family:inherit}
+  .hp .hp-btn:hover{background:#1e293b;color:#fff}
+  .hp .hp-t{font-size:12px;color:#cbd2e0;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:32px;border-top:1px solid var(--line);margin-top:48px}
+  #_tip{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:8px 16px;border-radius:8px;font-size:12px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_tip.ok{background:#15803d}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="nav"><a href="index.html">← 返回首页</a></span>
+  <span class="nav">·</span>
+  <span class="nav"><a href="full.html">完整报告</a></span>
+  <h1 style="margin-left:12px">🧴 面膜/局部贴</h1>
+  <span class="badge">4 条素材</span>
+</div>
+
+<div class="wrap">
+  <!-- ① 指标均值 -->
+  <section class="section">
+    <h2>📊 指标均值 <span class="count">· 该类别 4 条素材的均值（消耗加权）</span></h2>
+    <div class="metrics-grid"><div class="m-cell"><div class="lab">消耗(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">增长量(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">CTR (均值)</div><span class="val">4.56<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">CVR (均值)</div><span class="val">48.11<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">3s完播 (均值)</div><span class="val">73.6<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">播放时长(均值)</div><span class="val">29.2<span class="unit">s</span></span></div></div>
+  </section>
+
+  <!-- ② 脚本框架 -->
+  <section class="section">
+    <h2>📋 脚本框架 <span class="count">· AI 跨条聚合该类别下的典型套路</span></h2>
+    <div class="frame-empty">该类别下样本不足或解析尚未跑完，暂无脚本框架。<br>需 ≥2 条带『素材结构』的素材才能聚合。</div>
+  </section>
+
+  <!-- ③ Top5 关键帧拆解 -->
+  <section class="section">
+    <h2>🏆 Top5 素材关键帧拆解 <span class="count">· 按消耗降序</span></h2>
+    <div class="top-card"><div class="cover"><img src="assets/31d470d42f99e3e2.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🏪 未填</span><span class="meta-pill">🧴 贴片面膜</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🏷️ 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>7.85%</b> · CVR <b>99.96%</b> · 3s完播 <b>70.2%</b> · 播放时长 <b>18.5s</b></div><div class="desc">素材类型属于明星背书+大促福利混剪型。开篇博主手持多盒面膜，配合『再不买就要恢复299』的紧迫感文案和『中秋大促』标签，制造囤货氛围。紧接着插入秦岚等明星推荐切片，快速建立品牌信任。随后展示多位女性面部痛点特写，包括暗沉、松弛、细纹、毛孔粗大、闭口等问题，精准戳中用户焦虑。重点展示面膜敷贴过程和核心成分卖点，强调海绵微针疏通毛孔、富勒烯类蛇毒肽紧致嫩肤的功效。结尾由张晨光夫妇出镜背书，再次强调『囤满半年量』的超值感，引导下单。</div><div class="frames"><div class="frame"><img src="assets/86d1b2e1ac2e792b.jpg" alt="frame1"><div class="fcap"><div class="fname">促销开篇</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/a915060ec99aeb22.jpg" alt="frame2"><div class="fcap"><div class="fname">明星背书</div><div class="ftime">3-6s</div></div></div><div class="frame"><img src="assets/f8fbcf358ceb4bd0.jpg" alt="frame3"><div class="fcap"><div class="fname">福利轰炸</div><div class="ftime">6-14s</div></div></div><div class="frame"><img src="assets/3b27b473a03cc8eb.jpg" alt="frame4"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">14-24s</div></div></div><div class="frame"><img src="assets/ecf2d5879cf5b117.jpg" alt="frame5"><div class="fcap"><div class="fname">产品演示</div><div class="ftime">24-34s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄年轻女性博主手持多盒黑色面膜礼盒，表情兴奋夸张，画面顶部飘出粉色横幅『再不买就要恢复299一盒了』制造紧迫感。配音用激动语气说『这可能是你今年囤面膜最狠的一次』，1.5秒快切至产品堆叠画面和明星推荐片段。节奏紧凑，前3秒用『限时低价+明星信任』双重钩子抓住用户停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄年轻女性博主手持多盒黑色面膜礼盒，表情兴奋夸张，画面顶部飘出粉色横幅『再不买就要恢复299一盒了』制造紧迫感。配音用激动语气说『这可能是你今年囤面膜最狠的一次』，1.5秒快切至产品堆叠画面和明星推荐片段。节奏紧凑，前3秒用『限时低价+明星信任』双重钩子抓住用户停留。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/0edf709908074d94.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🏪 未填</span><span class="meta-pill">🧴 贴片面膜</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🏷️ 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>1.24%</b> · CVR <b>8.50%</b> · 3s完播 <b>72.4%</b> · 播放时长 <b>20.1s</b></div><div class="desc">素材类型属于明星背书+反差爆改剧情型。开篇以年轻男生走进化妆店向大妈提出化妆需求作为悬念钩子，大妈夸张的化妆手法制造笑点。接着展示大妈卸妆后的真实素颜状态，放大色斑、黄黑皮、松弛等肌肤痛点。重点展示谷雨流金面膜的产品质地与核心卖点，强调极光甘草美白淡斑、活性微囊弹嫩提亮、次抛保鲜等功效，并插入演员何宣林、向涵之的明星背书画面。加入多位不同城市素人的街头采访证言，增强可信度。结尾呈现大妈蜕变为酷飒御姐吉他手的惊艳反转，配合直播间高性价比促销信息引导下单。</div><div class="frames"><div class="frame"><img src="assets/a8efab381f59d92a.jpg" alt="frame1"><div class="fcap"><div class="fname">开篇悬念</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/eb5950ab5a5fb39e.jpg" alt="frame2"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">3-28s</div></div></div><div class="frame"><img src="assets/52620a26f81e61b3.jpg" alt="frame3"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">28-45s</div></div></div><div class="frame"><img src="assets/7f277b2fea965703.jpg" alt="frame4"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">45-60s</div></div></div><div class="frame"><img src="assets/33e4f67e15160958.jpg" alt="frame5"><div class="fcap"><div class="fname">明星背书</div><div class="ftime">60-70s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄年轻男生侧脸走进杂乱的化妆小店，背景是各类小商品，男生开口问『姐，咱这儿能化妆吗』，语气带点调侃。画面快切到50岁大妈店主正脸，穿着朴素白衬衫，大妈干脆回答『能，化妆20』。男生立刻掏出手机展示一张浓妆艳抹的模特照片说『就化这个妆』，制造『土味小店x高难度妆容』的反差悬念，激发观众好奇心停留看后续反转。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄年轻男生侧脸走进杂乱的化妆小店，背景是各类小商品，男生开口问『姐，咱这儿能化妆吗』，语气带点调侃。画面快切到50岁大妈店主正脸，穿着朴素白衬衫，大妈干脆回答『能，化妆20』。男生立刻掏出手机展示一张浓妆艳抹的模特照片说『就化这个妆』，制造『土味小店x高难度妆容』的反差悬念，激发观众好奇心停留看后续反转。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/ed01b8f7e70f6a5b.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#3</span><span class="meta-pill">🏪 未填</span><span class="meta-pill">🧴 贴片面膜</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🏷️ 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>1.10%</b> · CVR <b>1.50%</b> · 3s完播 <b>73.4%</b> · 播放时长 <b>47.5s</b></div><div class="desc">素材类型属于多明星背书+达人演示型。开篇快速切换陈妍希、姜妍、王琳、王艳、秦岚五位明星的『感谢青岚』口播，秦岚手持产品引出『皮秒膏可以在家做』的钩子。接着用『断崖式衰老』『垮脸人的命根子』等痛点话术戳中目标人群焦虑。重点展示谷雨山参胶原面膜的果冻质地、独立小金蛋包装和涂抹即时提亮效果，强调含高纯度极光甘草和人参皂苷CK成分。多位模特演示刷涂按摩手法，呈现紧致水润的使用效果。结尾以宠粉活动和新品福利引导下单转化。</div><div class="frames"><div class="frame"><img src="assets/f2014f8b15306bde.jpg" alt="frame1"><div class="fcap"><div class="fname">明星背书开篇</div><div class="ftime">0-9s</div></div></div><div class="frame"><img src="assets/682fba8edc54e988.jpg" alt="frame2"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">9-14s</div></div></div><div class="frame"><img src="assets/b22b6a83d8b2966c.jpg" alt="frame3"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">14-23s</div></div></div><div class="frame"><img src="assets/72b5747d0e677c8d.jpg" alt="frame4"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">23-36s</div></div></div><div class="frame"><img src="assets/640f45613b9a9e3a.jpg" alt="frame5"><div class="fcap"><div class="fname">多场景演示</div><div class="ftime">36-50s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="快节奏切换三位知名女星特写画面，每人停留约1秒，均为精致妆容造型。第一位女星微笑说『我是XXX，我要感谢青岚』，立刻切换第二位重复同样句式，再切第三位。字幕同步显示『知名明星 XXX同款』标签。通过多明星连续出镜的高密度信息轰炸制造权威感和好奇心，让观众产生『这么多明星都在感谢的是什么』的悬念。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">快节奏切换三位知名女星特写画面，每人停留约1秒，均为精致妆容造型。第一位女星微笑说『我是XXX，我要感谢青岚』，立刻切换第二位重复同样句式，再切第三位。字幕同步显示『知名明星 XXX同款』标签。通过多明星连续出镜的高密度信息轰炸制造权威感和好奇心，让观众产生『这么多明星都在感谢的是什么』的悬念。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/109eb0bcbccd6395.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#4</span><span class="meta-pill">🏪 未填</span><span class="meta-pill">🧴 涂抹面膜</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🏷️ 营销福利</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.08%</b> · CVR <b>0.21%</b> · 3s完播 <b>85.4%</b> · 播放时长 <b>50.7s</b></div><div class="desc">素材类型属于主播口播+营销福利型。开篇男女双主播站在产品展台前，字幕直接打出『五一面膜活动来啦』，配合『平时舍不得买』的话术精准锁定价格敏感人群。接着强调『五一一年一次大活动就在今天』，用时间稀缺性制造紧迫感。重点展示产品数量优势，采用递进否定手法『不是10片、不是20片、不是30片』，最终揭晓『通通50片』形成数字冲击。结尾明确喊话『想省钱、想囤货的富婆小姐姐们』，引导用户进入直播间完成转化闭环。</div><div class="frames"><div class="frame"><img src="assets/d7d5559784b109f9.jpg" alt="frame1"><div class="fcap"><div class="fname">福利开篇</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/94f7cec55a955a86.jpg" alt="frame2"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">3-5s</div></div></div><div class="frame"><img src="assets/eb0fb1d985801098.jpg" alt="frame3"><div class="fcap"><div class="fname">稀缺性强调</div><div class="ftime">5-8s</div></div></div><div class="frame"><img src="assets/1a694294d7b3ac23.jpg" alt="frame4"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">8-12s</div></div></div><div class="frame"><img src="assets/679a3501db9baf6a.jpg" alt="frame5"><div class="fcap"><div class="fname">利益揭晓</div><div class="ftime">12-14s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="户外阳光场景，一男一女双主播站在堆满紫色面膜礼盒的展台后方，男主播手持两片面膜向镜头展示。画面顶部立即弹出醒目黄色字幕『五一面膜活动来啦』，配音用热情语调说『平时舍不得买我们这个必扬玫瑰发酵面膜的粉丝们，看过来哦』。节奏明快，前3秒用『舍不得买+活动来了』制造价格痛点与福利悬念的双重钩子，激发用户停留欲望。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">户外阳光场景，一男一女双主播站在堆满紫色面膜礼盒的展台后方，男主播手持两片面膜向镜头展示。画面顶部立即弹出醒目黄色字幕『五一面膜活动来啦』，配音用热情语调说『平时舍不得买我们这个必扬玫瑰发酵面膜的粉丝们，看过来哦』。节奏明快，前3秒用『舍不得买+活动来了』制造价格痛点与福利悬念的双重钩子，激发用户停留欲望。</div></div></div></div>
+  </section>
+</div>
+
+<div class="footer">素材解析台 · 面膜/局部贴 · 20260521 · 对外版（脱敏）</div>
+<div id="_tip"></div>
+<script>
+// 复制按钮事件代理
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  var txt = btn.getAttribute("data-hook-copy") || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = txt;
+  var decoded = ta.value;
+  function ok(){
+    var t = document.getElementById("_tip");
+    t.textContent = "✓ 已复制黄金 3s prompt";
+    t.className = "ok"; t.style.display = "block";
+    clearTimeout(window._tipT);
+    window._tipT = setTimeout(function(){ t.style.display="none"; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(ok);
+  } else {
+    var t2 = document.createElement("textarea");
+    t2.value = decoded; t2.style.position="fixed"; t2.style.opacity="0";
+    document.body.appendChild(t2); t2.select();
+    try { document.execCommand("copy"); ok(); } catch(_){}
+    document.body.removeChild(t2);
+  }
+});
+</script>
+</body></html>
