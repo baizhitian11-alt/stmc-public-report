@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>精华 · 20260603 周报</title>
+<style>
+  :root{--bg:#0a0d14;--panel:#101622;--panel2:#0d1320;--line:#1f2937;
+        --text:#e6edf3;--muted:#94a3b8;--primary:#fbbf24;--success:#86efac;--info:#9dbcff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:24px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+          background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line)}
+  .header .nav{color:var(--muted);font-size:13px}
+  .header .nav a{color:var(--muted)}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .badge{background:rgba(157,188,255,.14);color:var(--info);padding:4px 10px;
+                 border-radius:12px;font-size:12px;border:1px solid rgba(157,188,255,.3)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+  .section{margin-top:32px}
+  .section h2{margin:0 0 16px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section h2 .count{font-size:13px;color:var(--muted);font-weight:400}
+
+  /* ① 指标均值 */
+  .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+                background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .m-cell{text-align:center}
+  .m-cell .lab{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .m-cell .val{font-size:22px;font-weight:700;color:var(--text)}
+  .m-cell .val.muted{color:var(--muted);font-size:18px}
+  .m-cell .unit{font-size:12px;color:var(--muted);margin-left:2px}
+
+  /* ② 脚本框架 A-B-C-D-E */
+  .frame-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;
+               background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .stage-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .stage-card .stg-ix{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--primary);
+                      background:rgba(251,191,36,.14);padding:2px 7px;border-radius:6px;border:1px solid rgba(251,191,36,.3)}
+  .stage-card .stg-name{font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;padding-right:36px}
+  .stage-card .stg-purpose{font-size:12px;color:#cbd2e0;line-height:1.6;margin-bottom:6px}
+  .stage-card .stg-time{font-size:11px;color:var(--info);margin-bottom:6px}
+  .stage-card .stg-pattern{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+  .frame-empty{padding:32px;text-align:center;color:var(--muted);font-size:13px;
+               background:var(--panel);border:1px dashed var(--line);border-radius:12px}
+
+  /* ②.b 方法论新模块（v2，2026-05-28 升级，对齐看板提示词）*/
+  .meth-block{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px}
+  .meth-block .mh{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:#fff;margin:0 0 12px}
+  .meth-block .mh .ic{font-size:16px}
+  .meth-block .mh .sub{font-size:12px;color:var(--muted);font-weight:400}
+  /* 双词云：左右两列 */
+  .wc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .wc-col{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .wc-col h4{margin:0 0 10px;font-size:12px;color:var(--info);font-weight:600;display:flex;align-items:center;gap:6px}
+  .wc-col h4 .n{color:var(--muted);font-weight:400;font-size:11px}
+  .wc-words{display:flex;flex-wrap:wrap;gap:6px}
+  .wc-w{padding:4px 10px;border-radius:14px;background:#172033;border:1px solid var(--line);font-size:12px;color:#cbd2e0}
+  .wc-w.s1{font-size:15px;color:#fff;background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.45)}
+  .wc-w.s2{font-size:13px;color:#fff;background:rgba(157,188,255,.14);border-color:rgba(157,188,255,.4)}
+  .wc-w.s3{font-size:12px;color:#cbd2e0}
+  .wc-w.s4{font-size:11px;color:var(--muted)}
+  /* persona 三列 */
+  .persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .persona-cell{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .persona-cell .pl{font-size:11px;color:var(--info);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .persona-cell .pv{font-size:12px;color:#cbd2e0;line-height:1.7}
+  /* 开篇细分 */
+  .subt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .subt-cell{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .subt-cell .stn{font-size:13px;font-weight:700;color:#fff;margin:0 0 4px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .subt-cell .stn .rec{font-size:11px;color:var(--primary);font-weight:600}
+  .subt-cell .std{font-size:12px;color:#cbd2e0;line-height:1.6}
+  /* 爆款话术 */
+  .viral-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .viral-list li{background:#0a0e18;border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:6px;padding:10px 12px;font-size:12px;color:#cbd2e0;line-height:1.7}
+  /* 跑量关键点 */
+  .runk-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .runk-list li{background:#0a0e18;border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:12px;color:#cbd2e0;line-height:1.7}
+  @media (max-width:760px){
+    .wc-grid,.persona-grid{grid-template-columns:1fr}
+    .viral-list{grid-template-columns:1fr}
+  }
+
+  /* ③ Top5 紧凑卡片：左封面 + 右关键帧并列 */
+  .top-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;
+            display:grid;grid-template-columns:200px 1fr;gap:18px}
+  .top-card .cover{aspect-ratio:9/16;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .top-card .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .cover .placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:#475569;font-size:12px}
+  .top-card .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .top-card .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .top-card .head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;border:1px solid rgba(251,191,36,.3)}
+  .top-card .head .meta-pill{font-size:11px;color:#cbd2e0;background:#172033;padding:2px 8px;border-radius:4px;border:1px solid var(--line)}
+  .top-card .metrics-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+  .top-card .metrics-row b{color:var(--text)}
+  .top-card .desc{font-size:12px;color:#cbd2e0;line-height:1.7;
+                  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .top-card .frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .top-card .frame{background:#0a0e18;border:1px solid var(--line);border-radius:6px;overflow:hidden;aspect-ratio:9/16;position:relative}
+  .top-card .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .frame .fcap{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:10px;color:#fff;line-height:1.3}
+  .top-card .frame .fname{font-weight:600}
+  .top-card .frame .ftime{color:#9dbcff;font-size:9px}
+  .top-card .frame.no-img{display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;text-align:center;padding:8px}
+
+  /* 黄金 3s prompt */
+  .hp{background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:8px}
+  .hp .hp-h{font-size:12px;font-weight:600;color:var(--info);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hp .hp-actions{margin-left:auto;display:inline-flex;gap:6px}
+  .hp .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;font-size:10px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:4px;cursor:pointer;text-decoration:none;font-family:inherit}
+  .hp .hp-btn:hover{background:#1e293b;color:#fff}
+  .hp .hp-t{font-size:12px;color:#cbd2e0;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:32px;border-top:1px solid var(--line);margin-top:48px}
+  #_tip{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:8px 16px;border-radius:8px;font-size:12px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_tip.ok{background:#15803d}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="nav"><a href="index.html">← 返回首页</a></span>
+  <span class="nav">·</span>
+  <span class="nav"><a href="full.html">完整报告</a></span>
+  <h1 style="margin-left:12px">🧴 精华</h1>
+  <span class="badge">30 条素材</span>
+</div>
+
+<div class="wrap">
+  <!-- ① 指标均值 -->
+  <section class="section">
+    <h2>📊 指标均值 <span class="count">· 该类别 30 条素材的均值（消耗加权）</span></h2>
+    <div class="metrics-grid"><div class="m-cell"><div class="lab">消耗(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">增长量(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">CTR (均值)</div><span class="val">3.67<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">CVR (均值)</div><span class="val">7.77<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">3s完播 (均值)</div><span class="val">50.3<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">播放时长(均值)</div><span class="val">13.5<span class="unit">s</span></span></div></div>
+  </section>
+
+  <!-- ② 方法论（脚本框架 + 词云 + 模特画像 + 爆款话术 + 跑量关键点） -->
+  <section class="section">
+    <h2>📚 方法论沉淀 <span class="count">· AI 跨条聚合：脚本框架 / 词云 / 画像 / 爆款话术 / 跑量关键点</span></h2>
+    <section class="meth-block" style="padding:14px 18px"><h3 class="mh"><span class="ic">📋</span>脚本框架<span class="sub">· 6 段，AI 跨条归纳</span></h3><div style="margin:0 -4px"><div class="frame-strip"><div class="stage-card"><span class="stg-ix">A</span><div class="stg-name">【悬念/福利开篇】</div><div class="stg-time">⏱ 0-5s</div><div class="stg-purpose">3秒内抓住用户注意力，制造好奇心或利益点吸引停留</div><div class="stg-pattern">📌 【话题悬念开篇】【明星福利开篇】【猎奇实验开篇】【痛点悬念开篇】【剧情悬念开篇】——用年龄反差、价格冲击、猎奇画面、热点话题快速吸睛</div></div><div class="stage-card"><span class="stg-ix">B</span><div class="stg-name">【用户痛点轰炸】</div><div class="stg-time">⏱ 5-20s</div><div class="stg-purpose">精准戳中目标人群焦虑，建立情感共鸣与需求唤醒</div><div class="stg-pattern">📌 【皱纹焦虑】【胶原流失】【斑点困扰】【衰老下垂】——用特写镜头+口播强化嘟嘟肉、法令纹、木偶纹等视觉痛点，锁定40-60岁抗老人群</div></div><div class="stage-card"><span class="stg-ix">C</span><div class="stg-name">【产品亮相+成分卖点】</div><div class="stg-time">⏱ 15-45s</div><div class="stg-purpose">展示产品核心卖点与成分功效，建立产品价值认知</div><div class="stg-pattern">📌 【产品成分卖点】【功效原理讲解】【使用演示】——突出活胶原、微晶渗透、玫瑰精华等核心成分，配合上脸演示增强说服力</div></div><div class="stage-card"><span class="stg-ix">D</span><div class="stg-name">【信任背书矩阵】</div><div class="stg-time">⏱ 20-50s</div><div class="stg-purpose">通过多维度背书消除用户疑虑，建立品牌信任</div><div class="stg-pattern">📌 【明星背书】【专家/科学家背书】【工厂实力背书】【用户证言】——明星亲测上脸、白大褂专家讲解、工厂生产线画面、素人前后对比证言</div></div><div class="stage-card"><span class="stg-ix">E</span><div class="stg-name">【效果对比展示】</div><div class="stg-time">⏱ 10-20s</div><div class="stg-purpose">用可视化对比强化产品效果，增强购买信心</div><div class="stg-pattern">📌 【效果对比】【前后对比】【实验演示】——香蕉斑点实验、面部前后对比、年龄反差对比，用视觉冲击证明功效</div></div><div class="stage-card"><span class="stg-ix">F</span><div class="stg-name">【价格福利+引导下单】</div><div class="stg-time">⏱ 10-25s</div><div class="stg-purpose">用超值福利制造紧迫感，促成即时转化</div><div class="stg-pattern">📌 【价格福利】【限时促销】【赠品堆砌】【引导下单】——69块9发3瓶、一折大促、买一送多，配合倒计时强化紧迫感</div></div></div></div></section><section class="meth-block"><h3 class="mh"><span class="ic">☁️</span>核心词云<span class="sub">· 卖点 / 痛点 / 明星 / 道具 等</span></h3><div class="wc-grid" style="grid-template-columns:1fr 1fr"><div class="wc-col"><h4>✨ 卖点 <span class="n">· 16 词</span></h4><div class="wc-words"><span class="wc-w s1">抗皱</span><span class="wc-w s1">去皱纹</span><span class="wc-w s1">活胶原</span><span class="wc-w s2">淡斑</span><span class="wc-w s2">断斑</span><span class="wc-w s2">紧致提拉</span><span class="wc-w s2">微晶渗透</span><span class="wc-w s2">玫瑰精华</span><span class="wc-w s3">深层修护</span><span class="wc-w s3">抗老</span><span class="wc-w s3">补水保湿</span><span class="wc-w s3">改善细纹</span><span class="wc-w s3">嫩肤亮白</span><span class="wc-w s3">工厂直发</span><span class="wc-w s3">一折福利</span><span class="wc-w s3">买一送多</span></div></div><div class="wc-col"><h4>😣 用户痛点 <span class="n">· 16 词</span></h4><div class="wc-words"><span class="wc-w s1">皱纹</span><span class="wc-w s1">法令纹</span><span class="wc-w s1">木偶纹</span><span class="wc-w s2">老太纹</span><span class="wc-w s2">嘴角纹</span><span class="wc-w s2">嘟嘟肉</span><span class="wc-w s2">口角囊袋</span><span class="wc-w s2">胶原流失</span><span class="wc-w s3">断崖式衰老</span><span class="wc-w s3">松弛下垂</span><span class="wc-w s3">斑点</span><span class="wc-w s3">片状斑</span><span class="wc-w s3">颧骨长斑</span><span class="wc-w s3">暗沉显老</span><span class="wc-w s3">年龄焦虑</span><span class="wc-w s3">医美风险</span></div></div></div></section><section class="meth-block"><h3 class="mh"><span class="ic">🪞</span>模特 / 对比 / 场景 三段画像</h3><div class="persona-grid"><div class="persona-cell"><div class="pl">👤 模特画像</div><div class="pv">主打40-60岁轻熟龄至中年女性，优先选择状态年轻、皮肤紧致的素人或明星（如牛莉、田震、于震），强调「40岁看起来像大学生」的年龄反差感，增强说服力。</div></div><div class="persona-cell"><div class="pl">🔁 效果对比方式</div><div class="pv">效果对比常用三种方式：①面部特写前后对比（皱纹淡化、皮肤紧致）；②猎奇实验对比（香蕉斑点消失、脚丫证明无美颜）；③年龄反差对比（43岁阿姨vs大学生、70后状态惊艳）。</div></div><div class="persona-cell"><div class="pl">🎬 场景搭建</div><div class="pv">场景以工厂/实验室（生产线、白大褂专家）、日常生活场景（地铁、化妆台、户外街头）、明星舞台/演播室为主，强化真实感与品质背书。</div></div></div></section><section class="meth-block"><h3 class="mh"><span class="ic">💬</span>常见爆款话术<span class="sub">· ≥2 条素材出现，产品名已隐藏 xx</span></h3><ul class="viral-list"><li>不可理喻的是她已经40岁了</li><li>大家听说了吗，最近在视频号上带货</li><li>xx的姐妹们有福了</li><li>是的你没听错，只要是我的粉丝</li><li>不是淡斑是断斑</li><li>洗完脸直接用，口红可以不买，xx不能不买</li><li>联合xx厂家，价格打下来了</li><li>一折！一折！真的全场一折啊</li><li>43岁阿姨逆袭被误以为大学生</li></ul></section><section class="meth-block"><h3 class="mh"><span class="ic">🚀</span>跑量关键点<span class="sub">· 必做要素清单</span></h3><ul class="runk-list"><li>① 开篇3秒定生死：用年龄反差悬念（40岁看起来像大学生）、价格冲击（一折/69块9发3瓶）、猎奇实验（香蕉祛斑）快速抓住中老年女性注意力，完播率提升关键。</li><li>② 痛点精准打击：聚焦40-60岁女性核心焦虑——皱纹（法令纹、木偶纹、嘴角纹）、胶原流失、斑点问题，用面部特写+口播双重强化，唤醒用户抗老需求。</li><li>③ 效果可视化呈现：通过香蕉斑点实验、面部前后对比、年龄反差素人等方式，让抗皱淡斑效果「看得见」，降低用户决策门槛，提升信任转化。</li><li>④ 多维背书矩阵：明星亲测（牛莉、田震、于震）+科学家/专家讲解+工厂生产线实拍+素人证言四重背书叠加，消除中老年用户对线上购物的信任顾虑。</li><li>⑤ 价格机制临门一脚：超低价锚点（一折/69.9元3瓶）+赠品堆砌+限时紧迫感（周年庆/大促）组合拳，配合「买一送多」话术降低决策成本，促成即时转化。</li></ul></section>
+  </section>
+
+  <!-- ③ Top5 关键帧拆解 -->
+  <section class="section">
+    <h2>🏆 Top5 素材关键帧拆解 <span class="count">· 按消耗降序</span></h2>
+    <div class="top-card"><div class="cover"><img src="assets/f211debb7a1c38f3.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 精华</span><span class="meta-pill">🧴 粉状精华/冻干精华</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 达人开篇</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.53%</b> · CVR <b>6.94%</b> · 3s完播 <b>61.2%</b> · 播放时长 <b>14.5s</b></div><div class="desc">开篇类型属于人设口播+新闻式悬念引入型。开篇以新闻播报风格抛出『中国出了改善皱纹法宝』的悬念钩子，配合『先试用再付款』的大胆承诺迅速抓住注意力。接着切入女企业家阳阳的办公室自述，手持奖杯情绪激动，讲述创业不易和被模仿的困扰，建立品牌正统性。中段展示源头工厂、实验室和产品特写，强调16年抗皱原料经验和活胶原蛋白成分。随后进入直播间促销环节，抛出『拍一发24』的超强优惠和正装体验承诺，降低决策门槛。结尾用多组街头采访用户好评收尾，以真实口碑强化转化信心。</div><div class="frames"><div class="frame"><img src="assets/b255a8e6d47819f3.jpg" alt="frame1"><div class="fcap"><div class="fname">悬念式开篇</div><div class="ftime">0-13s</div></div></div><div class="frame"><img src="assets/9d6fedc8eba718b3.jpg" alt="frame2"><div class="fcap"><div class="fname">人设信任建立</div><div class="ftime">13-29s</div></div></div><div class="frame"><img src="assets/9c9280e3a0f4685e.jpg" alt="frame3"><div class="fcap"><div class="fname">品牌正统性</div><div class="ftime">29-50s</div></div></div><div class="frame"><img src="assets/b9392371de56d92b.jpg" alt="frame4"><div class="fcap"><div class="fname">产品卖点展示</div><div class="ftime">50-68s</div></div></div><div class="frame"><img src="assets/3e87eef8b59aaa56.jpg" alt="frame5"><div class="fcap"><div class="fname">痛点唤醒</div><div class="ftime">68-78s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="新闻访谈式画面构图，上方标题栏显示醒目红色大字『中国居然出了个改善皱纹法宝』，中间画面是女性企业家接受采访的镜头。配音用播音腔男声急促说『北京已经传开了，做梦也没想到，中国居然出了一个去皱纹法宝』，语速快、信息密度高。节奏上1秒内抛出地域悬念，2秒揭示产品方向，3秒内完成新闻式权威感建立，用信息差制造好奇心驱动用户停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">新闻访谈式画面构图，上方标题栏显示醒目红色大字『中国居然出了个改善皱纹法宝』，中间画面是女性企业家接受采访的镜头。配音用播音腔男声急促说『北京已经传开了，做梦也没想到，中国居然出了一个去皱纹法宝』，语速快、信息密度高。节奏上1秒内抛出地域悬念，2秒揭示产品方向，3秒内完成新闻式权威感建立，用信息差制造好奇心驱动用户停留。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/54efa85c382dc923.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 精华</span><span class="meta-pill">🧴 精华液/肌底液</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.97%</b> · CVR <b>8.30%</b> · 3s完播 <b>45.6%</b> · 播放时长 <b>10.9s</b></div><div class="desc">开篇类型属于明星亲测体验+品牌信任背书型。开篇以演员牛莉亲身体验产品为钩子，通过『不疼吧莉姐』『直接就钻进去了』等对话消除用户对护肤品刺激性的顾虑。接着切换到产品特写和户外口播，强调防伪码、PDRN、NAD+等成分卖点，建立专业信任。重点展示厂家直发、自产自销、不偷工减料等品牌承诺，配合产品渗透海绵的效果演示。结尾通过『先买一单试试』『仓库直发』等话术降低决策门槛，引导进入直播间下单。</div><div class="frames"><div class="frame"><img src="assets/cea95028d9c88a04.jpg" alt="frame1"><div class="fcap"><div class="fname">明星体验开篇</div><div class="ftime">0-18s</div></div></div><div class="frame"><img src="assets/5e2330484d96da8b.jpg" alt="frame2"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">19-20s</div></div></div><div class="frame"><img src="assets/a75d60578ea269a9.jpg" alt="frame3"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">21-43s</div></div></div><div class="frame"><img src="assets/8e6defc927e184aa.jpg" alt="frame4"><div class="fcap"><div class="fname">品牌背书</div><div class="ftime">44-58s</div></div></div><div class="frame"><img src="assets/40e7466a42eea29b.jpg" alt="frame5"><div class="fcap"><div class="fname">效果演示</div><div class="ftime">59-72s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄明星牛莉坐在美容椅上，工作人员手持针管在其脸颊处操作。画面上方叠加『牛莉姐亲自上脸体验』黄色大字幕，吸引停留。配音用女声问『不疼吧莉姐』，牛莉回答『不疼啊』，1秒后切近景特写，工作人员说『你看直接就进去了』。整体节奏快速，用明星+体验感+产品吸收速度三重钩子制造好奇，激发观众继续观看。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄明星牛莉坐在美容椅上，工作人员手持针管在其脸颊处操作。画面上方叠加『牛莉姐亲自上脸体验』黄色大字幕，吸引停留。配音用女声问『不疼吧莉姐』，牛莉回答『不疼啊』，1秒后切近景特写，工作人员说『你看直接就进去了』。整体节奏快速，用明星+体验感+产品吸收速度三重钩子制造好奇，激发观众继续观看。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/68eb70a032dd5e2b.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#3</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 精华</span><span class="meta-pill">🧴 导入导出仪</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 达人开篇</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.91%</b> · CVR <b>4.89%</b> · 3s完播 <b>59.8%</b> · 播放时长 <b>11.6s</b></div><div class="desc">开篇类型属于达人口播+闺蜜背书型。开篇以日本街头高颜值闺蜜出镜，用『40多岁依然年轻』制造悬念和信任锚点。接着博主出镜演示水光仪使用方法，强调『懒女人必备』『快速方便』的使用体验。重点讲解产品核心卖点：深层补水优于面膜爽肤水精华，通过专业水光仪将精华打入皮肤深层。加入对比论证，用图标划叉强调普通护肤品只能表面吸收。结尾以价格锚点收尾，对比美容院四位数vs在家不到一块钱，引导进入直播间下单。</div><div class="frames"><div class="frame"><img src="assets/05c679c1090c2dc3.jpg" alt="frame1"><div class="fcap"><div class="fname">开篇悬念</div><div class="ftime">0-6s</div></div></div><div class="frame"><img src="assets/19a4fc3f428d3250.jpg" alt="frame2"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">7-12s</div></div></div><div class="frame"><img src="assets/17aedfefb367e85f.jpg" alt="frame3"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">13-18s</div></div></div><div class="frame"><img src="assets/b7e3aaa777ff26f7.jpg" alt="frame4"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">19-32s</div></div></div><div class="frame"><img src="assets/4fc7d6ae2caaa466.jpg" alt="frame5"><div class="fcap"><div class="fname">效果对比</div><div class="ftime">33-46s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="日本繁华街头实拍，一位穿白色镂空针织衫的短发美女面带微笑向镜头挥手，画面中央弹出黄色大字『我的日本闺蜜』。配音用轻松女声说『这是我的日本闺蜜，不可理喻的是她已经40多岁了』，第2秒美女回眸微笑特写，制造『冻龄秘密』悬念。节奏轻快，用年龄反差钩子激发观众好奇心。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">日本繁华街头实拍，一位穿白色镂空针织衫的短发美女面带微笑向镜头挥手，画面中央弹出黄色大字『我的日本闺蜜』。配音用轻松女声说『这是我的日本闺蜜，不可理喻的是她已经40多岁了』，第2秒美女回眸微笑特写，制造『冻龄秘密』悬念。节奏轻快，用年龄反差钩子激发观众好奇心。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/c2e4f0b9603023db.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#4</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 精华</span><span class="meta-pill">🧴 精华液/肌底液</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 达人开篇</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.45%</b> · CVR <b>2.92%</b> · 3s完播 <b>31.5%</b> · 播放时长 <b>12.7s</b></div><div class="desc">开篇类型属于人设口播+科研权威背书型。开篇以女主持新闻播报风格抛出「科学家带货被网友吐槽」的争议话题制造悬念，吸引用户停留。接着切入科学家唐翰宇本人回应，以「数十年科研心血」「好技术不应藏在实验室」的情怀话术建立信任。重点展示产品核心技术「自然可溶性透皮深渗技术」，配合微观动画讲解淡化川字纹、法令纹、鱼尾纹的原理。穿插多位不同职业女性使用产品的画面增强代入感。结尾以「自产自销不涨价」「免费领取试用」的福利承诺和工厂直发场景引导转化下单。</div><div class="frames"><div class="frame"><img src="assets/60e87052239792d7.jpg" alt="frame1"><div class="fcap"><div class="fname">悬念开场</div><div class="ftime">0-10s</div></div></div><div class="frame"><img src="assets/1d65f3e5b8506a0d.jpg" alt="frame2"><div class="fcap"><div class="fname">信任建立</div><div class="ftime">10-22s</div></div></div><div class="frame"><img src="assets/04563d3174672ebc.jpg" alt="frame3"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">22-26s</div></div></div><div class="frame"><img src="assets/8e74158e28bb6a76.jpg" alt="frame4"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">26-34s</div></div></div><div class="frame"><img src="assets/6a1932684497f48e.jpg" alt="frame5"><div class="fcap"><div class="fname">多场景演示</div><div class="ftime">34-40s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头，一位穿黑色西装的干练女主持站在舞台中央，画面上方浮现大字标题「科研人员跨界带货 被网友吐槽直播捞钱」，左侧画中画弹出白大褂科学家形象。女主持用播音腔快速抛出「大家听说了吗？科学家唐翰宇最近在视频号上带货，没想到被网友吐槽」，语速快、信息密度高，1秒内制造争议话题悬念。整体模拟新闻播报节奏，用冲突性标题和质疑语气激发用户好奇心停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头，一位穿黑色西装的干练女主持站在舞台中央，画面上方浮现大字标题「科研人员跨界带货 被网友吐槽直播捞钱」，左侧画中画弹出白大褂科学家形象。女主持用播音腔快速抛出「大家听说了吗？科学家唐翰宇最近在视频号上带货，没想到被网友吐槽」，语速快、信息密度高，1秒内制造争议话题悬念。整体模拟新闻播报节奏，用冲突性标题和质疑语气激发用户好奇心停留。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/ae3f1776c8cefb6a.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#5</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 精华</span><span class="meta-pill">🧴 面部洗护套装</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>5.00%</b> · CVR <b>4.91%</b> · 3s完播 <b>47.1%</b> · 播放时长 <b>13.2s</b></div><div class="desc">开篇类型属于明星福利背书+用户证言型。开篇明星阳阳在大型舞台激情演讲，抛出『一直舍不得买活胶原的姐妹们有福了』制造福利期待感。接着切换直播间场景，阳阳详细罗列抬头纹、川字纹、法令纹、大眼袋等皮肤痛点，精准锁定目标人群。重点展示产品核心卖点：小分子高活性胶原蛋白、无添加水、晚上使用效果猛。穿插上海陈女士街头采访和多位模特上脸实测画面，用真实用户背书增强可信度。结尾强调一折优惠力度、试用满意再留下的售后保障，通过『不计成本回馈粉丝』话术引导下单转化。</div><div class="frames"><div class="frame"><img src="assets/5a1fa52ffdc85474.jpg" alt="frame1"><div class="fcap"><div class="fname">明星福利开场</div><div class="ftime">0-9s</div></div></div><div class="frame"><img src="assets/eec3a1dfc16c2a57.jpg" alt="frame2"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">9-18s</div></div></div><div class="frame"><img src="assets/50bf790a23adcb49.jpg" alt="frame3"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">18-28s</div></div></div><div class="frame"><img src="assets/a1d28066c47e42e4.jpg" alt="frame4"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">28-56s</div></div></div><div class="frame"><img src="assets/e690aa863bee2a8d.jpg" alt="frame5"><div class="fcap"><div class="fname">用户证言</div><div class="ftime">56-78s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="大型体育馆舞台全景，聚光灯下明星阳阳身穿金色西装手持麦克风激情演讲，背景是密集观众席。画面上方红色横幅写着『阳阳工厂 全场一折』。配音用充满感染力的女声喊出『一直舍不得买活胶原的姐妹们有福了』，语速快节奏紧凑。通过明星身份+福利预告双重钩子制造停留，让用户产生『这个福利我要看看』的好奇心。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">大型体育馆舞台全景，聚光灯下明星阳阳身穿金色西装手持麦克风激情演讲，背景是密集观众席。画面上方红色横幅写着『阳阳工厂 全场一折』。配音用充满感染力的女声喊出『一直舍不得买活胶原的姐妹们有福了』，语速快节奏紧凑。通过明星身份+福利预告双重钩子制造停留，让用户产生『这个福利我要看看』的好奇心。</div></div></div></div>
+  </section>
+</div>
+
+<div class="footer">素材解析台 · 精华 · 20260603 · 对外版（脱敏）</div>
+<div id="_tip"></div>
+<script>
+// 复制按钮事件代理
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  var txt = btn.getAttribute("data-hook-copy") || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = txt;
+  var decoded = ta.value;
+  function ok(){
+    var t = document.getElementById("_tip");
+    t.textContent = "✓ 已复制黄金 3s prompt";
+    t.className = "ok"; t.style.display = "block";
+    clearTimeout(window._tipT);
+    window._tipT = setTimeout(function(){ t.style.display="none"; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(ok);
+  } else {
+    var t2 = document.createElement("textarea");
+    t2.value = decoded; t2.style.position="fixed"; t2.style.opacity="0";
+    document.body.appendChild(t2); t2.select();
+    try { document.execCommand("copy"); ok(); } catch(_){}
+    document.body.removeChild(t2);
+  }
+});
+</script>
+</body></html>
