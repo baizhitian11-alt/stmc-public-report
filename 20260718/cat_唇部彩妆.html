@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>唇部彩妆 · 20260718 周报</title>
+<style>
+  :root{--bg:#0a0d14;--panel:#101622;--panel2:#0d1320;--line:#1f2937;
+        --text:#e6edf3;--muted:#94a3b8;--primary:#fbbf24;--success:#86efac;--info:#9dbcff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:24px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+          background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line)}
+  .header .nav{color:var(--muted);font-size:13px}
+  .header .nav a{color:var(--muted)}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .badge{background:rgba(157,188,255,.14);color:var(--info);padding:4px 10px;
+                 border-radius:12px;font-size:12px;border:1px solid rgba(157,188,255,.3)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+  .section{margin-top:32px}
+  .section h2{margin:0 0 16px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section h2 .count{font-size:13px;color:var(--muted);font-weight:400}
+
+  /* ① 指标均值 */
+  .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+                background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .m-cell{text-align:center}
+  .m-cell .lab{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .m-cell .val{font-size:22px;font-weight:700;color:var(--text)}
+  .m-cell .val.muted{color:var(--muted);font-size:18px}
+  .m-cell .unit{font-size:12px;color:var(--muted);margin-left:2px}
+
+  /* ② 脚本框架 A-B-C-D-E */
+  .frame-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;
+               background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .stage-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .stage-card .stg-ix{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--primary);
+                      background:rgba(251,191,36,.14);padding:2px 7px;border-radius:6px;border:1px solid rgba(251,191,36,.3)}
+  .stage-card .stg-name{font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;padding-right:36px}
+  .stage-card .stg-purpose{font-size:12px;color:#cbd2e0;line-height:1.6;margin-bottom:6px}
+  .stage-card .stg-time{font-size:11px;color:var(--info);margin-bottom:6px}
+  .stage-card .stg-pattern{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+  .frame-empty{padding:32px;text-align:center;color:var(--muted);font-size:13px;
+               background:var(--panel);border:1px dashed var(--line);border-radius:12px}
+
+  /* ②.b 方法论新模块（v2，2026-05-28 升级，对齐看板提示词）*/
+  .meth-block{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px}
+  .meth-block .mh{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:#fff;margin:0 0 12px}
+  .meth-block .mh .ic{font-size:16px}
+  .meth-block .mh .sub{font-size:12px;color:var(--muted);font-weight:400}
+  /* 双词云：左右两列 */
+  .wc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .wc-col{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .wc-col h4{margin:0 0 10px;font-size:12px;color:var(--info);font-weight:600;display:flex;align-items:center;gap:6px}
+  .wc-col h4 .n{color:var(--muted);font-weight:400;font-size:11px}
+  .wc-words{display:flex;flex-wrap:wrap;gap:6px}
+  .wc-w{padding:4px 10px;border-radius:14px;background:#172033;border:1px solid var(--line);font-size:12px;color:#cbd2e0}
+  .wc-w.s1{font-size:15px;color:#fff;background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.45)}
+  .wc-w.s2{font-size:13px;color:#fff;background:rgba(157,188,255,.14);border-color:rgba(157,188,255,.4)}
+  .wc-w.s3{font-size:12px;color:#cbd2e0}
+  .wc-w.s4{font-size:11px;color:var(--muted)}
+  /* persona 三列 */
+  .persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .persona-cell{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .persona-cell .pl{font-size:11px;color:var(--info);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .persona-cell .pv{font-size:12px;color:#cbd2e0;line-height:1.7}
+  /* 开篇细分 */
+  .subt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .subt-cell{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .subt-cell .stn{font-size:13px;font-weight:700;color:#fff;margin:0 0 4px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .subt-cell .stn .rec{font-size:11px;color:var(--primary);font-weight:600}
+  .subt-cell .std{font-size:12px;color:#cbd2e0;line-height:1.6}
+  /* 爆款话术 */
+  .viral-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .viral-list li{background:#0a0e18;border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:6px;padding:10px 12px;font-size:12px;color:#cbd2e0;line-height:1.7}
+  /* 跑量关键点 */
+  .runk-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .runk-list li{background:#0a0e18;border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:12px;color:#cbd2e0;line-height:1.7}
+  @media (max-width:760px){
+    .wc-grid,.persona-grid{grid-template-columns:1fr}
+    .viral-list{grid-template-columns:1fr}
+  }
+
+  /* ③ Top5 紧凑卡片：左封面 + 右关键帧并列 */
+  .top-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;
+            display:grid;grid-template-columns:200px 1fr;gap:18px}
+  .top-card .cover{display:flex;flex-direction:column;gap:8px}
+  .top-card .cover img{width:100%;aspect-ratio:9/16;object-fit:cover;display:block;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .top-card .cover .placeholder{display:flex;align-items:center;justify-content:center;aspect-ratio:9/16;background:#000;border-radius:8px;border:1px solid var(--line);color:#475569;font-size:12px}
+  .top-card .cover .top-video-link{display:block;text-align:center;font-size:12px;padding:6px 8px;border-radius:6px;
+                                    color:var(--info);background:rgba(157,188,255,.1);border:1px solid rgba(157,188,255,.35)}
+  .top-card .cover .top-video-link:hover{background:rgba(157,188,255,.2)}
+  .top-card .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .top-card .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .top-card .head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;border:1px solid rgba(251,191,36,.3)}
+  .top-card .head .meta-pill{font-size:11px;color:#cbd2e0;background:#172033;padding:2px 8px;border-radius:4px;border:1px solid var(--line)}
+  .top-card .metrics-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+  .top-card .metrics-row b{color:var(--text)}
+  .top-card .desc{font-size:12px;color:#cbd2e0;line-height:1.7;
+                  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .top-card .frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .top-card .frame{background:#0a0e18;border:1px solid var(--line);border-radius:6px;overflow:hidden;aspect-ratio:9/16;position:relative}
+  .top-card .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .frame .fcap{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:10px;color:#fff;line-height:1.3}
+  .top-card .frame .fname{font-weight:600}
+  .top-card .frame .ftime{color:#9dbcff;font-size:9px}
+  .top-card .frame.no-img{display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;text-align:center;padding:8px}
+
+  /* 黄金 3s prompt */
+  .hp{background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:8px}
+  .hp .hp-h{font-size:12px;font-weight:600;color:var(--info);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hp .hp-actions{margin-left:auto;display:inline-flex;gap:6px}
+  .hp .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;font-size:10px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:4px;cursor:pointer;text-decoration:none;font-family:inherit}
+  .hp .hp-btn:hover{background:#1e293b;color:#fff}
+  .hp .hp-t{font-size:12px;color:#cbd2e0;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:32px;border-top:1px solid var(--line);margin-top:48px}
+  #_tip{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:8px 16px;border-radius:8px;font-size:12px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_tip.ok{background:#15803d}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="nav"><a href="index.html">← 返回首页</a></span>
+  <span class="nav">·</span>
+  <span class="nav"><a href="full.html">完整报告</a></span>
+  <h1 style="margin-left:12px">🧴 唇部彩妆</h1>
+  <span class="badge">11 条素材</span>
+</div>
+
+<div class="wrap">
+  <!-- ① 指标均值 -->
+  <section class="section">
+    <h2>📊 指标均值 <span class="count">· 清晰呈现本类素材基准指标，帮你快速定位差距，校准优化方向</span></h2>
+    <div class="metrics-grid"><div class="m-cell"><div class="lab">消耗(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">增长量(均值)</div><span class="val muted" title="对外版隐藏数值">—</span></div><div class="m-cell"><div class="lab">CTR (均值)</div><span class="val">2.36<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">CVR (均值)</div><span class="val">9.40<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">3s完播 (均值)</div><span class="val">65.5<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">播放时长(均值)</div><span class="val">22.6<span class="unit">s</span></span></div></div>
+  </section>
+
+  <!-- ② 方法论（脚本框架 + 词云 + 模特画像 + 爆款话术 + 跑量关键点） -->
+  <section class="section">
+    <h2>📚 方法论沉淀 <span class="count">· 拆解开篇类型核心打法，吃透爆款底层逻辑，轻松拿捏创作节奏</span></h2>
+    <section class="meth-block"><h3 class="mh"><span class="ic">🎬</span>开篇方式细分<span class="sub">· 还原头部素材的爆款开篇套路，直接参考高起量创作范式（推荐指数=消耗量级）</span></h3><div class="subt-grid"><div class="subt-cell"><div class="stn"><span>达人种草类</span><span class="rec">⭐⭐⭐⭐⭐</span></div><div class="std">以成熟气质女性户外画面配合悬念旁白开篇，如『五六十岁嘴巴还那么漂亮』制造好奇心，后接多位达人轮番口播种草，用闺蜜式话术拉近距离。消耗最高达6.9万，适合触达熟龄女性用户。</div></div><div class="subt-cell"><div class="stn"><span>剧情演绎类</span><span class="rec">⭐⭐⭐⭐</span></div><div class="std">以职场送礼、社交冲突等反差剧情制造悬念钩子，如『低情商老婆让我发了财』，通过戏剧化场景自然引入产品。剧情闭环增强记忆点，消耗可达2.9万，适合长视频深度种草。</div></div><div class="subt-cell"><div class="stn"><span>产品展示类</span><span class="rec">⭐⭐⭐⭐</span></div><div class="std">以唇部微距特写涂抹画面直入主题，配合玻璃杯压唇展示水光质感，薄涂厚涂双效果演示强化色彩记忆。简洁高效，消耗可达3万，适合新品首发和试色种草。</div></div><div class="subt-cell"><div class="stn"><span>明星背书类</span><span class="rec">⭐⭐⭐</span></div><div class="std">明星以自创品牌或同款推荐形式出镜，如何穗讲述婚礼故事、曹颖『良心商人』人设，快速建立信任感。消耗约1-2万，适合品牌认知提升。</div></div><div class="subt-cell"><div class="stn"><span>营销福利类</span><span class="rec">⭐⭐⭐</span></div><div class="std">以『五一一折』『母亲节一折』等大促信息配合惊叹配音和产品快剪强势吸睛，制造紧迫感引发即时行动。消耗约1万，适合大促节点引流。</div></div></div></section><section class="meth-block" style="padding:14px 18px"><h3 class="mh"><span class="ic">📋</span>脚本框架<span class="sub">· 标准化脚本流程拆解，素材组合直接照着用，降低创作试错成本（6 段）</span></h3><div style="margin:0 -4px"><div class="frame-strip"><div class="stage-card"><span class="stg-ix">A</span><div class="stg-name">【悬念/福利开篇】</div><div class="stg-time">⏱ 0-5s</div><div class="stg-purpose">3秒内抓住注意力，制造好奇心或利益点刺激停留</div><div class="stg-pattern">📌 气质女性户外画面+悬念旁白/大促福利冲击+产品堆叠/剧情冲突设置悬念钩子</div></div><div class="stage-card"><span class="stg-ix">B</span><div class="stg-name">【用户痛点】</div><div class="stg-time">⏱ 5-15s</div><div class="stg-purpose">引发共鸣，建立需求认知</div><div class="stg-pattern">📌 吐槽传统口红沾杯掉色/拔干卡纹/色素沉着/唇纹加深等痛点，配合负面画面对比强化</div></div><div class="stage-card"><span class="stg-ix">C</span><div class="stg-name">【产品成分卖点】</div><div class="stg-time">⏱ 15-40s</div><div class="stg-purpose">展示产品核心差异化优势，建立价值感</div><div class="stg-pattern">📌 30秒成膜实验/不沾杯喝水测试/纸巾擦拭不掉色/精华入唇/四效合一/水转雾成膜技术</div></div><div class="stage-card"><span class="stg-ix">D</span><div class="stg-name">【效果对比+功效成分背书】</div><div class="stg-time">⏱ 40-70s</div><div class="stg-purpose">多维度验证产品力，强化信任</div><div class="stg-pattern">📌 多达人试色展示/明星同款背书/成分讲解(丰唇肽/霍霍巴籽油/水精华)/喷水防水实测</div></div><div class="stage-card"><span class="stg-ix">E</span><div class="stg-name">【场景种草】</div><div class="stg-time">⏱ 70-90s</div><div class="stg-purpose">代入使用场景，激发购买欲望</div><div class="stg-pattern">📌 送娃上学/早八通勤/姐妹聚会/约会送礼等日常场景展示，强调一天涂一次/素颜出门也显白</div></div><div class="stage-card"><span class="stg-ix">F</span><div class="stg-name">【价格福利+引导下单】</div><div class="stg-time">⏱ 90s-结尾</div><div class="stg-purpose">促成即时转化，完成闭环</div><div class="stg-pattern">📌 直播间福利/拍1发4/买一送一/限时优惠券/点进直播间获同款</div></div></div></div></section><section class="meth-block"><h3 class="mh"><span class="ic">☁️</span>核心词云<span class="sub">· 提炼高频重点标签，靠前标签即高机会，快速抓准流量密码（卖点 / 用户痛点）</span></h3><div class="wc-grid" style="grid-template-columns:1fr 1fr"><div class="wc-col"><h4>✨ 卖点 <span class="n">· 16 词</span></h4><div class="wc-words"><span class="wc-w s1">不沾杯不掉色</span><span class="wc-w s1">30秒成膜</span><span class="wc-w s1">丝滑不卡纹</span><span class="wc-w s2">隐形唇纹</span><span class="wc-w s2">显白显气色</span><span class="wc-w s2">水光质地</span><span class="wc-w s2">雾面哑光</span><span class="wc-w s2">精华入唇</span><span class="wc-w s3">四效合一</span><span class="wc-w s3">干唇友好</span><span class="wc-w s3">水转雾成膜</span><span class="wc-w s3">养唇护唇</span><span class="wc-w s3">百搭不挑肤色</span><span class="wc-w s3">高级感妆效</span><span class="wc-w s3">一天只涂一次</span><span class="wc-w s3">明星同款</span></div></div><div class="wc-col"><h4>😣 用户痛点 <span class="n">· 14 词</span></h4><div class="wc-words"><span class="wc-w s1">沾杯掉色</span><span class="wc-w s1">拔干卡纹</span><span class="wc-w s1">唇纹深</span><span class="wc-w s2">唇色暗</span><span class="wc-w s2">没气色</span><span class="wc-w s2">粘腻拉丝</span><span class="wc-w s2">色素沉着</span><span class="wc-w s2">起皮干燥</span><span class="wc-w s3">大红唇显老</span><span class="wc-w s3">频繁补涂</span><span class="wc-w s3">不够滋润</span><span class="wc-w s3">嘴巴干</span><span class="wc-w s3">显村气</span><span class="wc-w s3">不持久</span></div></div></div></section><section class="meth-block"><h3 class="mh"><span class="ic">🪞</span>模特 / 对比 / 场景 三段画像</h3><div class="persona-grid"><div class="persona-cell"><div class="pl">👤 模特画像</div><div class="pv">选择28-55岁成熟气质女性为主，贵气感妆容，可搭配精致珠宝配饰，眼妆深邃有神，日常不涂口红时呈现没气色状态，形成使用前后的强烈反差。</div></div><div class="persona-cell"><div class="pl">🔁 效果对比方式</div><div class="pv">先展示传统口红沾杯掉色、拔干卡纹的痛点画面，再演示产品上唇丝滑、喝水不沾杯、纸巾擦拭不掉色的效果，可配合『叮』的音效强化质感呈现。</div></div><div class="persona-cell"><div class="pl">🎬 场景搭建</div><div class="pv">聚焦日常出门场景(送娃上学、早八通勤)、姐妹聚会场景(露营烧烤、餐厅聚餐)、夫妻生活场景(亲亲不粘、约会送礼)，突出一次涂抹全天持妆的便捷性。</div></div></div></section><section class="meth-block"><h3 class="mh"><span class="ic">💬</span>常见爆款话术<span class="sub">· 整理高转化爆款话术，直接复用提升素材起量率与吸引力（≥2 条素材出现，产品名已隐藏）</span></h3><ul class="viral-list"><li>从没见过五六十岁嘴巴还那么漂亮的女人，原来她们从不用口红</li><li>接吻吃饭喝水都不掉色，一天只涂一次就够了</li><li>30秒成膜，喝水不沾杯，纸巾擦都不掉色</li><li>干唇姐妹也能闭眼入，丝滑不卡纹</li><li>不挑肤色不挑年龄，涂上就是高级感</li><li>大红唇显老显村，低饱和色才是高级</li><li>一边美丽一边养唇，xx让你素颜出门也显白</li><li>姐妹们这个xx真的绝了，身边人都在用</li></ul></section><section class="meth-block"><h3 class="mh"><span class="ic">🚀</span>跑量关键点<span class="sub">· 跑量必备要素清单，逐项 check，确保创作不踩坑</span></h3><ul class="runk-list"><li>①**悬念钩子抓眼球**：用气质熟龄女性画面配合『嘴巴还那么漂亮』等悬念文案，3秒内制造好奇心锁定目标用户停留。</li><li>②**实测场景建信任**：通过喝水不沾杯、纸巾擦拭、吃东西等真实场景实测，直观验证不掉色卖点，消除用户购买顾虑。</li><li>③**痛点共鸣促转化**：精准击中沾杯掉色、拔干卡纹等高频痛点，配合限时福利和明星背书，激发即时下单欲望。</li></ul></section>
+  </section>
+
+  <!-- ③ 代表素材关键帧拆解（品牌 Top5 + 非品牌 Top5）-->
+  <section class="section">
+    <h2>🏆 代表素材关键帧拆解 <span class="count">· 品牌 / 非品牌各 Top5（按消耗降序）</span></h2>
+    <div class="top5-group-label" style="margin:6px 0 10px;font-weight:600;color:#9dbcff">🏪 品牌素材 Top5（按消耗降序）</div><div class="top-card"><div class="cover"><img src="assets/76aad775fab8ffd3.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 唇部彩妆</span><span class="meta-pill">🧴 有色唇膏/口红</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 达人开篇</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>2.73%</b> · CVR <b>7.98%</b> · 3s完播 <b>56.9%</b> · 播放时长 <b>16.5s</b></div><div class="desc">开篇类型属于气质美女悬念开篇+多达人种草型。开篇以两位五六十岁气质女性户外散步为钩子，配合『从没见过嘴巴还那么漂亮的女人』悬念文案吸引停留。接着通过对比普通唇釉粘腻拉丝的痛点，引出卡姿兰雾吻唇膏的核心卖点。重点展示30秒成膜、不沾杯、不掉色的产品测试，用纸巾擦拭和喝水演示强化信任。中段穿插多位达人种草分享，强调显白、显气色、适合所有肤色。加入何泓姗明星同款背书增加品牌信任度。结尾通过街头采访形式展示M584色号的百搭实用性，以『亲亲也不粘』的互动收尾。</div><div class="frames"><div class="frame"><img src="assets/1a7a868e11f2bba4.jpg" alt="frame1"><div class="fcap"><div class="fname">悬念开篇</div><div class="ftime">0-4s</div></div></div><div class="frame"><img src="assets/e06ba2044ced7727.jpg" alt="frame2"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">4-8s</div></div></div><div class="frame"><img src="assets/ef6301911a88881b.jpg" alt="frame3"><div class="fcap"><div class="fname">产品演示</div><div class="ftime">8-24s</div></div></div><div class="frame"><img src="assets/6e6378ad95c6e5ba.jpg" alt="frame4"><div class="fcap"><div class="fname">达人种草</div><div class="ftime">24-50s</div></div></div><div class="frame"><img src="assets/7adbb9b84cb810ef.jpg" alt="frame5"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">50-70s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄两位五六十岁气质女性在阳光明媚的公园步道散步，穿着优雅得体，嘴唇呈现自然水润的裸粉色泽。镜头缓慢推进至两人侧脸，展示精致唇妆。男声旁白低沉悬念感说『从没见过五六十岁，嘴巴还那么漂亮的女人』，1.5秒后接『原来她们从不用口红』制造反差悬念。节奏舒缓但信息密集，用年龄反差+产品悬念双钩子激发好奇心。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄两位五六十岁气质女性在阳光明媚的公园步道散步，穿着优雅得体，嘴唇呈现自然水润的裸粉色泽。镜头缓慢推进至两人侧脸，展示精致唇妆。男声旁白低沉悬念感说『从没见过五六十岁，嘴巴还那么漂亮的女人』，1.5秒后接『原来她们从不用口红』制造反差悬念。节奏舒缓但信息密集，用年龄反差+产品悬念双钩子激发好奇心。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/6c017a98596bf80e.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 唇部彩妆</span><span class="meta-pill">🧴 唇釉/唇蜜/唇彩/唇露/唇泥</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 产品展示</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>0.67%</b> · CVR <b>4.42%</b> · 3s完播 <b>70.2%</b> · 播放时长 <b>13.7s</b></div><div class="desc">开篇类型属于沉浸式产品试色展示型。开篇以唇部微距特写直入主题，用刷头涂抹动作和『入夏新色606芭乐岛』的旁白迅速锁定注意力。接着通过薄涂和厚涂两种妆效的分段展示，分别用『像融进嘴里的芭乐粉』和『浓郁的灰粉调韩系少女感』两组文案强化色彩记忆点。随后重点展示产品质地卖点，强调升级水光质地、自动吸附、丝滑不卡纹，并用『干唇姐妹也能闭眼入』消除购买顾虑。结尾切到产品实物堆叠画面，以『直播间还有惊喜好礼，快来解锁绝美新色』引导用户进入直播间转化下单。</div><div class="frames"><div class="frame"><img src="assets/bb55e8a037cb865c.jpg" alt="frame1"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">0-4s</div></div></div><div class="frame"><img src="assets/3e5f8d155970ac71.jpg" alt="frame2"><div class="fcap"><div class="fname">效果对比</div><div class="ftime">4-7s</div></div></div><div class="frame"><img src="assets/853fa906994240c3.jpg" alt="frame3"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">7-13s</div></div></div><div class="frame"><img src="assets/b7bc2b7072e00309.jpg" alt="frame4"><div class="fcap"><div class="fname">产品演示</div><div class="ftime">13-18s</div></div></div><div class="frame"><img src="assets/eb2434f8da22a277.jpg" alt="frame5"><div class="fcap"><div class="fname">限时促销</div><div class="ftime">18-19s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="极近距离微距镜头特写女性嘴唇，唇釉刷头从下唇中央向两侧缓慢涂开，色泽呈水润芭乐粉色，光泽感明显。画面左侧浮现芭乐水果图标和『#606 芭乐岛』字样，配音用清透女声说『完美日记入夏新色606芭乐岛，气质与质感都拉满的调色』。节奏舒缓但信息密集，1秒内用色彩冲击抓住眼球，2秒用水果联想锚定色号记忆点，3秒用玻璃杯触唇动作制造质感悬念。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">极近距离微距镜头特写女性嘴唇，唇釉刷头从下唇中央向两侧缓慢涂开，色泽呈水润芭乐粉色，光泽感明显。画面左侧浮现芭乐水果图标和『#606 芭乐岛』字样，配音用清透女声说『完美日记入夏新色606芭乐岛，气质与质感都拉满的调色』。节奏舒缓但信息密集，1秒内用色彩冲击抓住眼球，2秒用水果联想锚定色号记忆点，3秒用玻璃杯触唇动作制造质感悬念。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/928e7e2c00780d85.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#3</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 唇部彩妆</span><span class="meta-pill">🧴 气垫</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 剧情反转</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>2.29%</b> · CVR <b>15.10%</b> · 3s完播 <b>57.7%</b> · 播放时长 <b>36.8s</b></div><div class="desc">开篇类型属于职场送礼反差剧情型。开篇以餐厅偶遇场景展开，通过时尚女嘲讽朴素女的穿着制造戏剧冲突，字幕『低情商的老婆却意外让我发了财』设置悬念钩子。接着聚餐场景中竞争对手送名牌包和茅台，女主却送蔬菜和气垫唇霜，形成强烈反差。重点展示领导夫人唇部干燥痛点，引出产品DPDP气垫唇霜的四效合一卖点。中段插入明星背书切片和达人实测，强调不沾杯不掉色。结尾领导夫人惊艳亮相，项目成功拿下，居家场景揭秘女主高情商送礼策略，完成剧情闭环。</div><div class="frames"><div class="frame"><img src="assets/399aebacf3e23383.jpg" alt="frame1"><div class="fcap"><div class="fname">剧情悬念开场</div><div class="ftime">0-15s</div></div></div><div class="frame"><img src="assets/73f6a26e103c8efc.jpg" alt="frame2"><div class="fcap"><div class="fname">冲突升级</div><div class="ftime">15-35s</div></div></div><div class="frame"><img src="assets/811deed602a60ee8.jpg" alt="frame3"><div class="fcap"><div class="fname">送礼对比</div><div class="ftime">36-63s</div></div></div><div class="frame"><img src="assets/dcbf64dc07015251.jpg" alt="frame4"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">64-85s</div></div></div><div class="frame"><img src="assets/3e8be9a9b88ad87d.jpg" alt="frame5"><div class="fcap"><div class="fname">产品卖点</div><div class="ftime">86-164s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="中景镜头拍摄高档餐厅门口，两对夫妻相遇，左侧时尚女拎名牌袋面露嘲讽，右侧朴素女提红色塑料袋神情自若。时尚女开口说『你穿成这样都不像城里人』，语气带刺。画面顶部大字幕弹出『低情商的老婆却意外让我发了财』形成强悬念反差。节奏紧凑，用阶层反差和悬念文案双钩子制造好奇心，引导用户继续观看。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">中景镜头拍摄高档餐厅门口，两对夫妻相遇，左侧时尚女拎名牌袋面露嘲讽，右侧朴素女提红色塑料袋神情自若。时尚女开口说『你穿成这样都不像城里人』，语气带刺。画面顶部大字幕弹出『低情商的老婆却意外让我发了财』形成强悬念反差。节奏紧凑，用阶层反差和悬念文案双钩子制造好奇心，引导用户继续观看。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/0d95214d9dc944c5.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#4</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 唇部彩妆</span><span class="meta-pill">🧴 唇釉/唇蜜/唇彩/唇露/唇泥</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 明星背书</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>1.77%</b> · CVR <b>7.35%</b> · 3s完播 <b>73.0%</b> · 播放时长 <b>9.3s</b></div><div class="desc">开篇类型属于明星背书+多场景种草型。开篇以超模何穗讲述婚礼故事切入，新娘哭泣时唇妆依然闪亮的细节制造好奇。接着引出徐璐、曾黎等明星同款背书，强调产品在圈内流行度。重点展示产品核心卖点：水光感、不沾杯、淡化唇纹、丝滑质地，并通过水冲测试和负面对比（拔干卡纹打叉）强化持妆力优势。多位博主演示不同色号的上嘴效果，展现饱满水润的妆效。结尾抛出618大促福利『拍二发四』+大额优惠券，制造紧迫感引导下单。</div><div class="frames"><div class="frame"><img src="assets/4fcbba6ef00f9c15.jpg" alt="frame1"><div class="fcap"><div class="fname">明星故事开篇</div><div class="ftime">0-8s</div></div></div><div class="frame"><img src="assets/4db4fbdb9fc09bbe.jpg" alt="frame2"><div class="fcap"><div class="fname">多明星背书</div><div class="ftime">8-28s</div></div></div><div class="frame"><img src="assets/73d681c3573a0b26.jpg" alt="frame3"><div class="fcap"><div class="fname">产品卖点演示</div><div class="ftime">29-38s</div></div></div><div class="frame"><img src="assets/0a53fd726cac75ee.jpg" alt="frame4"><div class="fcap"><div class="fname">痛点对比</div><div class="ftime">38-42s</div></div></div><div class="frame"><img src="assets/cb34f1f47dc3c09d.jpg" alt="frame5"><div class="fcap"><div class="fname">效果特写展示</div><div class="ftime">43-52s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="画面以婚礼现场为背景，新娘眼含泪水的近景特写，重点突出嘴唇在哭泣时依然闪闪发光的水光质感。左下角放置超模何穗的圆形头像，配合波形动效。何穗用温柔讲故事的语气说『我当时就是参加了一个圈外好友的婚礼』，上方叠加文字『何穗记录好友婚礼温馨一幕 不料引发种草』。节奏舒缓但悬念感强，用『明星八卦+婚礼场景+唇妆特写』三重钩子激发观众好奇心。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">画面以婚礼现场为背景，新娘眼含泪水的近景特写，重点突出嘴唇在哭泣时依然闪闪发光的水光质感。左下角放置超模何穗的圆形头像，配合波形动效。何穗用温柔讲故事的语气说『我当时就是参加了一个圈外好友的婚礼』，上方叠加文字『何穗记录好友婚礼温馨一幕 不料引发种草』。节奏舒缓但悬念感强，用『明星八卦+婚礼场景+唇妆特写』三重钩子激发观众好奇心。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/26f7498cf4d3e033.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#5</span><span class="meta-pill">🏪 品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 唇部彩妆</span><span class="meta-pill">🧴 有色唇膏/口红</span><span class="meta-pill" style="color:#94a3b8;border-color:#94a3b866">🏛 非白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 达人开篇</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>2.45%</b> · CVR <b>15.35%</b> · 3s完播 <b>74.2%</b> · 播放时长 <b>10.0s</b></div><div class="desc">开篇类型属于颜值达人x逆袭话题型。开篇以『46岁阿姨逆袭成功，被误以为大学生』的悬念标题配合高铁场景，瞬间抓住熟龄女性注意力。紧接着展示口红涂抹过程，重点呈现06号肉桂奶茶色的上唇效果。中段通过喝水不沾杯、纸巾擦拭不掉色的实测演示，直观验证产品核心卖点。穿插多位不同年龄模特的试色分享，强调『显白、高级感、不油腻不拔干』等使用体验。结尾展示产品礼盒包装，配合『点进直播间获得同款』的引导话术和限时福利暗示，促进即时转化。</div><div class="frames"><div class="frame"><img src="assets/b44eb6d3c254cef7.jpg" alt="frame1"><div class="fcap"><div class="fname">悬念开篇</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/8e4da72760632a81.jpg" alt="frame2"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">3-8s</div></div></div><div class="frame"><img src="assets/e35b873e9a9b61e6.jpg" alt="frame3"><div class="fcap"><div class="fname">卖点演示</div><div class="ftime">8-12s</div></div></div><div class="frame"><img src="assets/3607513fd8e05281.jpg" alt="frame4"><div class="fcap"><div class="fname">多人种草</div><div class="ftime">12-28s</div></div></div><div class="frame"><img src="assets/06886490319e3c88.jpg" alt="frame5"><div class="fcap"><div class="fname">效果验证</div><div class="ftime">28-40s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="高铁车厢内景，一位气质优雅的中年女性与年轻男生并排而坐，女性正低头整理妆容。画面上方大字弹出『46岁阿姨逆袭成功，被误以为大学生』制造悬念。1秒后切近景，女性手持金色细管口红涂抹嘴唇，画面流畅自然。配乐用轻快抒情女声，不加旁白，让观众好奇她的『逆袭秘密』是什么。节奏舒缓但信息密集，3秒内完成身份反差+产品露出两个钩子。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">高铁车厢内景，一位气质优雅的中年女性与年轻男生并排而坐，女性正低头整理妆容。画面上方大字弹出『46岁阿姨逆袭成功，被误以为大学生』制造悬念。1秒后切近景，女性手持金色细管口红涂抹嘴唇，画面流畅自然。配乐用轻快抒情女声，不加旁白，让观众好奇她的『逆袭秘密』是什么。节奏舒缓但信息密集，3秒内完成身份反差+产品露出两个钩子。</div></div></div></div><div class="top5-group-label" style="margin:18px 0 10px;font-weight:600;color:#86efac">🏬 非品牌素材 Top2（按消耗降序）</div><div class="top-card"><div class="cover"><img src="assets/635e0a119dffb543.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 唇部彩妆</span><span class="meta-pill">🧴 唇线笔/唇笔</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 营销福利</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>4.41%</b> · CVR <b>4.98%</b> · 3s完播 <b>91.2%</b> · 播放时长 <b>52.8s</b></div><div class="desc">开篇类型属于营销福利+多场景实测型。开篇以『五一节一折』大促信息配合快节奏产品剪辑强势吸睛，制造紧迫感。接着通过模特上嘴演示展示不卡纹不起皮不掉色等核心功效，并用30秒成膜后喝水不沾杯的实验直观验证产品力。中段引入演员苗圃推荐背书，提升品牌信任度，同时推出肉桂奶茶色等热门色号种草。随后多位达人反复演示涂抹丝滑感、遮盖唇纹效果，强调雾面哑光高级质感和百搭属性。结尾以直播间福利引导和多色号展示促成转化下单。</div><div class="frames"><div class="frame"><img src="assets/7f0302f36ab8a7e5.jpg" alt="frame1"><div class="fcap"><div class="fname">营销福利开场</div><div class="ftime">0-8s</div></div></div><div class="frame"><img src="assets/cd31c2cb122ec899.jpg" alt="frame2"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">8-15s</div></div></div><div class="frame"><img src="assets/f75fba6bcd40e98b.jpg" alt="frame3"><div class="fcap"><div class="fname">产品演示</div><div class="ftime">15-25s</div></div></div><div class="frame"><img src="assets/531f5ea524c935fa.jpg" alt="frame4"><div class="fcap"><div class="fname">明星背书</div><div class="ftime">25-35s</div></div></div><div class="frame"><img src="assets/74704ddab6114f4f.jpg" alt="frame5"><div class="fcap"><div class="fname">深度种草</div><div class="ftime">35-70s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="快速切换的产品特写画面开场，白金双头口红唇线笔在画面中央旋转展示，配合惊叹语气女声高喊『什么？五一节一折！一折！一折！』，字幕用超大红色字体弹出『五一节1折』制造视觉冲击。节奏极快，0.5秒一个镜头切换，产品特写与模特涂抹交替闪现，用价格悬念加快节奏双重刺激迫使观众停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">快速切换的产品特写画面开场，白金双头口红唇线笔在画面中央旋转展示，配合惊叹语气女声高喊『什么？五一节一折！一折！一折！』，字幕用超大红色字体弹出『五一节1折』制造视觉冲击。节奏极快，0.5秒一个镜头切换，产品特写与模特涂抹交替闪现，用价格悬念加快节奏双重刺激迫使观众停留。</div></div></div></div><div class="top-card"><div class="cover"><img src="assets/c57ab48f5fdec305.jpg" alt="cover"></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🏪 非品牌</span><span class="meta-pill">📦 头部类目</span><span class="meta-pill">🛒 唇部彩妆</span><span class="meta-pill">🧴 有色唇膏/口红</span><span class="meta-pill" style="color:#10b981;border-color:#10b98166">🏛 白达</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 营销福利</span></div><div class="metrics-row">消耗 <b>—</b> · 增长量 <b>—</b> · CTR <b>3.40%</b> · CVR <b>5.42%</b> · 3s完播 <b>85.7%</b> · 播放时长 <b>41.2s</b></div><div class="desc">开篇类型属于营销福利+多达人种草型。开篇用女生惊呼『母亲节一折』制造福利冲击，配合产品堆叠画面强化促销氛围。紧接着通过痛点吐槽『大红唇显老显村』『拔干卡纹沾杯掉色』引发共鸣，顺势引出精华口红的四效合一卖点。重点展示多位达人上嘴试色，强调『丝滑遮唇纹』『水润Q弹』的使用体验，并用杯子实测不沾杯效果。中段切换达人讲解低饱和高级色、霍霍巴籽油成分，建立产品价值感。结尾用『素颜出门也自然显白』场景收尾，引导姐妹试用。</div><div class="frames"><div class="frame"><img src="assets/6088b5f893246018.jpg" alt="frame1"><div class="fcap"><div class="fname">福利钩子开篇</div><div class="ftime">0-3s</div></div></div><div class="frame"><img src="assets/a7950cb716711deb.jpg" alt="frame2"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">3-8s</div></div></div><div class="frame"><img src="assets/1e9f7e7632f01bf5.jpg" alt="frame3"><div class="fcap"><div class="fname">产品卖点速递</div><div class="ftime">8-12s</div></div></div><div class="frame"><img src="assets/f58e38ea3cfb0b16.jpg" alt="frame4"><div class="fcap"><div class="fname">达人试色演示</div><div class="ftime">12-22s</div></div></div><div class="frame"><img src="assets/c7d9546695f824ba.jpg" alt="frame5"><div class="fcap"><div class="fname">不沾杯实测</div><div class="ftime">22-28s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="开场画面：年轻女孩低头看手机，表情惊喜，镜头快切到三支金色包装口红产品堆叠特写。配音用惊喜女声喊出『什么？母亲节一折！一折！真的是一折！』，字幕同步弹出大字『一折』形成视觉冲击。1.5秒后切达人涂口红上嘴特写，展示丝滑质地。整体节奏紧凑急促，用福利价格+产品质感双重钩子在3秒内抓住用户停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">开场画面：年轻女孩低头看手机，表情惊喜，镜头快切到三支金色包装口红产品堆叠特写。配音用惊喜女声喊出『什么？母亲节一折！一折！真的是一折！』，字幕同步弹出大字『一折』形成视觉冲击。1.5秒后切达人涂口红上嘴特写，展示丝滑质地。整体节奏紧凑急促，用福利价格+产品质感双重钩子在3秒内抓住用户停留。</div></div></div></div>
+  </section>
+</div>
+
+<div class="footer">素材解析台 · 唇部彩妆 · 20260718 · 对外版（脱敏）</div>
+<div id="_tip"></div>
+<script>
+// 复制按钮事件代理
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  var txt = btn.getAttribute("data-hook-copy") || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = txt;
+  var decoded = ta.value;
+  function ok(){
+    var t = document.getElementById("_tip");
+    t.textContent = "✓ 已复制黄金 3s prompt";
+    t.className = "ok"; t.style.display = "block";
+    clearTimeout(window._tipT);
+    window._tipT = setTimeout(function(){ t.style.display="none"; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(ok);
+  } else {
+    var t2 = document.createElement("textarea");
+    t2.value = decoded; t2.style.position="fixed"; t2.style.opacity="0";
+    document.body.appendChild(t2); t2.select();
+    try { document.execCommand("copy"); ok(); } catch(_){}
+    document.body.removeChild(t2);
+  }
+});
+</script>
+</body></html>
