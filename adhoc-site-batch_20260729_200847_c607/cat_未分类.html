@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200,initial-scale=1">
+<title>未分类 · 20260729 周报</title>
+<style>
+  :root{--bg:#0a0d14;--panel:#101622;--panel2:#0d1320;--line:#1f2937;
+        --text:#e6edf3;--muted:#94a3b8;--primary:#fbbf24;--success:#86efac;--info:#9dbcff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+       font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  a{color:var(--info);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .header{padding:24px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+          background:linear-gradient(180deg,#0d1320,#0a0d14);border-bottom:1px solid var(--line)}
+  .header .nav{color:var(--muted);font-size:13px}
+  .header .nav a{color:var(--muted)}
+  .header h1{margin:0;font-size:22px;font-weight:700}
+  .header .badge{background:rgba(157,188,255,.14);color:var(--info);padding:4px 10px;
+                 border-radius:12px;font-size:12px;border:1px solid rgba(157,188,255,.3)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 40px 60px}
+  .section{margin-top:32px}
+  .section h2{margin:0 0 16px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .section h2 .count{font-size:13px;color:var(--muted);font-weight:400}
+
+  /* ① 指标均值 */
+  .metrics-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+                background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .m-cell{text-align:center}
+  .m-cell .lab{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .m-cell .val{font-size:22px;font-weight:700;color:var(--text)}
+  .m-cell .val.muted{color:var(--muted);font-size:18px}
+  .m-cell .unit{font-size:12px;color:var(--muted);margin-left:2px}
+
+  /* ② 脚本框架 A-B-C-D-E */
+  .frame-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;
+               background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .stage-card{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:14px;position:relative}
+  .stage-card .stg-ix{position:absolute;top:10px;right:12px;font-size:11px;font-weight:700;color:var(--primary);
+                      background:rgba(251,191,36,.14);padding:2px 7px;border-radius:6px;border:1px solid rgba(251,191,36,.3)}
+  .stage-card .stg-name{font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;padding-right:36px}
+  .stage-card .stg-purpose{font-size:12px;color:#cbd2e0;line-height:1.6;margin-bottom:6px}
+  .stage-card .stg-time{font-size:11px;color:var(--info);margin-bottom:6px}
+  .stage-card .stg-pattern{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+  .frame-empty{padding:32px;text-align:center;color:var(--muted);font-size:13px;
+               background:var(--panel);border:1px dashed var(--line);border-radius:12px}
+
+  /* ②.b 方法论新模块（v2，2026-05-28 升级，对齐看板提示词）*/
+  .meth-block{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px}
+  .meth-block .mh{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:#fff;margin:0 0 12px}
+  .meth-block .mh .ic{font-size:16px}
+  .meth-block .mh .sub{font-size:12px;color:var(--muted);font-weight:400}
+  /* 双词云：左右两列 */
+  .wc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .wc-col{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .wc-col h4{margin:0 0 10px;font-size:12px;color:var(--info);font-weight:600;display:flex;align-items:center;gap:6px}
+  .wc-col h4 .n{color:var(--muted);font-weight:400;font-size:11px}
+  .wc-words{display:flex;flex-wrap:wrap;gap:6px}
+  .wc-w{padding:4px 10px;border-radius:14px;background:#172033;border:1px solid var(--line);font-size:12px;color:#cbd2e0}
+  .wc-w.s1{font-size:15px;color:#fff;background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.45)}
+  .wc-w.s2{font-size:13px;color:#fff;background:rgba(157,188,255,.14);border-color:rgba(157,188,255,.4)}
+  .wc-w.s3{font-size:12px;color:#cbd2e0}
+  .wc-w.s4{font-size:11px;color:var(--muted)}
+  /* persona 三列 */
+  .persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .persona-cell{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .persona-cell .pl{font-size:11px;color:var(--info);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .persona-cell .pv{font-size:12px;color:#cbd2e0;line-height:1.7}
+  /* 开篇细分 */
+  .subt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .subt-cell{background:#0a0e18;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .subt-cell .stn{font-size:13px;font-weight:700;color:#fff;margin:0 0 4px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .subt-cell .stn .rec{font-size:11px;color:var(--primary);font-weight:600}
+  .subt-cell .std{font-size:12px;color:#cbd2e0;line-height:1.6}
+  /* 爆款话术 */
+  .viral-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .viral-list li{background:#0a0e18;border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:6px;padding:10px 12px;font-size:12px;color:#cbd2e0;line-height:1.7}
+  /* 跑量关键点 */
+  .runk-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .runk-list li{background:#0a0e18;border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:12px;color:#cbd2e0;line-height:1.7}
+  @media (max-width:760px){
+    .wc-grid,.persona-grid{grid-template-columns:1fr}
+    .viral-list{grid-template-columns:1fr}
+  }
+
+  /* ③ Top5 紧凑卡片：左封面 + 右关键帧并列 */
+  .top-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;
+            display:grid;grid-template-columns:200px 1fr;gap:18px}
+  .top-card .cover{display:flex;flex-direction:column;gap:8px}
+  .top-card .cover img{width:100%;aspect-ratio:9/16;object-fit:cover;display:block;background:#000;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+  .top-card .cover .placeholder{display:flex;align-items:center;justify-content:center;aspect-ratio:9/16;background:#000;border-radius:8px;border:1px solid var(--line);color:#475569;font-size:12px}
+  .top-card .cover .top-video-link{display:block;text-align:center;font-size:12px;padding:6px 8px;border-radius:6px;
+                                    color:var(--info);background:rgba(157,188,255,.1);border:1px solid rgba(157,188,255,.35)}
+  .top-card .cover .top-video-link:hover{background:rgba(157,188,255,.2)}
+  .top-card .info{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .top-card .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .top-card .head .rank{background:rgba(251,191,36,.14);color:var(--primary);padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;border:1px solid rgba(251,191,36,.3)}
+  .top-card .head .meta-pill{font-size:11px;color:#cbd2e0;background:#172033;padding:2px 8px;border-radius:4px;border:1px solid var(--line)}
+  .top-card .metrics-row{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--muted)}
+  .top-card .metrics-row b{color:var(--text)}
+  .top-card .desc{font-size:12px;color:#cbd2e0;line-height:1.7;
+                  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .top-card .frames{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .top-card .frame{background:#0a0e18;border:1px solid var(--line);border-radius:6px;overflow:hidden;aspect-ratio:9/16;position:relative}
+  .top-card .frame img{width:100%;height:100%;object-fit:cover;display:block}
+  .top-card .frame .fcap{position:absolute;left:0;right:0;bottom:0;padding:3px 6px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:10px;color:#fff;line-height:1.3}
+  .top-card .frame .fname{font-weight:600}
+  .top-card .frame .ftime{color:#9dbcff;font-size:9px}
+  .top-card .frame.no-img{display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;text-align:center;padding:8px}
+
+  /* 黄金 3s prompt */
+  .hp{background:#0a0e18;border-left:3px solid var(--info);border-radius:0 6px 6px 0;padding:10px 12px;margin-top:8px}
+  .hp .hp-h{font-size:12px;font-weight:600;color:var(--info);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hp .hp-actions{margin-left:auto;display:inline-flex;gap:6px}
+  .hp .hp-btn{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;font-size:10px;color:#cbd2e0;background:#172033;border:1px solid var(--line);border-radius:4px;cursor:pointer;text-decoration:none;font-family:inherit}
+  .hp .hp-btn:hover{background:#1e293b;color:#fff}
+  .hp .hp-t{font-size:12px;color:#cbd2e0;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+  .md5-actions{display:flex;gap:7px;flex-wrap:wrap}
+  .md5-action{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:6px;
+              padding:5px 9px;background:#172033;color:var(--info);font:11px ui-monospace,Menlo,monospace;
+              text-decoration:none;cursor:pointer}
+  .md5-action:hover{border-color:var(--info);background:#1e293b;color:#fff}
+  .detail-md5-tool{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 24px;padding:14px 16px;
+                   background:var(--panel);border:1px solid var(--line);border-radius:10px}
+  .detail-md5-tool .tool-label{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap}
+  .detail-md5-tool form{display:flex;gap:8px;flex:1;min-width:420px}
+  .detail-md5-tool input{flex:1;min-width:260px;border:1px solid var(--line);border-radius:7px;padding:9px 12px;
+                         background:var(--panel2);color:var(--text);font:12px ui-monospace,Menlo,monospace;outline:none}
+  .detail-md5-tool input:focus{border-color:var(--info);box-shadow:0 0 0 2px rgba(157,188,255,.14)}
+  .detail-md5-list{display:flex;gap:6px;flex-wrap:wrap}
+  .meth-search{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px;padding:12px 15px;
+               background:linear-gradient(180deg,rgba(79,140,255,.08),var(--panel));
+               border:1px solid var(--line);border-radius:10px}
+  .meth-search .tool-label{font-size:12px;font-weight:700;color:var(--text)}
+  .meth-search form{display:flex;gap:8px;flex:1;min-width:420px}
+  .meth-search input{flex:1;min-width:240px;border:1px solid var(--line);border-radius:7px;padding:9px 12px;
+                     background:var(--panel2);color:var(--text);font:12px system-ui,sans-serif;outline:none}
+  .meth-search input:focus{border-color:var(--info);box-shadow:0 0 0 2px rgba(157,188,255,.14)}
+  .meth-search-res{flex-basis:100%;font-size:12px;color:var(--info)}
+  .highlight-method-summary{font-size:13px;color:var(--text);line-height:1.8;margin-bottom:10px}
+  .highlight-method-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .highlight-method-chip{padding:4px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);
+                         color:var(--text);font-size:11px}
+  .highlight-method-samples{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+  .highlight-method-sample{padding:9px 11px;border-radius:7px;background:var(--panel2);border:1px solid var(--line);
+                           color:var(--text);font-size:11px;line-height:1.65}
+  .highlight-method-sample code{color:var(--info);font-family:ui-monospace,Menlo,monospace}
+  .highlight-content-title{margin:14px 0 8px;font-size:12px;font-weight:700;color:var(--text)}
+  .highlight-content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+  .highlight-content-card{padding:10px 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel2)}
+  .highlight-content-card .name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px}
+  .highlight-content-card .stats{font-size:11px;color:var(--muted);line-height:1.65}
+  .highlight-content-card .example{margin-top:6px;font-size:11px;color:var(--text);line-height:1.55}
+  .highlight-findings{margin:9px 0 0;padding-left:20px;color:var(--text);font-size:12px;line-height:1.8}
+  .top-card[hidden]{display:none!important}
+  .top-card.md5-hit{border-color:var(--primary);box-shadow:0 0 0 3px rgba(251,191,36,.22),0 12px 30px rgba(0,0,0,.18)}
+  .md5-label{cursor:default;user-select:all;word-break:break-all}
+
+  html[data-theme="light"]{--bg:#f7f3ea;--panel:#fffdf8;--panel2:#f1eadf;--line:#d9d0c2;--text:#292822;
+                            --muted:#716c62;--primary:#9a5f44;--info:#66734d;--success:#66734d;--danger:#b45f52}
+  html[data-theme="light"] body{background:var(--bg);color:var(--text)}
+  html[data-theme="light"] .header{background:rgba(247,243,234,.96);box-shadow:0 1px 0 rgba(84,70,56,.08)}
+  html[data-theme="light"] .section h2,html[data-theme="light"] .sub h3,html[data-theme="light"] .panel h3,
+  html[data-theme="light"] .frame-section h3,html[data-theme="light"] .stage-card .stg-name,
+  html[data-theme="light"] .meth-block .mh,html[data-theme="light"] .subt-cell .stn{color:var(--text)}
+  html[data-theme="light"] .stage-card .stg-purpose,html[data-theme="light"] .persona-cell .pv,
+  html[data-theme="light"] .subt-cell .std,html[data-theme="light"] .viral-list li,
+  html[data-theme="light"] .runk-list li,html[data-theme="light"] .top-card .desc,
+  html[data-theme="light"] .hp .hp-t,html[data-theme="light"] .hp .hp-btn,
+  html[data-theme="light"] .top-card .head .meta-pill{color:#58534b}
+  html[data-theme="light"] .stage-card,html[data-theme="light"] .wc-col,html[data-theme="light"] .persona-cell,
+  html[data-theme="light"] .subt-cell,html[data-theme="light"] .viral-list li,html[data-theme="light"] .runk-list li,
+  html[data-theme="light"] .top-card .frame,html[data-theme="light"] .hp{background:var(--panel2)}
+  html[data-theme="light"] .stage-card .stg-purpose,html[data-theme="light"] .stage-card .stg-pattern,
+  html[data-theme="light"] .meth-block .mh .sub,html[data-theme="light"] .section h2 .count{color:#625c53}
+  html[data-theme="light"] .top5-group-label{color:var(--info)!important}
+  html[data-theme="light"] .wc-w,html[data-theme="light"] .hp .hp-btn,
+  html[data-theme="light"] .top-card .head .meta-pill,html[data-theme="light"] .md5-action{background:#eee6da;color:#58534b}
+  html[data-theme="light"] .wc-w.s1,html[data-theme="light"] .wc-w.s2{color:var(--text)}
+  html[data-theme="light"] .top-card .cover img,html[data-theme="light"] .top-card .cover .placeholder{background:#e8dfd2}
+  html[data-theme="light"] .md5-action:hover{background:#e5dacb;color:var(--text)}
+
+  .footer{text-align:center;color:var(--muted);font-size:12px;padding:32px;border-top:1px solid var(--line);margin-top:48px}
+  #_tip{position:fixed;left:50%;top:24px;transform:translateX(-50%);padding:8px 16px;border-radius:8px;font-size:12px;color:#fff;z-index:1000;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  #_tip.ok{background:#15803d}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="nav"><a href="index.html">← 返回首页</a></span>
+  <span class="nav">·</span>
+  <span class="nav"><a href="full.html">完整报告</a></span>
+  <h1 style="margin-left:12px">🧴 未分类</h1>
+  <span class="badge">10 条素材</span>
+  <button class="md5-action" id="themeToggle" type="button" style="margin-left:auto;font-family:inherit">☀ 整体亮色</button>
+</div>
+
+<div class="wrap">
+  <section class="detail-md5-tool"><span class="tool-label">⌕ 按 MD5 检索本类型 10 条代表素材</span><form id="detailMd5Form"><input id="detailMd5Input" type="search" placeholder="粘贴客户发来的完整或部分 MD5，在本页定位视频" autocomplete="off"><button class="md5-action" type="submit">检索视频</button></form></section>
+  <!-- ① 指标均值 -->
+  <section class="section">
+    <h2>📊 指标均值 <span class="count">· 清晰呈现本类素材基准指标，帮你快速定位差距，校准优化方向</span></h2>
+    <div class="metrics-grid"><div class="m-cell"><div class="lab">消耗(均值)</div><span class="val">0.8<span class="unit">万</span></span></div><div class="m-cell"><div class="lab">增长量(均值)</div><span class="val">4.4<span class="unit">万</span></span></div><div class="m-cell"><div class="lab">CTR (均值)</div><span class="val">1.14<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">CVR (均值)</div><span class="val">8.20<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">3s完播 (均值)</div><span class="val">36.2<span class="unit">%</span></span></div><div class="m-cell"><div class="lab">播放时长(均值)</div><span class="val">8.8<span class="unit">s</span></span></div></div>
+  </section>
+
+  <!-- ② 方法论（脚本框架 + 词云 + 模特画像 + 爆款话术 + 跑量关键点） -->
+  <section class="section">
+    <h2>📚 方法论沉淀 <span class="count">· 拆解开篇类型核心打法，吃透爆款底层逻辑，轻松拿捏创作节奏</span></h2>
+    <section class="meth-search"><span class="tool-label">⌕ 集中检索</span><form id="methSearchForm"><input id="methSearchInput" type="search" placeholder="输入 MD5 / 客户 / 品类 / 开篇类型 / 脚本关键词，直接跳到下方对应视频" autocomplete="off"><button class="md5-action" type="submit">跳到视频</button><button class="md5-action" type="button" id="methSearchReset">重置</button></form><div class="meth-search-res" id="methSearchRes"></div></section>
+    <div class="frame-empty">该类别下样本不足或解析尚未跑完，暂无方法论。<br>需 ≥2 条带『素材结构』的素材才能聚合。</div>
+  </section>
+
+  <!-- ③ 代表素材关键帧拆解（品牌 Top5 + 非品牌 Top5）-->
+  <section class="section">
+    <h2>🏆 代表素材关键帧拆解 <span class="count">· 品牌 / 非品牌各 Top5（按消耗降序）</span></h2>
+    <div class="top5-group-label" style="margin:18px 0 10px;font-weight:600;color:#86efac">🏬 非品牌素材 Top5（按消耗降序）</div><div class="top-card" data-card-md5="a54207347fcb0fb9051a85bdcb8eaa44" data-card-search="a54207347fcb0fb9051a85bdcb8eaa44    个护清洁-头发洗护/造型-洗发护发-洗发水  痛点对比 开篇类型属于拟人动画痛点对比型。开篇以拟人化『头皮包包』形象直击用户头皮问题痛点，用夸张手法展示抠包包、猛搓头皮的错误行为。接着通过微观动画深度解析马拉色菌繁殖、油脂栓堵塞毛囊的科学原理，建立专业信任。重点展示康王二硫化硒洗发水的三大核心成" data-card-name="#1 个护清洁-头发洗护/造型-洗发护发-洗发水"><div class="cover"><img src="assets/1df2fac77c003a20.jpg" alt="cover"><a class="top-video-link" href="http://adsmind.gdtimg.com/ads_svp_video__0bc37ia7caablyanbos6mjvbv6qe6h5ad4ka.f0.mp4?dis_k=1246232de31adf3d2e394e1e2d678767&amp;dis_t=1784619585&amp;m=a54207347fcb0fb9051a85bdcb8eaa44&amp;sha256=835cc31e1616ff1ab563cc8fce526cfd6906932e9d390356e3490be22657cc0e" target="_blank" rel="noopener">🔗 原视频</a></div><div class="info"><div class="head"><span class="rank">#1</span><span class="meta-pill">🧴 个护清洁-头发洗护/造型-洗发护发-洗发水</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>2.5万</b> · 增长量 <b>8.0万</b> · CTR <b>0.62%</b> · CVR <b>9.82%</b> · 3s完播 <b>39.1%</b> · 播放时长 <b>7.2s</b></div><div class="md5-actions"><span class="md5-action md5-label">🆔 MD5 · a54207347fcb0fb9051a85bdcb8eaa44</span></div><div class="desc">开篇类型属于拟人动画痛点对比型。开篇以拟人化『头皮包包』形象直击用户头皮问题痛点，用夸张手法展示抠包包、猛搓头皮的错误行为。接着通过微观动画深度解析马拉色菌繁殖、油脂栓堵塞毛囊的科学原理，建立专业信任。重点展示康王二硫化硒洗发水的三大核心成分：医研级二硫化硒抑菌、0.9%水杨酸控油、泛醇神经酰胺养护。穿插多位达人实测画面，展示洗出浑浊油垢、发缝清爽干净的强效对比。结尾通过街头采访口碑证言收尾，强调控油持久、发质蓬松柔顺，引导下单转化。</div><div class="frames"><div class="frame"><img src="assets/adebd61db16a2f74.jpg" alt="frame1"><div class="fcap"><div class="fname">痛点+悬念开场</div><div class="ftime">0-12s</div></div></div><div class="frame"><img src="assets/12bd7e322177fc9e.jpg" alt="frame2"><div class="fcap"><div class="fname">科学原理解析</div><div class="ftime">12-45s</div></div></div><div class="frame"><img src="assets/d043938933bd9f0b.jpg" alt="frame3"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">45-71s</div></div></div><div class="frame"><img src="assets/9825be128e63b9b9.jpg" alt="frame4"><div class="fcap"><div class="fname">效果对比</div><div class="ftime">72-97s</div></div></div><div class="frame"><img src="assets/f930ce509074139d.jpg" alt="frame5"><div class="fcap"><div class="fname">场景适配引导</div><div class="ftime">97-135s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="微观头皮特写镜头，一个拟人化的红色『包包』卡通形象站在油腻的头皮毛囊间，露出挑衅表情对着镜头说话。配音用略带调侃的语气说『我是你头皮上的包包，你总是爱用手抠我』，随后切到手指抠挠头皮的夸张画面。整体采用猎奇微观视角+拟人化痛点表达，用反常规的第一人称叙事制造悬念，激发有头皮问题用户的好奇心和代入感。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">微观头皮特写镜头，一个拟人化的红色『包包』卡通形象站在油腻的头皮毛囊间，露出挑衅表情对着镜头说话。配音用略带调侃的语气说『我是你头皮上的包包，你总是爱用手抠我』，随后切到手指抠挠头皮的夸张画面。整体采用猎奇微观视角+拟人化痛点表达，用反常规的第一人称叙事制造悬念，激发有头皮问题用户的好奇心和代入感。</div></div></div></div><div class="top-card" data-card-md5="57fccacb8b9452cf6c224921fdafe197" data-card-search="57fccacb8b9452cf6c224921fdafe197    个护清洁-头发洗护/造型-洗发护发-洗发水  痛点对比 开篇类型属于动画痛点放大+达人种草型。开篇用拟人化毛囊动画直击头油头臭头屑痛点，微型小人清理头皮的创意画面制造强视觉冲击。接着通过动画演示错误清洁方式（用手抠、用碘伏、普通洗发水）均无效，引出康王洗发水登场瞬间解决问题。重点展示产品核心成分" data-card-name="#2 个护清洁-头发洗护/造型-洗发护发-洗发水"><div class="cover"><img src="assets/87b1710d14abde8f.jpg" alt="cover"><a class="top-video-link" href="http://adsmind.gdtimg.com/ads_svp_video__0b53eiar4aablead7qs6qnvbuiqedyrachsa.f0.mp4?dis_k=03f82fb2fe6c3354bdfef0fcd5917326&amp;dis_t=1784619545&amp;m=57fccacb8b9452cf6c224921fdafe197&amp;sha256=4b888801d9229a87fa143796dec4a3fa95573fdb72da9d38b9dd67a922d72fd0" target="_blank" rel="noopener">🔗 原视频</a></div><div class="info"><div class="head"><span class="rank">#2</span><span class="meta-pill">🧴 个护清洁-头发洗护/造型-洗发护发-洗发水</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>1.1万</b> · 增长量 <b>10.3万</b> · CTR <b>0.75%</b> · CVR <b>13.54%</b> · 3s完播 <b>34.7%</b> · 播放时长 <b>8.1s</b></div><div class="md5-actions"><span class="md5-action md5-label">🆔 MD5 · 57fccacb8b9452cf6c224921fdafe197</span></div><div class="desc">开篇类型属于动画痛点放大+达人种草型。开篇用拟人化毛囊动画直击头油头臭头屑痛点，微型小人清理头皮的创意画面制造强视觉冲击。接着通过动画演示错误清洁方式（用手抠、用碘伏、普通洗发水）均无效，引出康王洗发水登场瞬间解决问题。重点展示产品核心成分1%二硫化硒和0.9%水杨酸的作用机理，通过动画演示溶解油脂、破坏马拉色菌生存环境的过程。多位素人女性分享使用体验，强调蓝盖控油止痒、紫盖蓬松显脸小的差异化卖点。结尾强调面护级成分温和不刺激，洗完蓬松顺滑，建立产品信任。</div><div class="frames"><div class="frame"><img src="assets/9fc253e3af9b34ec.jpg" alt="frame1"><div class="fcap"><div class="fname">痛点动画引入</div><div class="ftime">0-17s</div></div></div><div class="frame"><img src="assets/087ddc6f89004e51.jpg" alt="frame2"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">17-23s</div></div></div><div class="frame"><img src="assets/2f6fd051c872e83f.jpg" alt="frame3"><div class="fcap"><div class="fname">使用指导</div><div class="ftime">23-36s</div></div></div><div class="frame"><img src="assets/97ac5c1a68930ded.jpg" alt="frame4"><div class="fcap"><div class="fname">痛点深挖</div><div class="ftime">36-62s</div></div></div><div class="frame"><img src="assets/609ef1aca28c36f2.jpg" alt="frame5"><div class="fcap"><div class="fname">成分科普</div><div class="ftime">62-96s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="微观视角俯拍油腻头皮特写，头皮上布满白色头屑，几个穿粉色防护服的微型动画小人站在头皮上，其中一个捂着鼻子喊出『主人，你做做清洁吧，都臭了』。画面快速切到毛囊横截面动画，一根手指伸向红肿发炎的毛囊准备挤压，配音说『清洁不是用手抠呀』。节奏紧凑，用拟人化痛点+错误示范制造好奇心，引发用户继续观看。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">微观视角俯拍油腻头皮特写，头皮上布满白色头屑，几个穿粉色防护服的微型动画小人站在头皮上，其中一个捂着鼻子喊出『主人，你做做清洁吧，都臭了』。画面快速切到毛囊横截面动画，一根手指伸向红肿发炎的毛囊准备挤压，配音说『清洁不是用手抠呀』。节奏紧凑，用拟人化痛点+错误示范制造好奇心，引发用户继续观看。</div></div></div></div><div class="top-card" data-card-md5="321ea24adaf037457d7e92728ff32221" data-card-search="321ea24adaf037457d7e92728ff32221    个护清洁-头发洗护/造型-洗发护发-洗发护发套装  痛点对比 开篇类型属于痛点对比+街采证言型。开篇通过展示头发稀疏露头皮的真实痛点画面，配合街头采访『不敢再洗了』的恐惧表达，直击脱发人群焦虑。接着通过白板演示排除养发馆、民间偏方、黑芝麻等传统误区，建立产品差异化认知。重点引入长发村背景和少数民族长发" data-card-name="#3 个护清洁-头发洗护/造型-洗发护发-洗发护发套装"><div class="cover"><img src="assets/b130f8cb9de7ca98.jpg" alt="cover"><a class="top-video-link" href="http://adsmind.gdtimg.com/ads_svp_video__0bc3oqaqkaabeqajgktj3furw5aeav2acbka.f0.mp4?dis_k=6bce9695eb088b5b9b5f2f7fb905d75c&amp;dis_t=1768461909&amp;m=321ea24adaf037457d7e92728ff32221" target="_blank" rel="noopener">🔗 原视频</a></div><div class="info"><div class="head"><span class="rank">#3</span><span class="meta-pill">🧴 个护清洁-头发洗护/造型-洗发护发-洗发护发套装</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>1.0万</b> · 增长量 <b>0.2万</b> · CTR <b>2.57%</b> · CVR <b>2.49%</b> · 3s完播 <b>36.4%</b> · 播放时长 <b>13.4s</b></div><div class="md5-actions"><span class="md5-action md5-label">🆔 MD5 · 321ea24adaf037457d7e92728ff32221</span></div><div class="desc">开篇类型属于痛点对比+街采证言型。开篇通过展示头发稀疏露头皮的真实痛点画面，配合街头采访『不敢再洗了』的恐惧表达，直击脱发人群焦虑。接着通过白板演示排除养发馆、民间偏方、黑芝麻等传统误区，建立产品差异化认知。重点引入长发村背景和少数民族长发女性形象，暗示产品源自传统长发秘方，增强信任背书。穿插多位素人使用反馈和效果见证，强调『像18岁女学生』等效果承诺。介绍侧柏叶、何首乌、人参等核心成分，突出老国货品牌定位。结尾承诺运费险和不满意退货，降低决策门槛，引导进入直播间转化。</div><div class="frames"><div class="frame"><img src="assets/8a5f47d26a2f55c1.jpg" alt="frame1"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">0-14s</div></div></div><div class="frame"><img src="assets/aa86b92e8194ce35.jpg" alt="frame2"><div class="fcap"><div class="fname">误区排除</div><div class="ftime">14-30s</div></div></div><div class="frame"><img src="assets/28a922a1ac831aae.jpg" alt="frame3"><div class="fcap"><div class="fname">品牌溯源</div><div class="ftime">31-54s</div></div></div><div class="frame"><img src="assets/daf94fb61154f418.jpg" alt="frame4"><div class="fcap"><div class="fname">效果见证</div><div class="ftime">55-110s</div></div></div><div class="frame"><img src="assets/1626fcb37dd2415f.jpg" alt="frame5"><div class="fcap"><div class="fname">售后承诺</div><div class="ftime">110-133s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="开场近景特写一位女性头顶发缝，清晰展示头发稀疏、露头皮严重的真实状态，画面用红圈动效标注问题区域。配音用关切语气说『你知道头发脱落的原因是什么吗？头发脱落的朋友请留步』，字幕同步显示『11个多月前 头发细软贴头皮』。第2秒切换到女性拨弄稀疏头发的正面镜头，第3秒快切街头采访画面，素人表情焦虑。整体节奏紧凑，用痛点画面+悬念提问制造停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">开场近景特写一位女性头顶发缝，清晰展示头发稀疏、露头皮严重的真实状态，画面用红圈动效标注问题区域。配音用关切语气说『你知道头发脱落的原因是什么吗？头发脱落的朋友请留步』，字幕同步显示『11个多月前 头发细软贴头皮』。第2秒切换到女性拨弄稀疏头发的正面镜头，第3秒快切街头采访画面，素人表情焦虑。整体节奏紧凑，用痛点画面+悬念提问制造停留。</div></div></div></div><div class="top-card" data-card-md5="8aa7409b798b6f369554b100656968a6" data-card-search="8aa7409b798b6f369554b100656968a6    个护清洁-头发洗护/造型-洗发护发-洗发水  痛点对比 开篇类型属于微观痛点+视觉冲击型。开篇通过3D动画展示头皮微观世界，油脂栓被硬生生拔出、蠕形螨蠕动的画面极具视觉冲击力，瞬间抓住注意力。接着切换到现实场景，青少年女孩展示头油、头屑、头皮长包等真实痛点，母亲一脸担忧地检查头皮，强化家长焦虑。" data-card-name="#4 个护清洁-头发洗护/造型-洗发护发-洗发水"><div class="cover"><img src="assets/f9320651891c37e2.jpg" alt="cover"><a class="top-video-link" href="http://adsmind.gdtimg.com/ads_svp_video__0b533mamqaaa3eanzj2puzvbvwyezdnqbsca.f0.mp4?dis_k=5844c2900f610e79e93857ed26218d85&amp;dis_t=1783567365&amp;m=8aa7409b798b6f369554b100656968a6" target="_blank" rel="noopener">🔗 原视频</a></div><div class="info"><div class="head"><span class="rank">#4</span><span class="meta-pill">🧴 个护清洁-头发洗护/造型-洗发护发-洗发水</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>0.7万</b> · 增长量 <b>0.7万</b> · CTR <b>0.77%</b> · CVR <b>3.43%</b> · 3s完播 <b>36.2%</b> · 播放时长 <b>6.5s</b></div><div class="md5-actions"><span class="md5-action md5-label">🆔 MD5 · 8aa7409b798b6f369554b100656968a6</span></div><div class="desc">开篇类型属于微观痛点+视觉冲击型。开篇通过3D动画展示头皮微观世界，油脂栓被硬生生拔出、蠕形螨蠕动的画面极具视觉冲击力，瞬间抓住注意力。接着切换到现实场景，青少年女孩展示头油、头屑、头皮长包等真实痛点，母亲一脸担忧地检查头皮，强化家长焦虑。重点展示康王青少年洗发水产品，强调『一周两次就够，太猛怕你接不住』的强效卖点，配合二硫化硒和超分子水杨酸成分动画演示。效果呈现环节展示洗后清爽头皮和顺滑发丝的对比。结尾以新品福利引导下单，完成转化闭环。</div><div class="frames"><div class="frame"><img src="assets/da65003689ae0de2.jpg" alt="frame1"><div class="fcap"><div class="fname">痛点+悬念开场</div><div class="ftime">0-5s</div></div></div><div class="frame"><img src="assets/72a02b2128ef96b5.jpg" alt="frame2"><div class="fcap"><div class="fname">恐惧营销</div><div class="ftime">5-15s</div></div></div><div class="frame"><img src="assets/7124c1c3df798d4b.jpg" alt="frame3"><div class="fcap"><div class="fname">症状展示</div><div class="ftime">15-27s</div></div></div><div class="frame"><img src="assets/a88a2c65f959e979.jpg" alt="frame4"><div class="fcap"><div class="fname">痛点强化</div><div class="ftime">27-42s</div></div></div><div class="frame"><img src="assets/b7ffa98d61ff262a.jpg" alt="frame5"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">42-51s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="微观3D动画特写头皮毛囊，一把银色镊子缓缓从毛孔中拔出巨大的黄色半透明油脂栓，毛囊口被撑大变形。画面极度写实，油脂栓质感黏腻。配音用成熟女声说『在微观视角下，厚厚的油脂栓被硬生生扯出来』，语气带有科普感和紧迫感。节奏紧凑，1秒1个视觉冲击点，用恶心但真实的微观画面制造『天哪我头皮里也有这个』的焦虑悬念。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">微观3D动画特写头皮毛囊，一把银色镊子缓缓从毛孔中拔出巨大的黄色半透明油脂栓，毛囊口被撑大变形。画面极度写实，油脂栓质感黏腻。配音用成熟女声说『在微观视角下，厚厚的油脂栓被硬生生扯出来』，语气带有科普感和紧迫感。节奏紧凑，1秒1个视觉冲击点，用恶心但真实的微观画面制造『天哪我头皮里也有这个』的焦虑悬念。</div></div></div></div><div class="top-card" data-card-md5="92866160ba92127c5488feec650f5fc5" data-card-search="92866160ba92127c5488feec650f5fc5    个护清洁-头发洗护/造型-洗发护发-洗发水  痛点对比 开篇类型属于动画痛点演绎+成分科普型。开篇以3D头皮微观动画切入，用手指抠头皮的错误示范引发用户好奇。接着通过拟人化的『马拉色菌反派独白』解释头油头屑的根源，制造戏剧冲突。重点展示康王洗发水的核心成分——1%二硫化硒和0.9%水杨酸，用动画" data-card-name="#5 个护清洁-头发洗护/造型-洗发护发-洗发水"><div class="cover"><img src="assets/6caaa4536b2110ec.jpg" alt="cover"><a class="top-video-link" href="http://adsmind.gdtimg.com/ads_svp_video__0bc3cibgaaacpqael3tbbjvbseqemajaeyca.f0.mp4?dis_k=39bd8f8812bd03bcc343ba77f650c398&amp;dis_t=1784883233&amp;m=92866160ba92127c5488feec650f5fc5&amp;sha256=436c3fc972ce12984ad62e63b264120e7b1ec568ea3147be5e3ab12a974bd570" target="_blank" rel="noopener">🔗 原视频</a></div><div class="info"><div class="head"><span class="rank">#5</span><span class="meta-pill">🧴 个护清洁-头发洗护/造型-洗发护发-洗发水</span><span class="meta-pill" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">🎬 痛点对比</span></div><div class="metrics-row">消耗 <b>0.6万</b> · 增长量 <b>8.8万</b> · CTR <b>0.50%</b> · CVR <b>10.86%</b> · 3s完播 <b>46.0%</b> · 播放时长 <b>8.6s</b></div><div class="md5-actions"><span class="md5-action md5-label">🆔 MD5 · 92866160ba92127c5488feec650f5fc5</span></div><div class="desc">开篇类型属于动画痛点演绎+成分科普型。开篇以3D头皮微观动画切入，用手指抠头皮的错误示范引发用户好奇。接着通过拟人化的『马拉色菌反派独白』解释头油头屑的根源，制造戏剧冲突。重点展示康王洗发水的核心成分——1%二硫化硒和0.9%水杨酸，用动画演示成分深入毛囊清理油脂的过程。穿插大量真人洗头实拍和洗后清爽效果对比，增强可信度。结尾强调面护级成分温和不刺激，以蓬松顺滑的秀发展示收尾，暗示产品性价比极高引导购买。</div><div class="frames"><div class="frame"><img src="assets/dbeaed5a46120dc8.jpg" alt="frame1"><div class="fcap"><div class="fname">痛点引入</div><div class="ftime">0-8s</div></div></div><div class="frame"><img src="assets/960d00dcafdcefd9.jpg" alt="frame2"><div class="fcap"><div class="fname">问题诊断</div><div class="ftime">8-21s</div></div></div><div class="frame"><img src="assets/56de41bdac67ac8e.jpg" alt="frame3"><div class="fcap"><div class="fname">反派独白</div><div class="ftime">21-50s</div></div></div><div class="frame"><img src="assets/bf56b5b77b124227.jpg" alt="frame4"><div class="fcap"><div class="fname">产品亮相</div><div class="ftime">50-70s</div></div></div><div class="frame"><img src="assets/c1b914c0c1f4b6c8.jpg" alt="frame5"><div class="fcap"><div class="fname">卖点轰炸</div><div class="ftime">70-118s</div></div></div></div><div class="hp"><div class="hp-h">⚡ 黄金 3s Prompt<span class="hp-actions"><button class="hp-btn" data-hook-copy="3D微观镜头特写头皮毛囊世界，毛囊被拟人化成卡通小人，一根巨大的手指正在用力抠弄红肿发炎的毛囊，油脂晶莹剔透布满头皮表面。毛囊小人表情痛苦扭曲，配音用轻快女声说『清洁不是用手抠呀』，制造『错误示范』的悬念点。画面左上角带品牌logo，整体节奏紧凑，用夸张动画+反常识话术抓住用户停留。">📋 复制</button><a class="hp-btn" href="https://admuse.qq.com/#/index" target="_blank" rel="noopener">🚀 妙思</a></span></div><div class="hp-t">3D微观镜头特写头皮毛囊世界，毛囊被拟人化成卡通小人，一根巨大的手指正在用力抠弄红肿发炎的毛囊，油脂晶莹剔透布满头皮表面。毛囊小人表情痛苦扭曲，配音用轻快女声说『清洁不是用手抠呀』，制造『错误示范』的悬念点。画面左上角带品牌logo，整体节奏紧凑，用夸张动画+反常识话术抓住用户停留。</div></div></div></div>
+  </section>
+</div>
+
+<div class="footer">素材解析台 · 未分类 · 20260729 · 内部版（含金额）</div>
+<div id="_tip"></div>
+<script>
+// 复制按钮事件代理
+(function(){
+  var themeBtn=document.getElementById("themeToggle"),saved="";
+  try{saved=localStorage.getItem("stmc-report-theme")||"";}catch(_){}
+  if(saved==="light")document.documentElement.dataset.theme="light";
+  function syncTheme(){if(themeBtn)themeBtn.textContent=document.documentElement.dataset.theme==="light"?"☾ 整体深色":"☀ 整体亮色";}
+  if(themeBtn)themeBtn.onclick=function(){var light=document.documentElement.dataset.theme!=="light";document.documentElement.dataset.theme=light?"light":"dark";try{localStorage.setItem("stmc-report-theme",light?"light":"dark");}catch(_){}syncTheme();};
+  syncTheme();
+  var md5Form=document.getElementById("detailMd5Form"),md5Input=document.getElementById("detailMd5Input");
+  if(md5Form)md5Form.onsubmit=function(e){
+    e.preventDefault();
+    var q=(md5Input.value||"").trim().toLowerCase();
+    var cards=Array.prototype.slice.call(document.querySelectorAll(".top-card[data-card-md5]"));
+    cards.forEach(function(card){card.hidden=false;card.classList.remove("md5-hit");});
+    if(!q)return;
+    var hits=cards.filter(function(card){return (card.getAttribute("data-card-md5")||"").toLowerCase().indexOf(q)!==-1;});
+    if(!hits.length){
+      var tip=document.getElementById("_tip");tip.textContent="本类型 10 条代表素材中未找到该 MD5";
+      tip.className="ok";tip.style.display="block";clearTimeout(window._tipT);
+      window._tipT=setTimeout(function(){tip.style.display="none";},2200);return;
+    }
+    cards.forEach(function(card){card.hidden=hits.indexOf(card)===-1;});
+    hits[0].classList.add("md5-hit");hits[0].scrollIntoView({behavior:"smooth",block:"center"});
+  };
+  // 方法论区集中检索：md5 / 客户 / 品类 / 开篇类型 / 脚本关键词 → 同页直接跳到视频卡
+  var mForm=document.getElementById("methSearchForm"),mInput=document.getElementById("methSearchInput"),
+      mRes=document.getElementById("methSearchRes"),mReset=document.getElementById("methSearchReset");
+  function methClear(){
+    var cards=document.querySelectorAll(".top-card[data-card-md5]");
+    Array.prototype.forEach.call(cards,function(c){c.hidden=false;c.classList.remove("md5-hit");});
+    if(mRes)mRes.textContent="";
+  }
+  if(mForm)mForm.onsubmit=function(e){
+    e.preventDefault();
+    var q=(mInput.value||"").trim().toLowerCase();
+    var cards=Array.prototype.slice.call(document.querySelectorAll(".top-card[data-card-md5]"));
+    cards.forEach(function(c){c.hidden=false;c.classList.remove("md5-hit");});
+    if(!q){if(mRes)mRes.textContent="";return;}
+    var hits=cards.filter(function(c){
+      var blob=((c.getAttribute("data-card-search")||"")+" "+(c.getAttribute("data-card-md5")||"")).toLowerCase();
+      return blob.indexOf(q)!==-1;
+    });
+    if(!hits.length){
+      if(mRes)mRes.textContent="未找到匹配的代表素材（本页展示品牌/非品牌各 Top5）";
+      return;
+    }
+    cards.forEach(function(c){c.hidden=hits.indexOf(c)===-1;});
+    hits[0].classList.add("md5-hit");hits[0].scrollIntoView({behavior:"smooth",block:"center"});
+    if(mRes)mRes.textContent="命中 "+hits.length+" 条，已定位第 1 条："+(hits[0].getAttribute("data-card-name")||"");
+  };
+  if(mReset)mReset.onclick=function(){if(mInput)mInput.value="";methClear();};
+})();
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-hook-copy]");
+  if(!btn) return;
+  e.preventDefault();
+  var txt = btn.getAttribute("data-hook-copy") || "";
+  var ta = document.createElement("textarea");
+  ta.innerHTML = txt;
+  var decoded = ta.value;
+  function ok(){
+    var t = document.getElementById("_tip");
+    t.textContent = "✓ " + (btn.getAttribute("data-copy-toast") || "已复制黄金 3s prompt");
+    t.className = "ok"; t.style.display = "block";
+    clearTimeout(window._tipT);
+    window._tipT = setTimeout(function(){ t.style.display="none"; }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(decoded).then(ok);
+  } else {
+    var t2 = document.createElement("textarea");
+    t2.value = decoded; t2.style.position="fixed"; t2.style.opacity="0";
+    document.body.appendChild(t2); t2.select();
+    try { document.execCommand("copy"); ok(); } catch(_){}
+    document.body.removeChild(t2);
+  }
+});
+</script>
+</body></html>
